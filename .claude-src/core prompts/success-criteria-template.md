@@ -113,7 +113,7 @@ Focus on functional behavior and technical implementation:
 - Patterns followed
 - No unintended changes
 
-**TDD Agent**
+**Tester Agent**
 Focus on test coverage and quality:
 
 - All specified behaviors have tests
@@ -121,7 +121,7 @@ Focus on test coverage and quality:
 - Tests fail before implementation (red)
 - Tests pass after implementation (green)
 
-**Reviewer General and Reviewer React Agent**
+**Backend Reviewer and Frontend Reviewer Agent**
 Focus on quality gates:
 
 - Code follows conventions
