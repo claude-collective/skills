@@ -26,15 +26,15 @@ const SKILLS_SOURCE_DIR = path.join(__dirname, "skills");
  * @returns {Promise<string>} - Processed content with includes resolved
  */
 async function resolveIncludes(content, basePath, visited = new Set()) {
-  const includeRegex = /@include\(([^)]+)\)/g;
+  // Negative lookbehind to skip @include inside backticks (inline code)
+  const includeRegex = /(?<!`)@include\(([^)]+)\)/g;
   let result = content;
-  let hasIncludes = false;
 
-  // Find all @include directives
+  // Find all @include directives with their positions
   const matches = [...content.matchAll(includeRegex)];
 
-  for (const match of matches) {
-    hasIncludes = true;
+  // Process in REVERSE order to preserve indices during replacement
+  for (const match of matches.reverse()) {
     const relativePath = match[1].trim();
     const absolutePath = path.resolve(basePath, relativePath);
 
@@ -56,8 +56,11 @@ async function resolveIncludes(content, basePath, visited = new Set()) {
         visited,
       );
 
-      // Replace the @include directive with the resolved content
-      result = result.replace(match[0], resolvedContent);
+      // Replace at EXACT match position (not first occurrence)
+      result =
+        result.substring(0, match.index) +
+        resolvedContent +
+        result.substring(match.index + match[0].length);
     } catch (error) {
       console.error(`❌ Error including ${relativePath}:`, error.message);
       // Leave the directive in place if file not found
@@ -102,23 +105,24 @@ async function compile(sourceFile) {
 
 /**
  * Compile a single skill
- * @param {string} skillPath - Path to skill directory
+ * @param {string} category - Category name (e.g., 'frontend', 'backend')
+ * @param {string} skillFile - Path to skill .md file
  * @returns {Promise<string>} - Path to output file
  */
-async function compileSkill(skillPath) {
-  const skillName = path.basename(skillPath);
-  const sourceFile = path.join(skillPath, "src.md");
-  const outputDir = path.join(SKILLS_DIR, skillName);
+async function compileSkill(category, skillFile) {
+  const skillName = path.basename(skillFile, ".md");
+  const outputDirName = `${category}-${skillName}`;
+  const outputDir = path.join(SKILLS_DIR, outputDirName);
   const outputPath = path.join(outputDir, "SKILL.md");
 
-  console.log(`📄 Compiling skill: ${skillName}...`);
+  console.log(`📄 Compiling skill: ${outputDirName}...`);
 
   try {
     // Read source file
-    const sourceContent = await fs.readFile(sourceFile, "utf-8");
+    const sourceContent = await fs.readFile(skillFile, "utf-8");
 
     // Resolve all @include directives
-    const compiledContent = await resolveIncludes(sourceContent, skillPath);
+    const compiledContent = await resolveIncludes(sourceContent, path.dirname(skillFile));
 
     // Ensure output directory exists
     await fs.mkdir(outputDir, { recursive: true });
@@ -129,7 +133,7 @@ async function compileSkill(skillPath) {
     console.log(`✅ Created ${outputPath}`);
     return outputPath;
   } catch (error) {
-    console.error(`❌ Error compiling skill ${skillName}:`, error.message);
+    console.error(`❌ Error compiling skill ${outputDirName}:`, error.message);
     throw error;
   }
 }
@@ -167,33 +171,35 @@ async function compileAll() {
  */
 async function compileAllSkills() {
   try {
-    const skillDirs = await fs.readdir(SKILLS_SOURCE_DIR);
-    const skills = [];
+    const categoryDirs = await fs.readdir(SKILLS_SOURCE_DIR);
+    const skillsToCompile = [];
 
-    // Filter for directories that contain src.md
-    for (const dir of skillDirs) {
-      const skillPath = path.join(SKILLS_SOURCE_DIR, dir);
-      const stat = await fs.stat(skillPath);
+    // Iterate over category directories (frontend, backend, security, setup)
+    for (const category of categoryDirs) {
+      const categoryPath = path.join(SKILLS_SOURCE_DIR, category);
+      const stat = await fs.stat(categoryPath);
+
       if (stat.isDirectory()) {
-        const srcPath = path.join(skillPath, "src.md");
-        try {
-          await fs.access(srcPath);
-          skills.push(skillPath);
-        } catch {
-          // Skip directories without src.md
+        // Get all .md files in this category
+        const files = await fs.readdir(categoryPath);
+        const mdFiles = files.filter((f) => f.endsWith(".md"));
+
+        for (const mdFile of mdFiles) {
+          const skillFile = path.join(categoryPath, mdFile);
+          skillsToCompile.push({ category, skillFile });
         }
       }
     }
 
-    if (skills.length === 0) {
+    if (skillsToCompile.length === 0) {
       console.log("No skills found to compile");
       return;
     }
 
-    console.log(`\n🚀 Compiling ${skills.length} skills...\n`);
+    console.log(`\n🚀 Compiling ${skillsToCompile.length} skills...\n`);
 
-    for (const skillPath of skills) {
-      await compileSkill(skillPath);
+    for (const { category, skillFile } of skillsToCompile) {
+      await compileSkill(category, skillFile);
     }
 
     console.log(`\n✨ All skills compiled successfully!\n`);
