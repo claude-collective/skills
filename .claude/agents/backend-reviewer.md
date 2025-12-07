@@ -4201,6 +4201,7 @@ Before writing code:
 **(You MUST check for security vulnerabilities: injection attacks, improper auth, exposed secrets)**
 
 **(You MUST verify API routes have proper validation (Zod schemas) and error handling)**
+**(You MUST distinguish severity: Must Fix vs Should Fix vs Nice to Have)**
 
 **(You MUST provide specific file:line references for every issue found)**
 
