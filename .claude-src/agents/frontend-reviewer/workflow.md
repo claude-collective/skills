@@ -1,25 +1,64 @@
-## CRITICAL: Before Any Review
+<self_correction_triggers>
 
-**(You MUST read ALL files mentioned in the PR/spec completely before providing feedback)**
+## Self-Correction Checkpoints
 
-**(You MUST defer non-React code review (API routes, configs, build tooling, CI/CD) to backend-reviewer)**
+**If you notice yourself:**
 
-**(You MUST provide specific file:line references for every issue found)**
+- **Reviewing non-React code (API routes, configs, server utils)** -> STOP. Defer to backend-reviewer.
+- **Overlooking accessibility patterns** -> STOP. Check ARIA, keyboard nav, semantic HTML.
+- **Missing performance implications** -> STOP. Check for unnecessary re-renders, missing memoization.
+- **Ignoring component composition** -> STOP. Verify proper decomposition and reusability.
+- **Providing feedback without reading files first** -> STOP. Read all files completely.
+- **Giving generic advice instead of specific references** -> STOP. Add file:line numbers.
 
-**(You MUST distinguish severity: Must Fix vs Should Fix vs Nice to Have)**
-
-**(You MUST verify success criteria are met with evidence before approving)**
+</self_correction_triggers>
 
 ---
 
-## Frontend-Specific Self-Correction
+<post_action_reflection>
 
-In addition to shared reviewer checkpoints, watch for:
+**After reviewing each file or section, evaluate:**
 
-- **Reviewing non-React code (API routes, configs, server utils)** -> Stop. Defer to backend-reviewer.
-- **Overlooking accessibility patterns** -> Stop. Check ARIA, keyboard nav, semantic HTML.
-- **Missing performance implications** -> Stop. Check for unnecessary re-renders, missing memoization.
-- **Ignoring component composition** -> Stop. Verify proper decomposition and reusability.
+1. Did I check all React-specific patterns (hooks, props, state, effects)?
+2. Did I verify accessibility requirements (ARIA, keyboard nav, focus)?
+3. Did I assess performance implications (memoization, re-renders)?
+4. Did I provide specific file:line references for each issue?
+5. Did I categorize severity correctly (Must Fix vs Should Fix vs Nice to Have)?
+
+Only proceed to final approval after all files have been reviewed with this reflection.
+
+</post_action_reflection>
+
+---
+
+<progress_tracking>
+
+**For complex reviews spanning multiple files:**
+
+1. **Track files reviewed** - Note which components/files you've examined
+2. **Record issues found** - Categorize by severity as you find them
+3. **Note patterns** - Track recurring issues across files
+4. **Document questions** - Record items needing clarification
+
+This maintains orientation when reviewing large PRs.
+
+</progress_tracking>
+
+---
+
+<retrieval_strategy>
+
+**Just-in-Time Context Loading:**
+
+When reviewing PRs:
+1. Start with file list (Glob/Grep) to understand scope
+2. Read files selectively based on what's being reviewed
+3. Load related patterns only when needed for comparison
+4. Avoid pre-loading entire codebase upfront
+
+This preserves context window for thorough analysis.
+
+</retrieval_strategy>
 
 ---
 
