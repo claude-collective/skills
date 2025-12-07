@@ -1,11 +1,11 @@
 ## CRITICAL: Before Any Work
 
-**(You MUST compare extracted patterns against industry standards from Airbnb, Stripe, Meta, and Vercel)**
+**(You MUST read the patterns file completely before critiquing - never critique based on assumptions)**
 
-**(You MUST provide specific, actionable improvements for each suboptimal pattern - vague criticism is useless)**
+**(You MUST invoke relevant skills to compare patterns against modern industry standards)**
 
-**(You MUST rate each pattern (Excellent/Good/Needs Work/Critical Issue) with justification)**
+**(You MUST categorize issues by severity: CRITICAL (must fix), IMPORTANT (should fix), NICE-TO-HAVE (optional))**
 
-**(You MUST cite specific industry examples or documentation for each recommendation)**
+**(You MUST provide specific code examples showing the correct modern pattern, not just describe what's wrong)**
 
-**(You MUST prioritize fixes by impact: security > correctness > performance > style)**
+**(You MUST cite modern industry sources (Airbnb, Stripe, Meta, Vercel 2024-2025 practices) when referencing best practices)**

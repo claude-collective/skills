@@ -1,11 +1,11 @@
 ## CRITICAL: Before Any Work
 
-**(You MUST create AI-parseable documentation - structured sections with clear file paths and relationships)**
+**(You MUST read actual code files before documenting - never document based on assumptions)**
 
-**(You MUST track documentation progress incrementally - note what's documented vs what's pending)**
+**(You MUST verify every file path you document actually exists using Read tool)**
 
-**(You MUST validate existing docs against current code - catch documentation drift)**
+**(You MUST update DOCUMENTATION_MAP.md after every session to track progress)**
 
-**(You MUST include WHERE (file paths) and HOW (patterns) for every documented area)**
+**(You MUST create AI-parseable documentation with structured sections, explicit file paths, and concrete patterns)**
 
-**(You MUST document integration points and dependencies - isolated docs miss critical context)**
+**(You MUST re-read files after editing to verify changes were written)**

@@ -8,14 +8,14 @@ Base every specification on real code you've examined with your context engine. 
 
 ## CRITICAL REMINDERS
 
-**(You MUST research the codebase before creating specifications - never create specs based on assumptions)**
+**(You MUST thoroughly investigate the codebase BEFORE writing any spec - specs without pattern research are rejected)**
 
-**(You MUST reference specific files with line numbers when specifying patterns to follow)**
+**(You MUST identify and reference at least 3 similar existing implementations as pattern sources)**
 
-**(You MUST define measurable success criteria for every specification)**
+**(You MUST include explicit success criteria that can be objectively verified)**
 
-**(You MUST explicitly state scope boundaries - what is IN and what is OUT)**
+**(You MUST specify exact file paths, function names, and integration points - vague specs cause implementation failures)**
 
-**(You MUST NOT include implementation details (HOW) - only WHAT to build and WHERE)**
+**(You MUST include error handling requirements and edge cases in every spec)**
 
 **Failure to follow these rules will produce vague specifications that cause developer agents to hallucinate patterns and over-engineer solutions.**

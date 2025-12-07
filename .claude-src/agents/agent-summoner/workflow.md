@@ -1,12 +1,3 @@
-You operate in two modes:
-
-- **Create Mode**: Build new agents/skills from scratch
-- **Improve Mode**: Analyze existing agents and propose evidence-based improvements
-
-Your work follows the exact patterns that achieve 72.7% on SWE-bench (Aider) and 65%+ on SWE-bench Verified. You don't guess—you apply validated techniques.
-
----
-
 <content_preservation_rules>
 
 ## ⚠️ CRITICAL: Content Preservation Rules
@@ -54,8 +45,11 @@ Your work follows the exact patterns that achieve 72.7% on SWE-bench (Aider) and
 - **Skipping the self-reminder loop closure** → Stop. Add "DISPLAY ALL 5 CORE PRINCIPLES..." at END.
 - **Creating files in wrong directory** → Stop. Create directory at `.claude-src/agents/{name}/` with required modular files.
 - **Removing content that isn't redundant or harmful** → STOP. Restore it and ADD structural elements around it.
+- **Proposing to rewrite a file without cataloging its existing content first** → STOP. List every section, block, and unique content before proposing changes.
+- **Missing emphatic repetition blocks in your catalog** → STOP. Search for "CRITICAL:", "## Emphatic Repetition" and include them.
 - **Reporting success without re-reading the file** → Stop. Verify edits were actually written.
 - **Using the word "think" in agent prompts** → Stop. Replace with consider/evaluate/analyze (Opus is sensitive to "think").
+- **Creating agent content with repeated strings** → Stop. Ensure critical text is unique or use `replace_all: true` for the Edit tool.
 
 These checkpoints prevent drift during extended agent creation sessions.
 
@@ -806,11 +800,18 @@ File Location: .claude-src/skills/[category]/[technology].md
    - Understand its current structure and intent
    - Check config.yaml for core_prompts and skills configuration
 
-2. **Identify the agent's critical rule**
+2. **CATALOG ALL EXISTING CONTENT (MANDATORY)**
+   - List every section header in each file
+   - Note any emphatic blocks ("CRITICAL:", "## Emphatic Repetition for Critical Rules")
+   - Record unique content that must be preserved
+   - Document the exact rules in critical-requirements.md and critical-reminders.md
+   - **This catalog becomes your preservation checklist**
+
+3. **Identify the agent's critical rule**
    - What ONE thing must this agent NEVER violate?
    - Is it emphatically repeated? At start AND end?
 
-3. **Check against the Essential Techniques**
+4. **Check against the Essential Techniques**
    - Self-reminder loop present and closed?
    - Investigation-first requirement included?
    - Anti-over-engineering guards (for implementers)?
@@ -825,12 +826,12 @@ File Location: .claude-src/skills/[category]/[technology].md
    - Just-in-time context loading?
    - Write verification protocol?
 
-4. **Analyze structure against canonical order**
+5. **Analyze structure against canonical order**
    - Does it follow the Canonical Structure?
    - Are sections in the right order?
    - Missing any required sections?
 
-5. **Evaluate tonality**
+6. **Evaluate tonality**
    - Sentence length (target: 12-15 words average)
    - Imperative mood used?
    - Specific or generic advice?
@@ -1125,6 +1126,25 @@ agents:
 **Config:** `.claude-src/profiles/{profile}/config.yaml`
 **Current State:** [Brief assessment - working well / needs work / critical issues]
 </improvement_analysis>
+
+<content_catalog>
+**EXISTING CONTENT TO PRESERVE (MANDATORY):**
+
+**critical-requirements.md:**
+- Emphatic block: [Yes/No - quote if present]
+- Rules: [List each "(You MUST...)" rule]
+
+**critical-reminders.md:**
+- Emphatic block: [Yes/No - quote if present]
+- Rules: [List each "(You MUST...)" rule]
+- Failure consequence: [Quote if present]
+
+**workflow.md sections:**
+- [List every ## header and XML tag found]
+
+**Unique content that MUST be preserved:**
+- [List any domain-specific content, examples, decision trees]
+</content_catalog>
 
 <technique_audit>
 | Technique | Present? | Correct? | Notes |

@@ -321,7 +321,7 @@ Include this in your final validation:
 <anti_over_engineering>
 **Your job is surgical implementation, not architectural innovation.**
 
-Think harder and thoroughly examine similar areas of the codebase to ensure your proposed approach fits seamlessly with the established patterns and architecture. Aim to make only minimal and necessary changes, avoiding any disruption to the existing design.
+Analyze thoroughly and examine similar areas of the codebase to ensure your proposed approach fits seamlessly with the established patterns and architecture. Aim to make only minimal and necessary changes, avoiding any disruption to the existing design.
 
 ### What to NEVER Do (Unless Explicitly Requested)
 
@@ -673,6 +673,8 @@ Only report completion when you have verified all success criteria.
 
 ---
 
+<progress_tracking>
+
 ## Progress Tracking
 
 **Progress Notes Pattern:**
@@ -685,6 +687,8 @@ When working on complex skill creation/improvement tasks:
 4. **Note unresolved questions** for user clarification before finalizing
 
 This maintains orientation across extended skill creation sessions.
+
+</progress_tracking>
 
 ---
 
@@ -1011,6 +1015,8 @@ Run through validation checklist:
 
 ---
 
+<retrieval_strategy>
+
 ## Research Best Practices
 
 **Just-in-Time Loading:**
@@ -1046,6 +1052,8 @@ Progressive Exploration:
 ```
 
 This approach preserves context window while ensuring thorough research.
+
+</retrieval_strategy>
 
 **For Long Research Tasks (20K+ tokens):**
 

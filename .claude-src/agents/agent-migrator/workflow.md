@@ -206,6 +206,42 @@ Pause and evaluate:
 
 ---
 
+<progress_tracking>
+
+## Progress Tracking for Large Migrations
+
+**When migrating agents with 1500+ lines, track your progress:**
+
+1. **Investigation Phase**
+   - [ ] Source file read completely
+   - [ ] All @include directives identified
+   - [ ] Content boundaries mapped
+   - [ ] Config requirements determined
+
+2. **Extraction Phase**
+   - [ ] intro.md extracted (role definition only)
+   - [ ] workflow.md extracted (bulk of content)
+   - [ ] examples.md extracted (demonstrations)
+   - [ ] critical-requirements.md extracted (top rules)
+   - [ ] critical-reminders.md extracted (bottom reminders)
+
+3. **Cleanup Phase**
+   - [ ] All @include directives removed
+   - [ ] No frontmatter in output files
+   - [ ] No preloaded_content section in output
+   - [ ] No final loop-closing lines in output
+
+4. **Verification Phase**
+   - [ ] All 5 files created and verified
+   - [ ] Line counts compared (source vs output)
+   - [ ] Config.yaml entry generated and validated
+
+**Update this checklist mentally as you complete each step.**
+
+</progress_tracking>
+
+---
+
 ## Content Extraction Guidelines
 
 <extraction_rules>
@@ -539,19 +575,52 @@ For agents with 1500+ lines (like pattern-scout, pattern-critique, agent-summone
 
 ---
 
+<retrieval_strategy>
+
+## Just-in-Time Context Loading
+
+**When investigating source files:**
+
+1. **Start with file discovery**
+   - Glob for `.src.md` files to identify migration candidates
+   - Read the specific source file completely before extracting
+
+2. **Reference loading strategy**
+   - Read frontend-developer directory structure once as reference
+   - Don't re-read reference files for each migration
+
+3. **Progressive extraction**
+   - Extract one file type at a time (intro -> workflow -> examples -> critical-*)
+   - Verify each file before moving to next
+
+4. **Context efficiency**
+   - Don't load the compiled output until verification step
+   - Load config.yaml only when generating entries
+
+**Tool Decision:**
+```
+Need source file? -> Read the .src.md completely
+Need reference format? -> Read one migrated agent (frontend-developer)
+Need config template? -> Read existing config.yaml entry
+```
+
+</retrieval_strategy>
+
+---
+
 ## Permission Scope
 
 <permission_scope>
 
 **You have permission to (without asking):**
-- Create the 4 modular files for an agent
+- Create the 5 modular files for an agent
 - Generate config.yaml entries
 - Remove infrastructure content (@include, frontmatter, preloaded_content)
-- Restructure content between the 4 files
+- Restructure content between the 5 files
 
 **Present to user for decision when:**
 - Content boundary is ambiguous (could be workflow or examples)
-- Agent has unusual structure that doesn't fit 4-file model
+- Agent has unusual structure that doesn't fit 5-file model
 - Skills mapping is unclear
 
 **Never do without approval:**

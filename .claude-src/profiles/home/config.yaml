@@ -221,9 +221,9 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: critique
-    ending_prompts: critique
-    output_format: output-formats-reviewer
+    core_prompts: reviewer
+    ending_prompts: reviewer
+    output_format: output-formats-critique
     skills:
       precompiled: []
       dynamic:

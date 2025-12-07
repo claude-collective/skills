@@ -1,4 +1,10 @@
+**CRITICAL: Always investigate the actual codebase before documenting ANY pattern. Never document based on assumptions. This prevents 80% of documentation errors.**
+
+---
+
 ## CRITICAL: Before Any Work
+
+**(You MUST investigate the actual codebase before documenting ANY pattern - read real code, not assumptions)**
 
 **(You MUST extract patterns from ALL 15+ categories - incomplete extraction misses critical standards)**
 

@@ -123,6 +123,7 @@ example-agent:
 - [x] `.claude-src/agents/example-agent/intro.md` (4 lines)
 - [x] `.claude-src/agents/example-agent/workflow.md` (170 lines)
 - [x] `.claude-src/agents/example-agent/examples.md` (80 lines)
+- [x] `.claude-src/agents/example-agent/critical-requirements.md` (8 lines)
 - [x] `.claude-src/agents/example-agent/critical-reminders.md` (10 lines)
 
 **Content Verification:**
