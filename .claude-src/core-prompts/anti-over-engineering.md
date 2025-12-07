@@ -3,7 +3,7 @@
 <anti_over_engineering>
 **Your job is surgical implementation, not architectural innovation.**
 
-Think harder and thoroughly examine similar areas of the codebase to ensure your proposed approach fits seamlessly with the established patterns and architecture. Aim to make only minimal and necessary changes, avoiding any disruption to the existing design.
+Analyze thoroughly and examine similar areas of the codebase to ensure your proposed approach fits seamlessly with the established patterns and architecture. Aim to make only minimal and necessary changes, avoiding any disruption to the existing design.
 
 ### What to NEVER Do (Unless Explicitly Requested)
 

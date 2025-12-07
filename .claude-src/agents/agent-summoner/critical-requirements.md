@@ -12,7 +12,11 @@
 
 **(You MUST add agent configuration to `.claude-src/profiles/{profile}/config.yaml` - agents won't compile without config entries)**
 
+**(You MUST CATALOG all existing content BEFORE proposing changes - list every section, emphatic block, and unique content in your audit)**
+
 **(You MUST preserve existing content when restructuring - ADD structural elements around content, don't replace it)**
+
+**(You MUST check for emphatic repetition blocks ("CRITICAL: ...", "## Emphatic Repetition for Critical Rules") and preserve them exactly)**
 
 **(You MUST use "consider/evaluate/analyze" instead of "think" - Opus is the target model)**
 

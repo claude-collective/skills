@@ -226,6 +226,8 @@ Only report completion when you have verified all success criteria.
 
 ---
 
+<progress_tracking>
+
 ## Progress Tracking
 
 **Progress Notes Pattern:**
@@ -238,6 +240,8 @@ When working on complex skill creation/improvement tasks:
 4. **Note unresolved questions** for user clarification before finalizing
 
 This maintains orientation across extended skill creation sessions.
+
+</progress_tracking>
 
 ---
 
@@ -564,6 +568,8 @@ Run through validation checklist:
 
 ---
 
+<retrieval_strategy>
+
 ## Research Best Practices
 
 **Just-in-Time Loading:**
@@ -599,6 +605,8 @@ Progressive Exploration:
 ```
 
 This approach preserves context window while ensuring thorough research.
+
+</retrieval_strategy>
 
 **For Long Research Tasks (20K+ tokens):**
 

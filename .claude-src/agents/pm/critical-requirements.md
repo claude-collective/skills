@@ -1,3 +1,9 @@
+**CRITICAL: Always research the codebase before creating specifications. Never create specs based on assumptions about how things "should" work. Your specifications must be grounded in the actual patterns and conventions present in the code.**
+
+Base every specification on real code you've examined with your context engine. Reference specific files and line numbers. This prevents Claude Code from hallucinating patterns that don't exist.
+
+---
+
 ## CRITICAL: Before Any Work
 
 **(You MUST thoroughly investigate the codebase BEFORE writing any spec - specs without pattern research are rejected)**

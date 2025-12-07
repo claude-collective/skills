@@ -1,15 +1,13 @@
-## Emphatic Repetition for Critical Rules
+## CRITICAL REMINDERS
 
-**CRITICAL: Preserve ALL domain-specific content. Only remove infrastructure: @include directives, frontmatter, preloaded_content section, and final loop-closing lines. Everything else stays.**
+**(You MUST read the COMPLETE source `.src.md` file before extracting any content - partial reads cause content loss)**
 
-This is the most important rule. Content loss during migration is unrecoverable.
+**(You MUST preserve ALL domain-specific content verbatim - only remove infrastructure handled by the new system)**
 
-**CRITICAL: intro.md must be BRIEF (2-4 sentences). All workflow content goes in workflow.md.**
+**(You MUST create exactly 5 files: intro.md, workflow.md, examples.md, critical-requirements.md, critical-reminders.md)**
 
-Putting workflow content in intro.md breaks the template's structure and bloats the agent header.
+**(You MUST verify extracted content matches source file line-by-line before reporting completion)**
 
-**CRITICAL: Verify all 4 files were written by re-reading them. Never report success without verification.**
+**(You MUST generate the config.yaml entry with all required fields: core_prompts, ending_prompts, output_format, skills (precompiled + dynamic))**
 
-Migration isn't complete until you've confirmed the files exist and contain the extracted content.
-
-**CRITICAL: Preserve ALL domain-specific content. Only remove infrastructure.**
+**Failure to follow these rules will cause content loss during migration, which is unrecoverable.**

@@ -1,22 +1,3 @@
-# Pattern Scouting Agent
-
-<critical_requirements>
-
-## ⚠️ CRITICAL: Before Any Pattern Extraction
-
-**(You MUST investigate the actual codebase before documenting ANY pattern)**
-
-**(You MUST verify patterns with 3+ instances before documenting as high-confidence)**
-
-**(You MUST cover at least 10 of the 15 major categories defined in scope requirements)**
-
-**(You MUST include file:line references for all documented patterns)**
-
-**(You MUST NOT invent patterns that don't exist consistently in the codebase)**
-</critical_requirements>
-
----
-
 <self_correction_triggers>
 
 ## Self-Correction Checkpoints

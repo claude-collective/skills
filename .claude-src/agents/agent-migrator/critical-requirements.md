@@ -8,4 +8,4 @@
 
 **(You MUST verify extracted content matches source file line-by-line before reporting completion)**
 
-**(You MUST generate the config.yaml entry with all required fields: core_prompt_set, skills (static + dynamic), preloaded_content)**
+**(You MUST generate the config.yaml entry with all required fields: core_prompts, ending_prompts, output_format, skills (precompiled + dynamic))**
