@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../schemas/profile-config.schema.json
 # Profile metadata
 name: home
 description: Personal projects (SCSS/cva, Zustand, React Query)
@@ -5,76 +6,21 @@ description: Personal projects (SCSS/cva, Zustand, React Query)
 # Profile-specific CLAUDE.md
 claude_md: ./CLAUDE.md
 
-# Which core prompts to include for each agent type
-# These appear at the BEGINNING of the agent (before workflow)
-core_prompt_sets:
-  developer:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-  reviewer:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-  pm:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-  scout:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-  summoner:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-  critique:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-  architect:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-
-# Which prompts appear at the END of the agent (after skills/examples)
-# These are typically shared across all agent types
-ending_prompt_sets:
-  developer:
-    - context-management
-    - improvement-protocol
-  reviewer:
-    - context-management
-    - improvement-protocol
-  pm:
-    - context-management
-    - improvement-protocol
-  scout:
-    - context-management
-    - improvement-protocol
-  summoner:
-    - context-management
-    - improvement-protocol
-  critique:
-    - context-management
-    - improvement-protocol
-  architect:
-    - context-management
-    - improvement-protocol
-
 # =============================================================================
-# Agent Skill Assignments
+# Agent Configurations
 # =============================================================================
-# Keys determine which agents from agents.yaml are compiled for this profile
-# Each skill reference has: id (from skills.yaml) + usage (context-specific)
+# Each agent has: core_prompts, ending_prompts, precompiled skills, dynamic skills
 
-agent_skills:
+agents:
   frontend-developer:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: frontend/react
         usage: when implementing React components
@@ -97,6 +43,14 @@ agent_skills:
         usage: when implementing client-side feature flag evaluation or experiments
 
   backend-developer:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: backend/api
         usage: when implementing API routes
@@ -127,6 +81,13 @@ agent_skills:
         usage: when setting up observability stack for the first time in a project
 
   frontend-reviewer:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: shared/reviewing
         usage: when reviewing code
@@ -147,6 +108,13 @@ agent_skills:
         usage: when reviewing client-side feature flag implementations
 
   backend-reviewer:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: shared/reviewing
         usage: when reviewing code
@@ -171,6 +139,14 @@ agent_skills:
         usage: when reviewing logging or error handling implementations
 
   tester:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: frontend/testing
         usage: when writing React component tests
@@ -189,6 +165,13 @@ agent_skills:
         usage: when writing tests involving feature flag behavior
 
   pm:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic:
       # Frontend skills
@@ -252,6 +235,14 @@ agent_skills:
         usage: when scoping features that require initial observability setup
 
   skill-summoner:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic:
       # Frontend skills
@@ -309,6 +300,14 @@ agent_skills:
         usage: when creating or improving skills related to observability
 
   agent-summoner:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic:
       # Frontend skills
@@ -366,10 +365,26 @@ agent_skills:
         usage: when creating or improving agents that work with logging or monitoring
 
   agent-migrator:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic: []
 
   pattern-scout:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic:
       - id: frontend/react
@@ -392,6 +407,13 @@ agent_skills:
         usage: when identifying observability patterns in codebases
 
   pattern-critique:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled: []
     dynamic:
       - id: frontend/react
@@ -412,6 +434,14 @@ agent_skills:
         usage: when critiquing observability patterns against industry standards
 
   documentor:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: setup/monorepo
         usage: when documenting monorepo structure
@@ -475,6 +505,14 @@ agent_skills:
         usage: when documenting observability setup procedures
 
   architecture:
+    core_prompts:
+      - core-principles
+      - investigation-requirement
+      - write-verification
+      - anti-over-engineering
+    ending_prompts:
+      - context-management
+      - improvement-protocol
     precompiled:
       - id: setup/monorepo
         usage: when scaffolding monorepo apps

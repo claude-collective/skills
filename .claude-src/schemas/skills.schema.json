@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-subagents.local/schemas/skills.schema.json",
+  "title": "Skills Configuration",
+  "description": "Single source of truth for all skill definitions. Profile configs reference these by ID and add context-specific usage.",
+  "type": "object",
+  "required": ["skills"],
+  "additionalProperties": false,
+  "properties": {
+    "skills": {
+      "type": "object",
+      "description": "Map of skill IDs to their definitions",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(-[a-z0-9]+)*/[a-z][a-z0-9]*(-[a-z0-9]+)*$": {
+          "$ref": "#/$defs/SkillDefinition"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "SkillDefinition": {
+      "type": "object",
+      "description": "Definition of a single skill",
+      "required": ["path", "name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Profile-relative path to the skill markdown file",
+          "pattern": "^skills/[a-z][a-z0-9-]*/[a-z][a-z0-9-]*\\.md$",
+          "examples": ["skills/frontend/react.md", "skills/backend/api.md"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the skill",
+          "minLength": 1,
+          "examples": ["React", "Backend API", "Database"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the skill's purpose",
+          "minLength": 1,
+          "examples": ["Component architecture, hooks, patterns", "Hono routes, OpenAPI, Zod validation"]
+        }
+      }
+    },
+    "SkillCategory": {
+      "type": "string",
+      "description": "Valid skill category prefixes",
+      "enum": [
+        "frontend",
+        "backend",
+        "security",
+        "shared",
+        "setup"
+      ]
+    }
+  }
+}

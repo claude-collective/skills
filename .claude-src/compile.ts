@@ -7,8 +7,8 @@
  * - LiquidJS handles simple variable interpolation and loops within templates
  *
  * Architecture:
- * - agents.yaml: Single source of truth for all agent definitions
- * - profiles/{profile}/config.yaml: References agents by name + adds profile-specific skills
+ * - agents.yaml: Single source of truth for agent definitions (title, description, tools, output_format)
+ * - profiles/{profile}/config.yaml: Agent-centric config with prompts and skills per agent
  *
  * Usage:
  *   bun .claude-src/compile.ts --profile=home
@@ -23,10 +23,10 @@ import type {
   AgentsConfig,
   CompiledAgentData,
   ProfileConfig,
+  ProfileAgentConfig,
   Skill,
   SkillAssignment,
   SkillReference,
-  SkillReferenceAssignment,
   SkillsConfig,
   ValidationResult,
 } from "./types";
@@ -100,19 +100,20 @@ function resolveSkillReference(
 }
 
 function resolveSkillReferences(
-  refs: SkillReferenceAssignment,
+  precompiled: SkillReference[],
+  dynamic: SkillReference[],
   skillsConfig: SkillsConfig
 ): SkillAssignment {
   return {
-    precompiled: refs.precompiled.map((ref) =>
+    precompiled: precompiled.map((ref) =>
       resolveSkillReference(ref, skillsConfig)
     ),
-    dynamic: refs.dynamic.map((ref) => resolveSkillReference(ref, skillsConfig)),
+    dynamic: dynamic.map((ref) => resolveSkillReference(ref, skillsConfig)),
   };
 }
 
 // =============================================================================
-// Agent Resolution (merge agents.yaml + profile skills)
+// Agent Resolution (merge agents.yaml + profile config)
 // =============================================================================
 
 function resolveAgents(
@@ -122,30 +123,36 @@ function resolveAgents(
 ): Record<string, AgentConfig> {
   const resolved: Record<string, AgentConfig> = {};
 
-  // Derive agents to compile from agent_skills keys
-  const agentNames = Object.keys(profileConfig.agent_skills);
+  // Derive agents to compile from profile agents keys
+  const agentNames = Object.keys(profileConfig.agents);
 
   for (const agentName of agentNames) {
     const definition = agentsConfig.agents[agentName];
     if (!definition) {
       throw new Error(
-        `Agent "${agentName}" in agent_skills but not found in agents.yaml`
+        `Agent "${agentName}" in profile config but not found in agents.yaml`
       );
     }
 
-    // Get profile-specific skill references and resolve them
-    const skillRefs = profileConfig.agent_skills[agentName];
-    const skills = resolveSkillReferences(skillRefs, skillsConfig);
+    // Get profile-specific agent config
+    const profileAgentConfig = profileConfig.agents[agentName];
 
-    // Merge definition with resolved skills
+    // Resolve skill references
+    const skills = resolveSkillReferences(
+      profileAgentConfig.precompiled,
+      profileAgentConfig.dynamic,
+      skillsConfig
+    );
+
+    // Merge definition with profile config
     resolved[agentName] = {
       name: agentName,
       title: definition.title,
       description: definition.description,
       model: definition.model,
       tools: definition.tools,
-      core_prompts: definition.core_prompts,
-      ending_prompts: definition.ending_prompts,
+      core_prompts: profileAgentConfig.core_prompts,
+      ending_prompts: profileAgentConfig.ending_prompts,
       output_format: definition.output_format,
       skills,
     };
@@ -178,6 +185,9 @@ async function validate(
     errors.push(`Core prompts directory missing or empty: ${corePromptsDir}`);
   }
 
+  // Collect all prompt names for validation
+  const allPromptNames = new Set<string>();
+
   // Check each resolved agent
   for (const [name, agent] of Object.entries(resolvedAgents)) {
     const agentDir = `${ROOT}/agent-sources/${name}`;
@@ -202,22 +212,9 @@ async function validate(
       }
     }
 
-    // Check core_prompts reference
-    if (!profileConfig.core_prompt_sets[agent.core_prompts]) {
-      errors.push(
-        `Invalid core_prompts reference "${agent.core_prompts}" for agent: ${name}`
-      );
-    }
-
-    // Check ending_prompts reference
-    if (
-      agent.ending_prompts &&
-      !profileConfig.ending_prompt_sets[agent.ending_prompts]
-    ) {
-      errors.push(
-        `Invalid ending_prompts reference "${agent.ending_prompts}" for agent: ${name}`
-      );
-    }
+    // Collect prompt names from this agent
+    agent.core_prompts.forEach((p) => allPromptNames.add(p));
+    agent.ending_prompts.forEach((p) => allPromptNames.add(p));
 
     // Check precompiled skill paths
     for (const skill of agent.skills.precompiled) {
@@ -252,27 +249,11 @@ async function validate(
     }
   }
 
-  // Check core prompt files exist
-  const allCorePrompts = new Set<string>();
-  for (const prompts of Object.values(profileConfig.core_prompt_sets)) {
-    prompts.forEach((p) => allCorePrompts.add(p));
-  }
-  for (const prompt of allCorePrompts) {
+  // Check all prompt files exist
+  for (const prompt of allPromptNames) {
     const promptPath = `${ROOT}/core-prompts/${prompt}.md`;
     if (!(await Bun.file(promptPath).exists())) {
       errors.push(`Core prompt not found: ${prompt}.md`);
-    }
-  }
-
-  // Check ending prompt files exist
-  const allEndingPrompts = new Set<string>();
-  for (const prompts of Object.values(profileConfig.ending_prompt_sets || {})) {
-    prompts.forEach((p) => allEndingPrompts.add(p));
-  }
-  for (const prompt of allEndingPrompts) {
-    const promptPath = `${ROOT}/core-prompts/${prompt}.md`;
-    if (!(await Bun.file(promptPath).exists())) {
-      errors.push(`Ending prompt not found: ${prompt}.md`);
     }
   }
 
@@ -333,9 +314,8 @@ async function compileAgent(
     ""
   );
 
-  // Read core prompts for this agent type
-  const corePromptNames = config.core_prompt_sets[agent.core_prompts] ?? [];
-  const corePromptsContent = await readCorePrompts(corePromptNames);
+  // Read core prompts for this agent (directly from agent config)
+  const corePromptsContent = await readCorePrompts(agent.core_prompts);
 
   // Read output format
   const outputFormat = await readFileOptional(
@@ -343,11 +323,8 @@ async function compileAgent(
     ""
   );
 
-  // Read ending prompts for this agent type (configured, not hardcoded)
-  const endingPromptNames = agent.ending_prompts
-    ? (config.ending_prompt_sets[agent.ending_prompts] ?? [])
-    : [];
-  const endingPromptsContent = await readCorePrompts(endingPromptNames);
+  // Read ending prompts for this agent (directly from agent config)
+  const endingPromptsContent = await readCorePrompts(agent.ending_prompts);
 
   // Read precompiled skills with their content
   const precompiledSkills = await readSkillsWithContent(
@@ -359,8 +336,8 @@ async function compileAgent(
   const formatPromptName = (n: string) =>
     n.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-  const formattedCorePromptNames = corePromptNames.map(formatPromptName);
-  const formattedEndingPromptNames = endingPromptNames.map(formatPromptName);
+  const formattedCorePromptNames = agent.core_prompts.map(formatPromptName);
+  const formattedEndingPromptNames = agent.ending_prompts.map(formatPromptName);
 
   // Prepare template data
   const data: CompiledAgentData = {
@@ -487,14 +464,16 @@ async function main(): Promise<void> {
 
   try {
     profileConfig = parseYaml(await readFile(configPath));
-    log(`Loaded profile config with ${Object.keys(profileConfig.agent_skills).length} agents`);
+    log(
+      `Loaded profile config with ${Object.keys(profileConfig.agents).length} agents`
+    );
   } catch (error) {
     console.error(`❌ Failed to load config: ${configPath}`);
     console.error(`   ${error}`);
     process.exit(1);
   }
 
-  // Resolve agents (merge definitions with profile skills)
+  // Resolve agents (merge definitions with profile config)
   let resolvedAgents: Record<string, AgentConfig>;
   try {
     resolvedAgents = resolveAgents(agentsConfig, profileConfig, skillsConfig);
@@ -507,7 +486,11 @@ async function main(): Promise<void> {
 
   // Validate
   console.log("🔍 Validating configuration...");
-  const validation = await validate(agentsConfig, profileConfig, resolvedAgents);
+  const validation = await validate(
+    agentsConfig,
+    profileConfig,
+    resolvedAgents
+  );
 
   if (validation.warnings.length > 0) {
     console.log("\n⚠️  Warnings:");
