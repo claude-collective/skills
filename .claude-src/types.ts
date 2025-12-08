@@ -65,15 +65,13 @@ export interface SkillReferenceAssignment {
 
 /**
  * Base agent definition from agents.yaml
- * Does NOT include skills - those are profile-specific
+ * Does NOT include skills or prompts - those are profile-specific
  */
 export interface AgentDefinition {
   title: string;
   description: string;
   model?: string;
   tools: string[];
-  core_prompts: string; // Key into core_prompt_sets (beginning prompts)
-  ending_prompts: string; // Key into ending_prompt_sets (end prompts)
   output_format: string; // Which output format file to use
 }
 
@@ -85,21 +83,29 @@ export interface AgentsConfig {
 }
 
 // =============================================================================
-// Profile Config Types (simplified - references agents by name)
+// Profile Config Types (agent-centric structure)
 // =============================================================================
 
 /**
- * Simplified profile configuration
- * No longer contains full agent definitions - references agents.yaml instead
- * Agents to compile are derived from the keys of agent_skills
+ * Profile-specific agent configuration
+ * Contains prompts and skills for a specific agent in this profile
+ */
+export interface ProfileAgentConfig {
+  core_prompts: string[]; // Prompt names for beginning of agent
+  ending_prompts: string[]; // Prompt names for end of agent
+  precompiled: SkillReference[]; // Skills compiled into agent
+  dynamic: SkillReference[]; // Skills loaded dynamically
+}
+
+/**
+ * Profile configuration
+ * Agents to compile are derived from the keys of `agents`
  */
 export interface ProfileConfig {
   name: string;
   description: string;
   claude_md: string;
-  core_prompt_sets: Record<string, string[]>;
-  ending_prompt_sets: Record<string, string[]>;
-  agent_skills: Record<string, SkillReferenceAssignment>; // Keys determine which agents to compile
+  agents: Record<string, ProfileAgentConfig>; // Keys determine which agents to compile
 }
 
 // =============================================================================
@@ -107,7 +113,7 @@ export interface ProfileConfig {
 // =============================================================================
 
 /**
- * Fully resolved agent config (agent definition + profile skills)
+ * Fully resolved agent config (agent definition + profile config)
  * This is what the compiler uses after merging agents.yaml with profile config
  */
 export interface AgentConfig {
@@ -116,8 +122,8 @@ export interface AgentConfig {
   description: string;
   model?: string;
   tools: string[];
-  core_prompts: string;
-  ending_prompts: string;
+  core_prompts: string[]; // Direct array of prompt names
+  ending_prompts: string[]; // Direct array of prompt names
   output_format: string;
   skills: SkillAssignment;
 }

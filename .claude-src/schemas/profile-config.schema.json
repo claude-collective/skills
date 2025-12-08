@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-subagents.local/schemas/profile-config.schema.json",
+  "title": "Profile Configuration",
+  "description": "Profile-specific configuration that determines which agents are compiled and how they are configured.",
+  "type": "object",
+  "required": ["name", "description", "claude_md", "agents"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Profile name (e.g., 'home', 'work')",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "examples": ["home", "work", "open-source"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the profile's purpose",
+      "minLength": 1,
+      "examples": ["Personal projects (SCSS/cva, Zustand, React Query)"]
+    },
+    "claude_md": {
+      "type": "string",
+      "description": "Relative path to the profile's CLAUDE.md file",
+      "pattern": "^\\./[a-zA-Z0-9._/-]+\\.md$",
+      "default": "./CLAUDE.md",
+      "examples": ["./CLAUDE.md"]
+    },
+    "agents": {
+      "type": "object",
+      "description": "Map of agent IDs to their profile-specific configuration",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(-[a-z0-9]+)*$": {
+          "$ref": "#/$defs/AgentConfig"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "AgentConfig": {
+      "type": "object",
+      "description": "Profile-specific configuration for a single agent",
+      "required": ["core_prompts", "ending_prompts", "precompiled", "dynamic"],
+      "additionalProperties": false,
+      "properties": {
+        "core_prompts": {
+          "type": "array",
+          "description": "Prompts that appear at the BEGINNING of the agent (before workflow)",
+          "items": {
+            "$ref": "#/$defs/PromptName"
+          }
+        },
+        "ending_prompts": {
+          "type": "array",
+          "description": "Prompts that appear at the END of the agent (after skills/examples)",
+          "items": {
+            "$ref": "#/$defs/PromptName"
+          }
+        },
+        "precompiled": {
+          "type": "array",
+          "description": "Skills compiled directly into the agent prompt (always available)",
+          "items": {
+            "$ref": "#/$defs/SkillReference"
+          }
+        },
+        "dynamic": {
+          "type": "array",
+          "description": "Skills available for dynamic loading by the agent",
+          "items": {
+            "$ref": "#/$defs/SkillReference"
+          }
+        }
+      }
+    },
+    "PromptName": {
+      "type": "string",
+      "description": "Name of a prompt file in core-prompts directory (without .md extension)",
+      "enum": [
+        "anti-over-engineering",
+        "context-management",
+        "core-principles",
+        "improvement-protocol",
+        "investigation-requirement",
+        "success-criteria-template",
+        "write-verification"
+      ]
+    },
+    "SkillReference": {
+      "type": "object",
+      "description": "Reference to a skill with context-specific usage",
+      "required": ["id", "usage"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/SkillId",
+          "description": "Skill ID from skills.yaml (format: category/name)"
+        },
+        "usage": {
+          "type": "string",
+          "description": "Context-specific description of when to use this skill",
+          "minLength": 1,
+          "examples": [
+            "when implementing React components",
+            "when reviewing API routes",
+            "when scoping features that involve authentication"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "description": "Override the skill's path for this profile (optional)",
+          "pattern": "^skills/[a-z][a-z0-9-]*/[a-z][a-z0-9-]*\\.md$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Override the skill's display name for this profile (optional)",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Override the skill's description for this profile (optional)",
+          "minLength": 1
+        }
+      }
+    },
+    "SkillId": {
+      "type": "string",
+      "description": "Skill ID in hierarchical kebab-case format (category/name)",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*/[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "examples": [
+        "frontend/react",
+        "frontend/styling",
+        "backend/api",
+        "backend/authentication",
+        "security/security",
+        "shared/reviewing",
+        "setup/monorepo"
+      ]
+    }
+  }
+}

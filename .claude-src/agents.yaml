@@ -1,5 +1,6 @@
+# yaml-language-server: $schema=./schemas/agents.schema.json
 # Single source of truth for all agent definitions
-# Profile configs reference these by name and add profile-specific skill assignments
+# Profile configs reference these by name and add profile-specific prompts and skill assignments
 
 agents:
   frontend-developer:
@@ -13,8 +14,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
     output_format: output-formats-developer
 
   backend-developer:
@@ -28,8 +27,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
     output_format: output-formats-developer
 
   frontend-reviewer:
@@ -43,8 +40,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: reviewer
-    ending_prompts: reviewer
     output_format: output-formats-reviewer
 
   backend-reviewer:
@@ -58,8 +53,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: reviewer
-    ending_prompts: reviewer
     output_format: output-formats-reviewer
 
   tester:
@@ -73,8 +66,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
     output_format: output-formats-tester
 
   pm:
@@ -88,8 +79,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: pm
-    ending_prompts: pm
     output_format: output-formats-pm
 
   skill-summoner:
@@ -104,8 +93,6 @@ agents:
       - Glob
       - WebSearch
       - WebFetch
-    core_prompts: summoner
-    ending_prompts: summoner
     output_format: output-formats-developer
 
   agent-summoner:
@@ -119,8 +106,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: summoner
-    ending_prompts: summoner
     output_format: output-formats-developer
 
   agent-migrator:
@@ -133,8 +118,6 @@ agents:
       - Edit
       - Grep
       - Glob
-    core_prompts: developer
-    ending_prompts: developer
     output_format: output-formats-developer
 
   pattern-scout:
@@ -146,8 +129,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: scout
-    ending_prompts: scout
     output_format: output-formats-developer
 
   pattern-critique:
@@ -161,8 +142,6 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: reviewer
-    ending_prompts: reviewer
     output_format: output-formats-critique
 
   documentor:
@@ -175,8 +154,6 @@ agents:
       - Glob
       - Grep
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
     output_format: output-formats-documentor
 
   architecture:
@@ -190,6 +167,4 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: architect
-    ending_prompts: architect
     output_format: output-formats-developer

@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-subagents.local/schemas/agents.schema.json",
+  "title": "Agents Configuration",
+  "description": "Single source of truth for all agent definitions. Profile configs reference these by name and add profile-specific prompts and skill assignments.",
+  "type": "object",
+  "required": ["agents"],
+  "additionalProperties": false,
+  "properties": {
+    "agents": {
+      "type": "object",
+      "description": "Map of agent IDs to their definitions",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(-[a-z0-9]+)*$": {
+          "$ref": "#/$defs/AgentDefinition"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "AgentDefinition": {
+      "type": "object",
+      "description": "Definition of a single agent",
+      "required": ["title", "description", "tools", "output_format"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Human-readable agent name",
+          "minLength": 1,
+          "examples": ["Frontend Developer Agent", "Backend Reviewer Agent"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Purpose and behavior of the agent - this is shown in the Task tool description",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "description": "Claude model to use for this agent",
+          "default": "opus",
+          "enum": ["opus", "sonnet", "haiku"]
+        },
+        "tools": {
+          "type": "array",
+          "description": "List of tools available to this agent",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ToolName"
+          }
+        },
+        "output_format": {
+          "$ref": "#/$defs/OutputFormat",
+          "description": "References core-prompts/{output_format}.md file for output formatting instructions"
+        }
+      }
+    },
+    "ToolName": {
+      "type": "string",
+      "description": "Valid Claude Code tool name",
+      "enum": [
+        "Read",
+        "Write",
+        "Edit",
+        "Grep",
+        "Glob",
+        "Bash",
+        "WebSearch",
+        "WebFetch"
+      ]
+    },
+    "OutputFormat": {
+      "type": "string",
+      "description": "Output format template name (must exist as core-prompts/{value}.md)",
+      "enum": [
+        "output-formats-developer",
+        "output-formats-reviewer",
+        "output-formats-tester",
+        "output-formats-pm",
+        "output-formats-critique",
+        "output-formats-documentor"
+      ]
+    }
+  }
+}
