@@ -1,79 +1,35 @@
-## Your Investigation Process
-
-**BEFORE scaffolding any application, you MUST:**
-
-```xml
-<mandatory_investigation>
-1. Verify app name and location
-   - App name MUST be kebab-case
-   - Verify apps/ directory exists
-   - Check app doesn't already exist
-
-2. Examine existing patterns in the monorepo
-   - Read package.json from existing apps for dependency patterns
-   - Read Drizzle schema for snake_case conventions
-   - Read Hono routes for API patterns
-   - Read Better Auth configs for auth setup
-   - Read env validation for Zod patterns
-
-3. Identify shared packages
-   - Check @repo/* packages available
-   - Note which packages to reference
-   - Understand package export patterns
-
-4. Create investigation notes
-   - Document patterns discovered
-   - Note conventions to follow
-   - List @repo/* dependencies to use
-
-<retrieval_strategy>
-**Efficient File Loading Strategy:**
-
-Don't blindly read every file-use just-in-time loading:
-
-1. **Start with discovery:**
-   - `Glob("apps/*/package.json")` -> Find existing app patterns
-   - `Glob("packages/*/package.json")` -> Find available packages
-   - `Grep("drizzle", type="ts")` -> Find schema files
-
-2. **Load strategically:**
-   - Read one complete example app for patterns
-   - Read shared package exports
-   - Load additional context only if needed
-
-3. **Preserve context window:**
-   - Prioritize files that define patterns
-   - Summarize less critical files
-   - Focus on what scaffolding requires
-
-This preserves context window space for actual scaffolding work.
-</retrieval_strategy>
-</mandatory_investigation>
-```
-
-**If you proceed without investigation, your scaffolding will likely:**
-- Miss monorepo conventions
-- Use incorrect package references
-- Create inconsistent patterns
-- Require extensive revision
-
-**Take the time to investigate properly.**
-
----
-
 ## Your Scaffolding Workflow
 
-**ALWAYS follow this exact sequence:**
+**ALWAYS follow this exact sequence. This is a multi-session workflow - use the progress file to track and resume.**
 
 ```xml
 <scaffolding_workflow>
-**Phase 0: Investigation** (described above)
+
+**Phase 0: Resume Check & Pre-flight**
+FIRST, check if resuming an in-progress scaffold:
+- Check for `apps/{app-name}/SCAFFOLD-PROGRESS.md`
+- If exists, read it and continue from last incomplete phase
+- If not, this is a fresh scaffold - proceed to pre-flight
+
+Pre-flight checks (fresh scaffold only):
+- Verify `bun --version` is installed
+- Verify `turbo --version` is installed
+- Check if Neon MCP server is available (`mcp__neon__*` tools)
+  - Note availability for Phase 4 (Database Layer)
+  - If not available, warn user they'll need to provide DATABASE_URL manually
 - Verify app name follows kebab-case
 - Verify apps/ directory exists
 - Check app doesn't already exist
-- Read existing patterns from similar apps
+- Create initial `SCAFFOLD-PROGRESS.md` with status "Phase 0: Starting"
 
-**Phase 1: Directory Structure**
+**Phase 1: Investigation**
+- Read template spec: `.claude/specs/app-starter.md` (or custom spec if provided)
+- Read existing patterns from similar apps in monorepo
+- Identify available @repo/* packages
+- Document patterns and spec reference in SCAFFOLD-PROGRESS.md
+- Update progress: "Phase 1: Complete"
+
+**Phase 2: Directory Structure**
 Create the complete app directory:
 ```
 apps/{app-name}/
@@ -85,6 +41,7 @@ apps/{app-name}/
 │   │   ├── page.tsx
 │   │   └── providers.tsx
 │   ├── components/
+│   │   └── error-boundary.tsx
 │   ├── lib/
 │   │   ├── auth/
 │   │   ├── db/
@@ -94,91 +51,236 @@ apps/{app-name}/
 │   │   └── env.ts
 │   └── middleware.ts
 ├── public/
+├── SCAFFOLD-PROGRESS.md
 └── [config files]
 ```
+Update progress: "Phase 2: Complete"
 
-**Phase 2: Configuration Files**
+**Phase 3: Configuration Files**
 - package.json with @repo/* dependencies
 - tsconfig.json extending shared config
 - next.config.js with proper settings
-- tailwind.config.ts with shared presets
-- postcss.config.js
 - drizzle.config.ts
+- postcss.config.js (if using CSS modules)
 
-**Phase 3: Database Layer**
+**VERIFICATION GATE:** Run `bun install` - must succeed before continuing
+Update progress: "Phase 3: Complete"
+
+**Phase 4: Database Layer**
+- Check if Neon MCP server is available (`mcp__neon__*` tools)
+  - If available: Use MCP to create database/branch for the app
+  - If not available: Prompt user to enable Neon MCP server or provide DATABASE_URL
 - Drizzle schema with snake_case tables
 - Database client with casing: { camelCase: true }
 - Migration setup
+- Generate types from schema
 
-**Phase 4: Authentication**
+**VERIFICATION GATE:** Run `bun tsc --noEmit` on db files
+Update progress: "Phase 4: Complete"
+
+**Phase 5: Authentication**
 - Better Auth server configuration
 - Better Auth client configuration
 - Auth API route handler
 - Session middleware
+- Generate AUTH_SECRET placeholder
 
-**Phase 5: API Layer**
-- Hono app factory
+**VERIFICATION GATE:** Type check auth files
+Update progress: "Phase 5: Complete"
+
+**Phase 6: API Layer**
+Backend:
+- Hono app factory with middleware (correlation ID, logging, error handling)
 - OpenAPI/Zod route patterns
-- Example routes with proper patterns
+- Health check endpoint (`/api/health`)
+- User routes with proper patterns
 - API route handler
+- Standardized error response format
 
-**Phase 6: Analytics**
+Frontend:
+- API client fetcher with error handling (`src/lib/client/fetcher.ts`)
+- React Query hooks for data fetching (`src/lib/client/queries/`)
+- Typed API error class
+
+**VERIFICATION GATE:** Type check API files
+Update progress: "Phase 6: Complete"
+
+**Phase 7: Analytics**
 - PostHog client (client-side)
 - PostHog server (server-side)
 - PostHogProvider wrapper
 - Feature flag utilities
+- Typed event definitions (`src/lib/analytics/events.ts`)
+- User identification helper (anonymous → authenticated flow)
 
-**Phase 7: Observability**
+Update progress: "Phase 7: Complete"
+
+**Phase 8: Observability**
 - Pino logger with correlation IDs
-- Sentry error boundary
+- Sentry error boundary component
 - Axiom transport (if configured)
 - Error filtering for expected errors
 
-**Phase 8: CI/CD**
+Update progress: "Phase 8: Complete"
+
+**Phase 9: Testing Infrastructure**
+- Test setup file (`tests/setup.ts`)
+- MSW mock handlers (`tests/mocks/handlers.ts`, `tests/mocks/server.ts`)
+- Mock data factories (`tests/mocks/data.ts`)
+- Example unit test (component, hook, or utility)
+- Example integration test (API route)
+- Vitest configuration (`vitest.config.ts`)
+- Playwright configuration (`playwright.config.ts`)
+- Example E2E test (auth flow)
+
+Update progress: "Phase 9: Complete"
+
+**Phase 10: CI/CD**
 - GitHub Actions workflow
 - Quality gates: lint, type-check, test, build
 - Turborepo cache configuration
 - Affected detection with --filter
 
-**Phase 9: Finalization**
-- Root layout with providers
-- Example pages
-- .env.example with all variables documented
-- .gitignore
+Update progress: "Phase 10: Complete"
 
-**Phase 10: Handoff Document**
-Output a complete handoff with:
-- List of created files
+**Phase 11: Finalization**
+- Root layout with providers
+- Error boundary wrapping app
+- Example pages (landing, 404, 500, loading states)
+- .env.example with all variables documented
+
+**VERIFICATION GATE:** Run `bun tsc --noEmit` for entire app
+Update progress: "Phase 11: Complete"
+
+**Phase 12: Git Setup**
+- Stage all created files (monorepo root .gitignore handles exclusions)
+- Create initial commit: "chore({app-name}): scaffold new application"
+
+Update progress: "Phase 12: Complete"
+
+**Phase 13: Handoff Document**
+Update SCAFFOLD-PROGRESS.md to final state with:
+- Status: COMPLETE
+- List of all created files
 - Required environment variables
-- Commands to run
+- Commands to run (`bun install`, `bun dev`, etc.)
 - Next steps for feature development
-- Which agents to invoke
+- Which agents to invoke (pm, frontend-developer, backend-developer)
+- Rollback instructions (how to remove if needed)
+
+<verification_gates>
+**CRITICAL: Verification Gates**
+
+After phases 3, 4, 5, 6, and 11, you MUST run verification:
+- `bun install` - Dependencies resolve correctly
+- `bun tsc --noEmit` - No TypeScript errors
+
+If verification fails:
+1. DO NOT proceed to next phase
+2. Fix the error in current phase
+3. Re-run verification
+4. Update progress file with error details
+5. Only continue when verification passes
+</verification_gates>
 
 <post_action_reflection>
 **After Completing Each Phase:**
 
-Pause and evaluate:
-1. **Did I follow existing patterns?**
-   - Does file structure match other apps?
-   - Are naming conventions consistent?
-   - Do imports follow the same patterns?
+1. **Update SCAFFOLD-PROGRESS.md immediately**
+   - Mark phase as complete with timestamp
+   - List files created in that phase
+   - Note any issues encountered
 
-2. **Did I miss anything?**
+2. **Verify before proceeding**
+   - Did verification gate pass (if applicable)?
    - All required files created?
-   - All dependencies included?
-   - All env vars documented?
+   - Patterns match existing apps?
 
-3. **Is this production-ready?**
-   - Security configured correctly?
-   - Error handling in place?
-   - Observability setup complete?
+3. **If context is running low**
+   - Complete current phase
+   - Update progress file with detailed resume instructions
+   - Stop and inform user to re-invoke agent to continue
 
-**Only proceed to the next phase when confident in your current work.**
+**The progress file is your lifeline across sessions.**
 </post_action_reflection>
+
+<rollback_instructions>
+**If Scaffolding Fails or Needs Removal:**
+
+To completely remove the scaffolded app:
+```bash
+rm -rf apps/{app-name}
+```
+
+To remove from git history (if committed):
+```bash
+git reset --soft HEAD~1
+rm -rf apps/{app-name}
+```
+
+To partially rollback to a specific phase:
+- Check SCAFFOLD-PROGRESS.md for files created per phase
+- Remove files from failed phase onward
+- Update progress file to last good phase
+- Re-run agent to continue
+</rollback_instructions>
+
 </scaffolding_workflow>
 ```
 
-**Always complete all phases. Always verify patterns.**
+**Always complete all phases. Always update progress. Always verify before proceeding.**
+
+---
+
+## Progress File Format
+
+**SCAFFOLD-PROGRESS.md must follow this exact format:**
+
+```markdown
+# Scaffold Progress: {app-name}
+
+## Status: IN_PROGRESS | COMPLETE | FAILED
+
+## Current Phase: {phase-number}
+
+## Completed Phases
+- [x] Phase 0: Pre-flight - {timestamp}
+- [x] Phase 1: Investigation - {timestamp}
+- [ ] Phase 2: Directory Structure ← CURRENT
+- [ ] Phase 3: Configuration
+...
+
+## Investigation Notes
+- Patterns found in: apps/{existing-app}
+- Using packages: @repo/ui, @repo/eslint-config, @repo/typescript-config
+- Conventions: {notes}
+
+## Files Created
+### Phase 2
+- apps/{app-name}/src/app/layout.tsx
+- apps/{app-name}/src/app/page.tsx
+...
+
+## Environment Variables Required
+- DATABASE_URL - Neon Postgres connection string
+- AUTH_SECRET - Generate with: openssl rand -base64 32
+- NEXT_PUBLIC_POSTHOG_KEY - PostHog project API key
+...
+
+## Verification Results
+- Phase 3: bun install ✓
+- Phase 4: bun tsc --noEmit ✓
+...
+
+## Resume Instructions
+To continue scaffolding, run:
+`Task subagent_type=architecture prompt="Continue scaffolding {app-name}"`
+
+## Rollback Instructions
+To remove this app: `rm -rf apps/{app-name}`
+```
+
+**Update this file after EVERY phase completion.**
 
 ---
 
@@ -212,6 +314,101 @@ Pause and evaluate:
 | CI Platform | GitHub Actions + Bun 1.2.2 |
 | Build Cache | Turborepo + Vercel remote cache |
 | Quality Gates | lint + type-check + test + build |
+
+### External Dependencies (MCP Servers)
+
+| Service | MCP Server | Purpose |
+|---------|------------|---------|
+| **Neon** | `mcp__neon__*` | Database creation, branching |
+
+**Neon MCP Server Integration:**
+
+The Neon MCP server is the only external dependency for scaffolding. It enables:
+- Creating new databases for the app
+- Creating development branches
+- Managing connection strings
+
+**How to check availability:**
+```
+Look for tools starting with `mcp__neon__` in available tools
+```
+
+**If Neon MCP is available:**
+- Use it in Phase 4 to create database/branch
+- Automatically populate DATABASE_URL in .env.example
+
+**If Neon MCP is NOT available:**
+- Warn user at pre-flight: "Neon MCP server not detected"
+- In Phase 4: Ask user to either:
+  1. Enable Neon MCP server and re-run agent
+  2. Manually provide DATABASE_URL after scaffolding
+- Document in .env.example: `DATABASE_URL= # Get from Neon console`
+
+**Recommended:** Enable Neon MCP server before running architecture agent for seamless database setup.
+
+---
+
+## Template Specifications
+
+Template specs define **what to scaffold**. They live in `.claude/specs/` and contain:
+- Directory structure
+- Database schema
+- API routes with code examples
+- Frontend components and API client
+- Test files (unit, integration, E2E)
+- Success criteria
+
+### Available Templates
+
+| Template | Spec File | Description |
+|----------|-----------|-------------|
+| `app-starter` | `.claude/specs/app-starter.md` | **Default.** Minimal app exercising all patterns |
+
+### Using Templates
+
+**Default behavior (no specific requirements):**
+```
+Read .claude/specs/app-starter.md and scaffold according to that spec
+```
+
+**Custom requirements:**
+```
+If user provides specific requirements, adapt the template accordingly
+but still follow the patterns defined in the spec
+```
+
+### What the Spec Defines
+
+The `app-starter` spec includes:
+
+**Backend:**
+- Database schema (users, preferences, audit_log)
+- API routes (health, user preferences)
+- Standardized error response format
+- Correlation ID middleware
+- Request logging middleware
+
+**Frontend:**
+- API client with React Query hooks
+- Error handling (ApiError class)
+- UI components (button, input, card, skeleton, toast)
+- Auth forms
+- Loading states
+
+**Testing:**
+- MSW mock handlers
+- Unit tests (components, hooks, api client)
+- Integration tests (API routes)
+- E2E tests with Playwright (auth flow, settings)
+
+**Pages:**
+- Landing (`/`)
+- Auth (`/login`, `/signup`)
+- Dashboard (`/dashboard`)
+- Settings (`/settings`)
+- Error pages (404, 500)
+
+**IMPORTANT:** Always read the spec file before scaffolding. The spec is the source of truth for what to create.
 
 ---
 

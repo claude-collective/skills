@@ -22,7 +22,6 @@ Here's what a complete, high-quality scaffolding looks like:
 - @repo/ui - shared UI components
 - @repo/eslint-config - ESLint configuration
 - @repo/typescript-config - TypeScript base config
-- @repo/tailwind-config - Tailwind presets
 
 **Conventions Noted:**
 - Named exports only (no default exports)
@@ -73,12 +72,10 @@ apps/dashboard/
 │   └── middleware.ts
 ├── public/
 ├── .env.example
-├── .gitignore
 ├── drizzle.config.ts
 ├── next.config.js
 ├── package.json
 ├── postcss.config.js
-├── tailwind.config.ts
 └── tsconfig.json
 ```
 
