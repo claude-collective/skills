@@ -8,15 +8,15 @@ argument-hint: [path-to-submission-folder OR github-url]
 
 ## Grading System Documents
 
-!`cat docs/frontend-review-index.md`
+!`cat /Users/vincentbollaert/dev/photoroom.com/apps/webapp/.ai-docs/_review-assignment/frontend-review-index.md`
 
-!`cat docs/frontend-assignment-grading-bible.md`
+!`cat /Users/vincentbollaert/dev/photoroom.com/apps/webapp/.ai-docs/_review-assignment/frontend-assignment-grading-bible.md`
 
-!`cat docs/scoring-decision-tree-insert.md`
+!`cat /Users/vincentbollaert/dev/photoroom.com/apps/webapp/.ai-docs/_review-assignment/scoring-decision-tree-insert.md`
 
-!`cat docs/grading-bible-conflicts.md`
+!`cat /Users/vincentbollaert/dev/photoroom.com/apps/webapp/.ai-docs/_review-assignment/grading-bible-conflicts.md`
 
-!`cat docs/writing-style-guide.md`
+!`cat /Users/vincentbollaert/dev/photoroom.com/apps/webapp/.ai-docs/_review-assignment/writing-style-guide.md`
 
 ## Submission Location
 
@@ -68,26 +68,30 @@ Structure your review exactly as follows:
 ## Candidate Review: [Name/ID]
 
 ### Summary
+
 [2-3 sentences on overall impression]
 
 ### Score Breakdown
 
-| Feature | Score | Max | Notes |
-|---------|-------|-----|-------|
-| Persistence + Delete | X.X | 1.2 | |
-| Nested Folders | X.X | 1.2 | |
-| Select Component | X.X | 0.8 | |
-| Code Quality | X.X | 0.6 | |
-| Range Selection | X.X | 0.2 | |
-| **Total** | **X.X** | **4.0** | |
+| Feature              | Score   | Max     | Notes |
+| -------------------- | ------- | ------- | ----- |
+| Persistence + Delete | X.X     | 1.2     |       |
+| Nested Folders       | X.X     | 1.2     |       |
+| Select Component     | X.X     | 0.8     |       |
+| Code Quality         | X.X     | 0.6     |       |
+| Range Selection      | X.X     | 0.2     |       |
+| **Total**            | **X.X** | **4.0** |       |
 
 ### Strengths
+
 - [specific examples with file:line references]
 
 ### Areas for Improvement
+
 - [specific recommendations]
 
 ### Code Quality Observations
+
 [MobX patterns, React patterns, TypeScript usage]
 
 ### Recommendation
@@ -97,7 +101,9 @@ Structure your review exactly as follows:
 [Brief justification for recommendation]
 
 ### Questions for Review Call
+
 (if applicable - score 2.5-3.4)
+
 - [specific technical questions to clarify]
 
 ---
