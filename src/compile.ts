@@ -6,8 +6,9 @@
  * - TypeScript handles file reading, path resolution, template composition, and validation
  * - LiquidJS handles simple variable interpolation and loops within templates
  *
- * Architecture:
- * - registry.yaml: Single source of truth for agent and skill definitions
+ * Architecture (Phase 0A - Co-located Config):
+ * - agent.yaml: Co-located in each agent folder (src/agent-sources/{agent}/agent.yaml)
+ * - skill.yaml: Co-located in each skill folder (src/skills/{category}/{subcategory}/{skill}/skill.yaml)
  * - profiles/{profile}/config.yaml: Agent-centric config with prompts and skills per agent
  *
  * Usage:
@@ -20,12 +21,14 @@ import { parse as parseYaml } from "yaml";
 import type {
   AgentConfig,
   AgentDefinition,
+  AgentYamlConfig,
   CompiledAgentData,
   ProfileConfig,
   ProfileAgentConfig,
-  RegistryConfig,
   Skill,
+  SkillDefinition,
   SkillReference,
+  SkillYamlConfig,
   StackConfig,
   ValidationResult,
 } from "./types";
@@ -78,16 +81,111 @@ function log(message: string): void {
 }
 
 // =============================================================================
-// Skill Resolution (merge registry.yaml skills + profile skill references)
+// Directory Scanning (Phase 0A - replaces registry.yaml)
+// =============================================================================
+
+/**
+ * Load all agents by scanning src/agent-sources/{agentId}/agent.yaml
+ * Returns a map of agent ID to AgentDefinition (same structure as registry.yaml)
+ */
+async function loadAllAgents(): Promise<Record<string, AgentDefinition>> {
+  const agents: Record<string, AgentDefinition> = {};
+  const glob = new Bun.Glob("*/agent.yaml");
+  const agentSourcesDir = `${ROOT}/agent-sources`;
+
+  for await (const path of glob.scan({ cwd: agentSourcesDir })) {
+    const fullPath = `${agentSourcesDir}/${path}`;
+    const content = await readFile(fullPath);
+    const config = parseYaml(content) as AgentYamlConfig;
+
+    // Convert to AgentDefinition format (matching registry.yaml structure)
+    agents[config.id] = {
+      title: config.title,
+      description: config.description,
+      model: config.model,
+      tools: config.tools,
+      output_format: config.output_format,
+    };
+
+    log(`Loaded agent: ${config.id} from ${path}`);
+  }
+
+  return agents;
+}
+
+/**
+ * Load all skills by scanning src/skills/{category}/{subcategory}/{skillId}/skill.yaml
+ * Returns a map of skill ID to SkillDefinition (same structure as registry.yaml)
+ */
+async function loadAllSkills(): Promise<Record<string, SkillDefinition>> {
+  const skills: Record<string, SkillDefinition> = {};
+  const glob = new Bun.Glob("**/skill.yaml");
+  const skillsDir = `${ROOT}/skills`;
+
+  for await (const path of glob.scan({ cwd: skillsDir })) {
+    const fullPath = `${skillsDir}/${path}`;
+    const content = await readFile(fullPath);
+    const config = parseYaml(content) as SkillYamlConfig;
+
+    // Derive path from file location (relative to src/)
+    // path is like "frontend/styling/scss-modules (@vince)/skill.yaml"
+    // We want "skills/frontend/styling/scss-modules (@vince)/"
+    const folderPath = path.replace("/skill.yaml", "");
+    const skillPath = `skills/${folderPath}/`;
+
+    // Parse path segments to extract category and skill name
+    // Path: "frontend/styling/scss-modules (@vince)"
+    // -> mainCategory: "frontend"
+    // -> folderName: "scss-modules (@vince)"
+    const segments = folderPath.split("/");
+    const mainCategory = segments[0]; // e.g., "frontend", "backend", "setup"
+    const folderName = segments[segments.length - 1]; // e.g., "scss-modules (@vince)"
+
+    // Extract skill name and publisher from folder name
+    // Folder name like "scss-modules (@vince)" -> skillName: "scss-modules", publisher: "vince"
+    const folderMatch = folderName.match(/^(.+?)\s*\(@(\w+)\)$/);
+    let skillName: string;
+    let publisher: string | undefined;
+
+    if (folderMatch) {
+      skillName = folderMatch[1].trim();
+      publisher = folderMatch[2];
+    } else {
+      skillName = folderName;
+      publisher = undefined;
+    }
+
+    // Construct the skill ID to match registry.yaml key format
+    // Registry format: "category/skill-name (@publisher)"
+    // Example: "frontend/scss-modules (@vince)"
+    const skillId = publisher
+      ? `${mainCategory}/${skillName} (@${publisher})`
+      : `${mainCategory}/${skillName}`;
+
+    // Convert to SkillDefinition format (matching registry.yaml structure)
+    skills[skillId] = {
+      path: skillPath,
+      name: config.name,
+      description: config.description,
+    };
+
+    log(`Loaded skill: ${skillId} from ${path}`);
+  }
+
+  return skills;
+}
+
+// =============================================================================
+// Skill Resolution
 // =============================================================================
 
 function resolveSkillReference(
   ref: SkillReference,
-  registry: RegistryConfig
+  skills: Record<string, SkillDefinition>
 ): Skill {
-  const definition = registry.skills[ref.id];
+  const definition = skills[ref.id];
   if (!definition) {
-    throw new Error(`Skill "${ref.id}" not found in registry.yaml`);
+    throw new Error(`Skill "${ref.id}" not found in scanned skills`);
   }
   return {
     id: ref.id,
@@ -99,10 +197,10 @@ function resolveSkillReference(
 }
 
 function resolveSkillReferences(
-  skills: SkillReference[],
-  registry: RegistryConfig
+  skillRefs: SkillReference[],
+  skills: Record<string, SkillDefinition>
 ): Skill[] {
-  return skills.map((ref) => resolveSkillReference(ref, registry));
+  return skillRefs.map((ref) => resolveSkillReference(ref, skills));
 }
 
 // =============================================================================
@@ -141,19 +239,19 @@ async function loadStack(stackId: string): Promise<StackConfig> {
  */
 function resolveStackSkills(
   stack: StackConfig,
-  registry: RegistryConfig
+  skills: Record<string, SkillDefinition>
 ): SkillReference[] {
   const skillRefs: SkillReference[] = [];
 
   for (const [category, skillId] of Object.entries(stack.skills)) {
-    // Validate skill exists in registry
-    if (!registry.skills[skillId]) {
+    // Validate skill exists
+    if (!skills[skillId]) {
       throw new Error(
-        `Stack "${stack.id}" references skill "${skillId}" (category: ${category}) not found in registry`
+        `Stack "${stack.id}" references skill "${skillId}" (category: ${category}) not found in scanned skills`
       );
     }
 
-    const skillDef = registry.skills[skillId];
+    const skillDef = skills[skillId];
     skillRefs.push({
       id: skillId,
       usage: `when working with ${skillDef.name.toLowerCase()} (${category})`,
@@ -171,7 +269,7 @@ async function getAgentSkills(
   agentName: string,
   profileAgentConfig: ProfileAgentConfig,
   profileConfig: ProfileConfig,
-  registry: RegistryConfig
+  skills: Record<string, SkillDefinition>
 ): Promise<SkillReference[]> {
   // If agent has explicit skills defined, use those
   if (profileAgentConfig.skills && profileAgentConfig.skills.length > 0) {
@@ -182,7 +280,7 @@ async function getAgentSkills(
   if (profileConfig.stack) {
     console.log(`  📦 Resolving skills from stack "${profileConfig.stack}" for ${agentName}`);
     const stack = await loadStack(profileConfig.stack);
-    return resolveStackSkills(stack, registry);
+    return resolveStackSkills(stack, skills);
   }
 
   // No skills defined and no stack - return empty array
@@ -190,11 +288,12 @@ async function getAgentSkills(
 }
 
 // =============================================================================
-// Agent Resolution (merge registry.yaml agents + profile config)
+// Agent Resolution (merge scanned agents + profile config)
 // =============================================================================
 
 async function resolveAgents(
-  registry: RegistryConfig,
+  agents: Record<string, AgentDefinition>,
+  skills: Record<string, SkillDefinition>,
   profileConfig: ProfileConfig
 ): Promise<Record<string, AgentConfig>> {
   const resolved: Record<string, AgentConfig> = {};
@@ -203,10 +302,10 @@ async function resolveAgents(
   const agentNames = Object.keys(profileConfig.agents);
 
   for (const agentName of agentNames) {
-    const definition = registry.agents[agentName];
+    const definition = agents[agentName];
     if (!definition) {
       throw new Error(
-        `Agent "${agentName}" in profile config but not found in registry.yaml`
+        `Agent "${agentName}" in profile config but not found in scanned agents`
       );
     }
 
@@ -218,11 +317,11 @@ async function resolveAgents(
       agentName,
       profileAgentConfig,
       profileConfig,
-      registry
+      skills
     );
 
     // Resolve skill references to full skill objects
-    const skills = resolveSkillReferences(skillRefs, registry);
+    const resolvedSkills = resolveSkillReferences(skillRefs, skills);
 
     // Merge definition with profile config
     resolved[agentName] = {
@@ -234,7 +333,7 @@ async function resolveAgents(
       core_prompts: profileAgentConfig.core_prompts,
       ending_prompts: profileAgentConfig.ending_prompts,
       output_format: definition.output_format,
-      skills,
+      skills: resolvedSkills,
     };
   }
 
@@ -246,7 +345,6 @@ async function resolveAgents(
 // =============================================================================
 
 async function validate(
-  registry: RegistryConfig,
   profileConfig: ProfileConfig,
   resolvedAgents: Record<string, AgentConfig>
 ): Promise<ValidationResult> {
@@ -565,19 +663,12 @@ async function compileAllCommands(): Promise<void> {
 async function main(): Promise<void> {
   console.log(`\n🚀 Compiling profile: ${PROFILE}\n`);
 
-  // Load registry.yaml (single source of truth for agent and skill definitions)
-  const registryPath = `${ROOT}/registry.yaml`;
-  let registry: RegistryConfig;
-
-  try {
-    registry = parseYaml(await readFile(registryPath));
-    log(`Loaded ${Object.keys(registry.agents).length} agent definitions`);
-    log(`Loaded ${Object.keys(registry.skills).length} skill definitions`);
-  } catch (error) {
-    console.error(`❌ Failed to load registry.yaml: ${registryPath}`);
-    console.error(`   ${error}`);
-    process.exit(1);
-  }
+  // Load agents and skills from co-located config (Phase 0A)
+  console.log("📂 Scanning directories for config...");
+  const agents = await loadAllAgents();
+  const skills = await loadAllSkills();
+  console.log(`  ✓ Loaded ${Object.keys(agents).length} agents`);
+  console.log(`  ✓ Loaded ${Object.keys(skills).length} skills\n`);
 
   // Load profile config
   const configPath = `${ROOT}/profiles/${PROFILE}/config.yaml`;
@@ -597,7 +688,7 @@ async function main(): Promise<void> {
   // Resolve agents (merge definitions with profile config)
   let resolvedAgents: Record<string, AgentConfig>;
   try {
-    resolvedAgents = await resolveAgents(registry, profileConfig);
+    resolvedAgents = await resolveAgents(agents, skills, profileConfig);
     log(`Resolved ${Object.keys(resolvedAgents).length} agents for profile`);
   } catch (error) {
     console.error(`❌ Failed to resolve agents:`);
@@ -608,7 +699,6 @@ async function main(): Promise<void> {
   // Validate
   console.log("🔍 Validating configuration...");
   const validation = await validate(
-    registry,
     profileConfig,
     resolvedAgents
   );

@@ -187,3 +187,33 @@ export interface StackMetrics {
   upvotes?: number;
   downloads?: number;
 }
+
+// =============================================================================
+// Co-located Config Types (Phase 0A - replaces registry.yaml)
+// =============================================================================
+
+/**
+ * Agent configuration from agent.yaml (co-located in each agent folder)
+ */
+export interface AgentYamlConfig {
+  id: string;
+  title: string;
+  description: string;
+  model?: string;
+  tools: string[];
+  output_format: string;
+}
+
+/**
+ * Skill configuration from skill.yaml (co-located in each skill folder)
+ */
+export interface SkillYamlConfig {
+  id: string;
+  name: string;
+  description: string;
+  category?: string;
+  category_exclusive?: boolean;
+  author?: string;
+  version?: string;
+  tags?: string[];
+}

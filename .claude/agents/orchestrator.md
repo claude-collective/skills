@@ -172,19 +172,19 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 ### frontend/scss-modules (@vince)
 - Description: SCSS Modules, cva, design tokens
 - Invoke: `skill: "frontend/scss-modules (@vince)"`
-- Use when: when working with scss modules (styling)
+- Use when: when working with styling (styling)
 
 
 ### frontend/zustand (@vince)
 - Description: Zustand stores, React Query integration
 - Invoke: `skill: "frontend/zustand (@vince)"`
-- Use when: when working with zustand (state)
+- Use when: when working with client state (state)
 
 
 ### frontend/react-query (@vince)
 - Description: REST APIs, React Query, data fetching
 - Invoke: `skill: "frontend/react-query (@vince)"`
-- Use when: when working with react query (data-fetching)
+- Use when: when working with api integration (data-fetching)
 
 
 ### frontend/accessibility (@vince)
@@ -196,55 +196,55 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 ### frontend/performance (@vince)
 - Description: Bundle optimization, render performance
 - Invoke: `skill: "frontend/performance (@vince)"`
-- Use when: when working with frontend performance (performance)
+- Use when: when working with performance (performance)
 
 
 ### frontend/vitest (@vince)
 - Description: Playwright E2E, Vitest, React Testing Library
 - Invoke: `skill: "frontend/vitest (@vince)"`
-- Use when: when working with vitest (testing)
+- Use when: when working with frontend testing (testing)
 
 
 ### frontend/msw (@vince)
 - Description: MSW handlers, browser/server workers, test data
 - Invoke: `skill: "frontend/msw (@vince)"`
-- Use when: when working with msw (mocking)
+- Use when: when working with mocking (mocking)
 
 
 ### backend/hono (@vince)
 - Description: Hono routes, OpenAPI, Zod validation
 - Invoke: `skill: "backend/hono (@vince)"`
-- Use when: when working with hono (api)
+- Use when: when working with backend api (api)
 
 
 ### backend/drizzle (@vince)
 - Description: Drizzle ORM, queries, migrations
 - Invoke: `skill: "backend/drizzle (@vince)"`
-- Use when: when working with drizzle (database)
+- Use when: when working with database (database)
 
 
 ### backend/better-auth (@vince)
 - Description: Better Auth patterns, sessions, OAuth
 - Invoke: `skill: "backend/better-auth (@vince)"`
-- Use when: when working with better auth (authentication)
+- Use when: when working with authentication (authentication)
 
 
 ### backend/posthog-analytics (@vince)
 - Description: PostHog event tracking, user identification
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
-- Use when: when working with posthog analytics (analytics)
+- Use when: when working with analytics (analytics)
 
 
 ### backend/posthog-flags (@vince)
 - Description: PostHog feature flags, rollouts, A/B testing
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
-- Use when: when working with posthog flags (feature-flags)
+- Use when: when working with feature flags (feature-flags)
 
 
 ### backend/resend (@vince)
 - Description: Resend + React Email templates
 - Invoke: `skill: "backend/resend (@vince)"`
-- Use when: when working with resend (email)
+- Use when: when working with email (email)
 
 
 ### backend/observability (@vince)
@@ -256,7 +256,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 ### backend/github-actions (@vince)
 - Description: GitHub Actions, pipelines, deployment
 - Invoke: `skill: "backend/github-actions (@vince)"`
-- Use when: when working with github actions (ci-cd)
+- Use when: when working with ci/cd (ci-cd)
 
 
 ### security/security (@vince)
@@ -268,7 +268,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 ### setup/turborepo (@vince)
 - Description: Turborepo, workspaces, package architecture
 - Invoke: `skill: "setup/turborepo (@vince)"`
-- Use when: when working with turborepo (monorepo)
+- Use when: when working with monorepo (monorepo)
 
 
 ### setup/package (@vince)
