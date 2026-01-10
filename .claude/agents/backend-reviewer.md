@@ -126,7 +126,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### shared/reviewing (@vince)
-- Description: Code review patterns, feedback principles
+- Description: Code review patterns, feedback principles. Use when reviewing PRs, implementations, or making approval/rejection decisions. Covers self-correction, progress tracking, feedback principles, severity levels.
 - Invoke: `skill: "shared/reviewing (@vince)"`
 - Use when: when reviewing code
 
@@ -138,7 +138,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### security/security (@vince)
-- Description: Authentication, authorization, secrets
+- Description: Authentication, authorization, secrets management, XSS prevention, CSRF protection, Dependabot configuration, vulnerability scanning, DOMPurify sanitization, CSP headers, CODEOWNERS, HttpOnly cookies
 - Invoke: `skill: "security/security (@vince)"`
 - Use when: when reviewing security implementations
 
@@ -162,13 +162,13 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/posthog-analytics (@vince)
-- Description: PostHog event tracking, user identification
+- Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
 - Use when: when reviewing analytics implementations
 
 
 ### backend/posthog-flags (@vince)
-- Description: PostHog feature flags, rollouts, A/B testing
+- Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
 - Use when: when reviewing feature flag implementations
 
@@ -180,7 +180,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/observability (@vince)
-- Description: Pino logging, Sentry error tracking, Axiom
+- Description: Pino logging, Sentry error tracking, Axiom - structured logging with correlation IDs, error boundaries, performance monitoring, alerting
 - Invoke: `skill: "backend/observability (@vince)"`
 - Use when: when reviewing logging or error handling implementations
 

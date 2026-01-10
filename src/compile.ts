@@ -6,9 +6,10 @@
  * - TypeScript handles file reading, path resolution, template composition, and validation
  * - LiquidJS handles simple variable interpolation and loops within templates
  *
- * Architecture (Phase 0A - Co-located Config):
+ * Architecture (Phase 0B - SKILL.md as Source of Truth):
  * - agent.yaml: Co-located in each agent folder (src/agent-sources/{agent}/agent.yaml)
- * - skill.yaml: Co-located in each skill folder (src/skills/{category}/{subcategory}/{skill}/skill.yaml)
+ * - SKILL.md: Single source of truth for skill identity (name, description, model)
+ * - metadata.yaml: Relationship/catalog data (category, tags, requires, conflicts, etc.)
  * - profiles/{profile}/config.yaml: Agent-centric config with prompts and skills per agent
  *
  * Usage:
@@ -28,7 +29,7 @@ import type {
   Skill,
   SkillDefinition,
   SkillReference,
-  SkillYamlConfig,
+  SkillMetadataConfig,
   StackConfig,
   ValidationResult,
 } from "./types";
@@ -74,10 +75,47 @@ async function readFileOptional(path: string, fallback = ""): Promise<string> {
   return file.text();
 }
 
+async function fileExists(path: string): Promise<boolean> {
+  const file = Bun.file(path);
+  return file.exists();
+}
+
 function log(message: string): void {
   if (VERBOSE) {
     console.log(`  ${message}`);
   }
+}
+
+// =============================================================================
+// Frontmatter Parser (Phase 0B - SKILL.md as source of truth)
+// =============================================================================
+
+interface SkillFrontmatter {
+  name: string;
+  description: string;
+  model?: string;
+}
+
+/**
+ * Parse YAML frontmatter from a markdown file
+ * Frontmatter is enclosed between --- markers at the start of the file
+ */
+function parseFrontmatter(content: string): SkillFrontmatter | null {
+  const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---/;
+  const match = content.match(FRONTMATTER_REGEX);
+
+  if (!match) {
+    return null;
+  }
+
+  const yamlContent = match[1];
+  const frontmatter = parseYaml(yamlContent) as SkillFrontmatter;
+
+  if (!frontmatter.name || !frontmatter.description) {
+    return null;
+  }
+
+  return frontmatter;
 }
 
 // =============================================================================
@@ -114,65 +152,65 @@ async function loadAllAgents(): Promise<Record<string, AgentDefinition>> {
 }
 
 /**
- * Load all skills by scanning src/skills/{category}/{subcategory}/{skillId}/skill.yaml
- * Returns a map of skill ID to SkillDefinition (same structure as registry.yaml)
+ * Load all skills by scanning src/skills/{category}/{subcategory}/{skillId}/SKILL.md
+ * Phase 0B: SKILL.md frontmatter is the single source of truth for skill identity
+ * Returns a map of skill ID to SkillDefinition
  */
 async function loadAllSkills(): Promise<Record<string, SkillDefinition>> {
   const skills: Record<string, SkillDefinition> = {};
-  const glob = new Bun.Glob("**/skill.yaml");
+  const glob = new Bun.Glob("**/SKILL.md");
   const skillsDir = `${ROOT}/skills`;
 
   for await (const path of glob.scan({ cwd: skillsDir })) {
     const fullPath = `${skillsDir}/${path}`;
     const content = await readFile(fullPath);
-    const config = parseYaml(content) as SkillYamlConfig;
 
-    // Derive path from file location (relative to src/)
-    // path is like "frontend/styling/scss-modules (@vince)/skill.yaml"
-    // We want "skills/frontend/styling/scss-modules (@vince)/"
-    const folderPath = path.replace("/skill.yaml", "");
-    const skillPath = `skills/${folderPath}/`;
-
-    // Parse path segments to extract category and skill name
-    // Path: "frontend/styling/scss-modules (@vince)"
-    // -> mainCategory: "frontend"
-    // -> folderName: "scss-modules (@vince)"
-    const segments = folderPath.split("/");
-    const mainCategory = segments[0]; // e.g., "frontend", "backend", "setup"
-    const folderName = segments[segments.length - 1]; // e.g., "scss-modules (@vince)"
-
-    // Extract skill name and publisher from folder name
-    // Folder name like "scss-modules (@vince)" -> skillName: "scss-modules", publisher: "vince"
-    const folderMatch = folderName.match(/^(.+?)\s*\(@(\w+)\)$/);
-    let skillName: string;
-    let publisher: string | undefined;
-
-    if (folderMatch) {
-      skillName = folderMatch[1].trim();
-      publisher = folderMatch[2];
-    } else {
-      skillName = folderName;
-      publisher = undefined;
+    // Phase 0B: Parse frontmatter from SKILL.md for identity
+    const frontmatter = parseFrontmatter(content);
+    if (!frontmatter) {
+      console.warn(`  ⚠️  Skipping ${path}: Missing or invalid frontmatter (requires name and description)`);
+      continue;
     }
 
-    // Construct the skill ID to match registry.yaml key format
-    // Registry format: "category/skill-name (@publisher)"
-    // Example: "frontend/scss-modules (@vince)"
-    const skillId = publisher
-      ? `${mainCategory}/${skillName} (@${publisher})`
-      : `${mainCategory}/${skillName}`;
+    // Derive path from file location (relative to src/)
+    // path is like "frontend/styling/scss-modules (@vince)/SKILL.md"
+    // We want "skills/frontend/styling/scss-modules (@vince)/"
+    const folderPath = path.replace("/SKILL.md", "");
+    const skillPath = `skills/${folderPath}/`;
 
-    // Convert to SkillDefinition format (matching registry.yaml structure)
+    // The skill ID comes from the frontmatter name field
+    // e.g., "frontend/react (@vince)" or "backend/hono (@vince)"
+    const skillId = frontmatter.name;
+
+    // Convert to SkillDefinition format
     skills[skillId] = {
       path: skillPath,
-      name: config.name,
-      description: config.description,
+      name: extractDisplayName(frontmatter.name),
+      description: frontmatter.description,
     };
 
     log(`Loaded skill: ${skillId} from ${path}`);
   }
 
   return skills;
+}
+
+/**
+ * Extract display name from skill ID
+ * e.g., "frontend/react (@vince)" -> "React"
+ * e.g., "backend/hono (@vince)" -> "Hono"
+ */
+function extractDisplayName(skillId: string): string {
+  // Remove category prefix and author suffix
+  // "frontend/react (@vince)" -> "react"
+  const withoutCategory = skillId.split("/").pop() || skillId;
+  const withoutAuthor = withoutCategory.replace(/\s*\(@\w+\)$/, "").trim();
+
+  // Capitalize first letter of each word
+  return withoutAuthor
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 // =============================================================================

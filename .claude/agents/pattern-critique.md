@@ -119,7 +119,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/zustand (@vince)
-- Description: Zustand stores, React Query integration
+- Description: Zustand stores, React Query integration, client state patterns. Use when deciding between Zustand vs useState, managing global state, avoiding Context misuse, or handling form state.
 - Invoke: `skill: "frontend/zustand (@vince)"`
 - Use when: when critiquing state management patterns against industry standards
 
@@ -137,19 +137,19 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/posthog-analytics (@vince)
-- Description: PostHog event tracking, user identification
+- Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
 - Use when: when critiquing analytics tracking patterns against industry standards
 
 
 ### backend/posthog-flags (@vince)
-- Description: PostHog feature flags, rollouts, A/B testing
+- Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
 - Use when: when critiquing feature flag patterns against industry standards
 
 
 ### backend/observability (@vince)
-- Description: Pino logging, Sentry error tracking, Axiom
+- Description: Pino logging, Sentry error tracking, Axiom - structured logging with correlation IDs, error boundaries, performance monitoring, alerting
 - Invoke: `skill: "backend/observability (@vince)"`
 - Use when: when critiquing observability patterns against industry standards
 
