@@ -155,19 +155,19 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### security/security (@vince)
-- Description: Authentication, authorization, secrets
+- Description: Authentication, authorization, secrets management, XSS prevention, CSRF protection, Dependabot configuration, vulnerability scanning, DOMPurify sanitization, CSP headers, CODEOWNERS, HttpOnly cookies
 - Invoke: `skill: "security/security (@vince)"`
 - Use when: when implementing authentication, authorization, or secrets handling
 
 
 ### backend/posthog-analytics (@vince)
-- Description: PostHog event tracking, user identification
+- Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
 - Use when: when implementing analytics event tracking or user identification
 
 
 ### backend/posthog-flags (@vince)
-- Description: PostHog feature flags, rollouts, A/B testing
+- Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
 - Use when: when implementing feature flags, gradual rollouts, or experiments
 
@@ -179,7 +179,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/observability (@vince)
-- Description: Pino logging, Sentry error tracking, Axiom
+- Description: Pino logging, Sentry error tracking, Axiom - structured logging with correlation IDs, error boundaries, performance monitoring, alerting
 - Invoke: `skill: "backend/observability (@vince)"`
 - Use when: when implementing logging, error tracking, or monitoring patterns
 
@@ -197,7 +197,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### setup/observability-setup (@vince)
-- Description: Pino, Axiom, Sentry installation
+- Description: Pino, Axiom, Sentry installation - one-time project setup for logging and error tracking with source maps upload
 - Invoke: `skill: "setup/observability-setup (@vince)"`
 - Use when: when setting up observability stack for the first time in a project
 

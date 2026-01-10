@@ -133,7 +133,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### research/research-methodology (@vince)
-- Description: Investigation flow, evidence-based research, structured output
+- Description: Investigation flow (Glob -> Grep -> Read), evidence-based research with file:line references, structured output format for AI consumption. Use for pattern discovery, implementation research, and codebase investigation.
 - Invoke: `skill: "research/research-methodology (@vince)"`
 - Use when: when conducting any research task
 
@@ -157,7 +157,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/zustand (@vince)
-- Description: Zustand stores, React Query integration
+- Description: Zustand stores, React Query integration, client state patterns. Use when deciding between Zustand vs useState, managing global state, avoiding Context misuse, or handling form state.
 - Invoke: `skill: "frontend/zustand (@vince)"`
 - Use when: when researching state management patterns
 
@@ -175,13 +175,13 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/vitest (@vince)
-- Description: Playwright E2E, Vitest, React Testing Library
+- Description: Playwright E2E, Vitest, React Testing Library - E2E for user flows, unit tests for pure functions only, MSW for API mocking - inverted testing pyramid prioritizing E2E tests
 - Invoke: `skill: "frontend/vitest (@vince)"`
 - Use when: when researching testing patterns
 
 
 ### frontend/msw (@vince)
-- Description: MSW handlers, browser/server workers, test data
+- Description: MSW handlers, browser/server workers, test data. Use when setting up API mocking for development or testing, creating mock handlers with variants, or sharing mocks between browser and Node environments.
 - Invoke: `skill: "frontend/msw (@vince)"`
 - Use when: when researching mocking patterns
 

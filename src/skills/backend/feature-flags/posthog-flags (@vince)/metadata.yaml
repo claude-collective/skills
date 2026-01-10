@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: backend
+category_exclusive: false
+author: "@vince"
+version: 1.0.0
+compatible_with:
+  - backend/analytics
+tags:
+  - posthog
+  - feature-flags
+  - rollouts
+  - ab-testing
+  - experiments

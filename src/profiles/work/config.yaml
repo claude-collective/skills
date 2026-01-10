@@ -25,13 +25,13 @@ agents:
       - context-management
       - improvement-protocol
     skills:
-      - id: frontend/react-mobx (@photoroom)
+      - id: frontend/react (@photoroom)
         usage: when implementing React components with MobX
       - id: frontend/tailwind (@photoroom)
         usage: when implementing styles with Tailwind CSS
       - id: frontend/mobx (@photoroom)
         usage: when implementing MobX stores or complex client-side state
-      - id: frontend/react-query-mobx (@photoroom)
+      - id: frontend/react-query (@photoroom)
         usage: when implementing data fetching, API calls, or React Query integrations
 
   frontend-reviewer:
@@ -43,13 +43,13 @@ agents:
       - context-management
       - improvement-protocol
     skills:
-      - id: frontend/react-mobx (@photoroom)
+      - id: frontend/react (@photoroom)
         usage: when reviewing React components with MobX
       - id: frontend/tailwind (@photoroom)
         usage: when reviewing Tailwind CSS styles
       - id: frontend/mobx (@photoroom)
         usage: when reviewing MobX store implementations
-      - id: frontend/react-query-mobx (@photoroom)
+      - id: frontend/react-query (@photoroom)
         usage: when reviewing API integration code
 
   tester:
@@ -62,7 +62,7 @@ agents:
       - context-management
       - improvement-protocol
     skills:
-      - id: frontend/react-mobx (@photoroom)
+      - id: frontend/react (@photoroom)
         usage: when writing React component tests with MobX
       - id: frontend/mobx (@photoroom)
         usage: when writing store tests
@@ -76,9 +76,9 @@ agents:
       - context-management
       - improvement-protocol
     skills:
-      - id: frontend/react-mobx (@photoroom)
+      - id: frontend/react (@photoroom)
         usage: when scoping features that involve React components
-      - id: frontend/react-query-mobx (@photoroom)
+      - id: frontend/react-query (@photoroom)
         usage: when scoping features that involve data fetching or API integration
       - id: frontend/tailwind (@photoroom)
         usage: when scoping features that involve styling or theming
@@ -95,11 +95,11 @@ agents:
       - context-management
       - improvement-protocol
     skills:
-      - id: frontend/react-mobx (@photoroom)
+      - id: frontend/react (@photoroom)
         usage: when creating or improving skills related to React components or hooks
       - id: frontend/tailwind (@photoroom)
         usage: when creating or improving skills related to CSS or styling patterns
-      - id: frontend/react-query-mobx (@photoroom)
+      - id: frontend/react-query (@photoroom)
         usage: when creating or improving skills related to data fetching or API integration
       - id: frontend/mobx (@photoroom)
         usage: when creating or improving skills related to state management

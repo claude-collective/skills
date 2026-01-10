@@ -16,13 +16,13 @@ description: >
 
 framework: react
 
-# Skills by category - maps to skill IDs in registry
+# Skills by category - maps to skill IDs in SKILL.md frontmatter
 skills:
   # Frontend - Photoroom specific
-  react: frontend/react-mobx (@photoroom)
+  react: frontend/react (@photoroom)
   styling: frontend/tailwind (@photoroom)
   state: frontend/mobx (@photoroom)
-  data-fetching: frontend/react-query-mobx (@photoroom)
+  data-fetching: frontend/react-query (@photoroom)
 
 agents:
   - frontend-developer

@@ -122,7 +122,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### shared/reviewing (@vince)
-- Description: Code review patterns, feedback principles
+- Description: Code review patterns, feedback principles. Use when reviewing PRs, implementations, or making approval/rejection decisions. Covers self-correction, progress tracking, feedback principles, severity levels.
 - Invoke: `skill: "shared/reviewing (@vince)"`
 - Use when: when reviewing code
 
@@ -152,19 +152,19 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/zustand (@vince)
-- Description: Zustand stores, React Query integration
+- Description: Zustand stores, React Query integration, client state patterns. Use when deciding between Zustand vs useState, managing global state, avoiding Context misuse, or handling form state.
 - Invoke: `skill: "frontend/zustand (@vince)"`
 - Use when: when reviewing state management implementations
 
 
 ### backend/posthog-analytics (@vince)
-- Description: PostHog event tracking, user identification
+- Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
 - Use when: when reviewing client-side analytics implementations
 
 
 ### backend/posthog-flags (@vince)
-- Description: PostHog feature flags, rollouts, A/B testing
+- Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
 - Use when: when reviewing client-side feature flag implementations
 

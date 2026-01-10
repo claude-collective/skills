@@ -206,6 +206,7 @@ export interface AgentYamlConfig {
 
 /**
  * Skill configuration from skill.yaml (co-located in each skill folder)
+ * @deprecated Use SkillMetadataConfig + SKILL.md frontmatter instead (Phase 0B)
  */
 export interface SkillYamlConfig {
   id: string;
@@ -216,4 +217,36 @@ export interface SkillYamlConfig {
   author?: string;
   version?: string;
   tags?: string[];
+}
+
+// =============================================================================
+// Phase 0B: SKILL.md as Source of Truth
+// =============================================================================
+
+/**
+ * SKILL.md frontmatter - the single source of truth for skill identity
+ * Contains: name (IS the identifier), description, optional model
+ */
+export interface SkillFrontmatter {
+  /** The skill identifier (e.g., "frontend/react (@vince)") - must be unique */
+  name: string;
+  /** Brief description of what this skill teaches */
+  description: string;
+  /** Optional: which AI model to use for this skill */
+  model?: string;
+}
+
+/**
+ * metadata.yaml - relationship and catalog data for skills
+ * Identity (name, description) comes from SKILL.md frontmatter
+ */
+export interface SkillMetadataConfig {
+  category?: string;
+  category_exclusive?: boolean;
+  author?: string;
+  version?: string;
+  tags?: string[];
+  requires?: string[];
+  compatible_with?: string[];
+  conflicts_with?: string[];
 }

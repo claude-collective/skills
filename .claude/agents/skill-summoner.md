@@ -160,7 +160,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/zustand (@vince)
-- Description: Zustand stores, React Query integration
+- Description: Zustand stores, React Query integration, client state patterns. Use when deciding between Zustand vs useState, managing global state, avoiding Context misuse, or handling form state.
 - Invoke: `skill: "frontend/zustand (@vince)"`
 - Use when: when creating or improving skills related to state management
 
@@ -178,13 +178,13 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### frontend/vitest (@vince)
-- Description: Playwright E2E, Vitest, React Testing Library
+- Description: Playwright E2E, Vitest, React Testing Library - E2E for user flows, unit tests for pure functions only, MSW for API mocking - inverted testing pyramid prioritizing E2E tests
 - Invoke: `skill: "frontend/vitest (@vince)"`
 - Use when: when creating or improving skills related to React testing
 
 
 ### frontend/msw (@vince)
-- Description: MSW handlers, browser/server workers, test data
+- Description: MSW handlers, browser/server workers, test data. Use when setting up API mocking for development or testing, creating mock handlers with variants, or sharing mocks between browser and Node environments.
 - Invoke: `skill: "frontend/msw (@vince)"`
 - Use when: when creating or improving skills related to mocking or test data
 
@@ -220,13 +220,13 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### security/security (@vince)
-- Description: Authentication, authorization, secrets
+- Description: Authentication, authorization, secrets management, XSS prevention, CSRF protection, Dependabot configuration, vulnerability scanning, DOMPurify sanitization, CSP headers, CODEOWNERS, HttpOnly cookies
 - Invoke: `skill: "security/security (@vince)"`
 - Use when: when creating or improving skills related to authentication or security
 
 
 ### shared/reviewing (@vince)
-- Description: Code review patterns, feedback principles
+- Description: Code review patterns, feedback principles. Use when reviewing PRs, implementations, or making approval/rejection decisions. Covers self-correction, progress tracking, feedback principles, severity levels.
 - Invoke: `skill: "shared/reviewing (@vince)"`
 - Use when: when creating or improving skills related to code review
 
@@ -238,7 +238,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### setup/package (@vince)
-- Description: Internal package conventions, exports
+- Description: Internal package conventions, exports, @repo/* naming, workspace dependencies, tree-shaking configuration
 - Invoke: `skill: "setup/package (@vince)"`
 - Use when: when creating or improving skills related to package conventions
 
@@ -250,7 +250,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### setup/tooling (@vince)
-- Description: ESLint, Prettier, TypeScript configuration
+- Description: ESLint 9 flat config, Prettier, TypeScript configuration, Vite, Husky + lint-staged, commitlint - build tooling for monorepos
 - Invoke: `skill: "setup/tooling (@vince)"`
 - Use when: when creating or improving skills related to build tooling
 
@@ -262,13 +262,13 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/posthog-analytics (@vince)
-- Description: PostHog event tracking, user identification
+- Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
 - Invoke: `skill: "backend/posthog-analytics (@vince)"`
 - Use when: when creating or improving skills related to analytics
 
 
 ### backend/posthog-flags (@vince)
-- Description: PostHog feature flags, rollouts, A/B testing
+- Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
 - Invoke: `skill: "backend/posthog-flags (@vince)"`
 - Use when: when creating or improving skills related to feature flags
 
@@ -280,7 +280,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 
 
 ### backend/observability (@vince)
-- Description: Pino logging, Sentry error tracking, Axiom
+- Description: Pino logging, Sentry error tracking, Axiom - structured logging with correlation IDs, error boundaries, performance monitoring, alerting
 - Invoke: `skill: "backend/observability (@vince)"`
 - Use when: when creating or improving skills related to observability
 
