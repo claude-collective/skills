@@ -1,5 +1,5 @@
 ---
-name: frontend/performance (@photoroom)
+name: frontend/performance+mobx (@photoroom)
 description: MobX computed, observer, WebGL cleanup for Photoroom webapp
 ---
 

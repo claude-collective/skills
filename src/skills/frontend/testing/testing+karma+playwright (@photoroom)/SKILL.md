@@ -1,5 +1,5 @@
 ---
-name: frontend/testing (@photoroom)
+name: frontend/testing+karma+playwright (@photoroom)
 description: Karma, Mocha, Chai, Sinon for unit tests, Playwright E2E with custom fixtures and Page Object Model
 ---
 
