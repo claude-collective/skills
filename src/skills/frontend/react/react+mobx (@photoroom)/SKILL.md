@@ -1,5 +1,5 @@
 ---
-name: frontend/react (@photoroom)
+name: frontend/react+mobx (@photoroom)
 description: MobX observer, stores, i18n for Photoroom webapp
 ---
 
