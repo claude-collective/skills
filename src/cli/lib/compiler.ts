@@ -1,0 +1,267 @@
+import { Liquid } from 'liquidjs';
+import path from 'path';
+import { readFile, readFileOptional, writeFile, ensureDir, remove, copy, glob, fileExists } from '../utils/fs';
+import { verbose } from '../utils/logger';
+import { DIRS, OUTPUT_DIR, SKILL_SUPPORTING_FILES } from '../consts';
+import { resolveClaudeMd } from './resolver';
+import type {
+  AgentConfig,
+  CompiledAgentData,
+  ProfileConfig,
+  CompileContext,
+} from '../types';
+
+/**
+ * Read and concatenate core prompt files
+ */
+async function readCorePrompts(
+  promptNames: string[],
+  projectRoot: string
+): Promise<string> {
+  const contents: string[] = [];
+  const corePromptsDir = path.join(projectRoot, DIRS.corePrompts);
+
+  for (const name of promptNames) {
+    const content = await readFile(path.join(corePromptsDir, `${name}.md`));
+    contents.push(content);
+  }
+
+  return contents.join('\n\n---\n\n');
+}
+
+/**
+ * Compile a single agent using LiquidJS
+ */
+async function compileAgent(
+  name: string,
+  agent: AgentConfig,
+  config: ProfileConfig,
+  projectRoot: string,
+  engine: Liquid
+): Promise<string> {
+  verbose(`Reading agent files for ${name}...`);
+
+  const agentDir = path.join(projectRoot, DIRS.agents, name);
+
+  // Read agent-specific files
+  const intro = await readFile(path.join(agentDir, 'intro.md'));
+  const workflow = await readFile(path.join(agentDir, 'workflow.md'));
+  const examples = await readFileOptional(
+    path.join(agentDir, 'examples.md'),
+    '## Examples\n\n_No examples defined._'
+  );
+  const criticalRequirementsTop = await readFileOptional(
+    path.join(agentDir, 'critical-requirements.md'),
+    ''
+  );
+  const criticalReminders = await readFileOptional(
+    path.join(agentDir, 'critical-reminders.md'),
+    ''
+  );
+
+  // Read core prompts
+  const corePromptsContent = await readCorePrompts(agent.core_prompts, projectRoot);
+
+  // Read output format
+  const outputFormat = await readFileOptional(
+    path.join(projectRoot, DIRS.agentOutputs, `${agent.output_format}.md`),
+    ''
+  );
+
+  // Read ending prompts
+  const endingPromptsContent = await readCorePrompts(agent.ending_prompts, projectRoot);
+
+  // Format prompt names for display
+  const formatPromptName = (n: string) =>
+    n.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+
+  const formattedCorePromptNames = agent.core_prompts.map(formatPromptName);
+  const formattedEndingPromptNames = agent.ending_prompts.map(formatPromptName);
+
+  // Prepare template data
+  const data: CompiledAgentData = {
+    agent,
+    intro,
+    workflow,
+    examples,
+    criticalRequirementsTop,
+    criticalReminders,
+    corePromptNames: formattedCorePromptNames,
+    corePromptsContent,
+    outputFormat,
+    endingPromptNames: formattedEndingPromptNames,
+    endingPromptsContent,
+    skills: agent.skills,
+  };
+
+  // Render with LiquidJS
+  verbose(`Rendering template for ${name}...`);
+  return engine.renderFile('agent', data);
+}
+
+/**
+ * Compile all agents to output directory
+ */
+export async function compileAllAgents(
+  resolvedAgents: Record<string, AgentConfig>,
+  config: ProfileConfig,
+  ctx: CompileContext,
+  engine: Liquid
+): Promise<void> {
+  const outDir = path.join(ctx.outputDir, 'agents');
+  await ensureDir(outDir);
+
+  for (const [name, agent] of Object.entries(resolvedAgents)) {
+    try {
+      const output = await compileAgent(name, agent, config, ctx.projectRoot, engine);
+      await writeFile(path.join(outDir, `${name}.md`), output);
+      console.log(`  ✓ ${name}.md`);
+    } catch (error) {
+      console.error(`  ✗ ${name}.md - ${error}`);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Compile all skills to output directory
+ */
+export async function compileAllSkills(
+  resolvedAgents: Record<string, AgentConfig>,
+  ctx: CompileContext
+): Promise<void> {
+  // Collect all unique skills with paths
+  const allSkills = Object.values(resolvedAgents)
+    .flatMap((a) => a.skills)
+    .filter((s) => s.path);
+
+  const uniqueSkills = [...new Map(allSkills.map((s) => [s.id, s])).values()];
+
+  for (const skill of uniqueSkills) {
+    const id = skill.id.replace('/', '-');
+    const outDir = path.join(ctx.outputDir, 'skills', id);
+    await ensureDir(outDir);
+
+    // Skills are in src/skills/ directory
+    const sourcePath = path.join(ctx.projectRoot, 'src', skill.path);
+    const isFolder = skill.path.endsWith('/');
+
+    try {
+      if (isFolder) {
+        // Folder-based skill: read SKILL.md and copy
+        const mainContent = await readFile(path.join(sourcePath, 'SKILL.md'));
+        await writeFile(path.join(outDir, 'SKILL.md'), mainContent);
+        console.log(`  ✓ skills/${id}/SKILL.md`);
+
+        // Copy optional supporting files
+        for (const file of SKILL_SUPPORTING_FILES) {
+          const supportingContent = await readFileOptional(path.join(sourcePath, file));
+          if (supportingContent) {
+            await writeFile(path.join(outDir, file), supportingContent);
+            console.log(`  ✓ skills/${id}/${file}`);
+          }
+        }
+
+        // Copy scripts directory if exists
+        const scriptsDir = path.join(sourcePath, 'scripts');
+        if (await fileExists(scriptsDir)) {
+          await copy(scriptsDir, path.join(outDir, 'scripts'));
+          console.log(`  ✓ skills/${id}/scripts/`);
+        }
+      } else {
+        // Legacy: single file skill
+        const content = await readFile(sourcePath);
+        await writeFile(path.join(outDir, 'SKILL.md'), content);
+        console.log(`  ✓ skills/${id}/SKILL.md`);
+      }
+    } catch (error) {
+      console.error(`  ✗ skills/${id}/SKILL.md - ${error}`);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Copy CLAUDE.md to output
+ */
+export async function copyClaude(
+  config: ProfileConfig,
+  ctx: CompileContext
+): Promise<void> {
+  let claudePath: string;
+
+  if (!ctx.profileId && ctx.stackId) {
+    // Stack mode - use stack's CLAUDE.md directly
+    claudePath = path.join(ctx.projectRoot, DIRS.stacks, ctx.stackId, 'CLAUDE.md');
+    if (!(await fileExists(claudePath))) {
+      throw new Error(`Stack ${ctx.stackId} missing CLAUDE.md`);
+    }
+  } else if (ctx.profileId) {
+    // Profile mode - use cascade
+    claudePath = await resolveClaudeMd(ctx.projectRoot, ctx.profileId, config.stack);
+  } else {
+    throw new Error('Either profileId or stackId must be provided');
+  }
+
+  const content = await readFile(claudePath);
+  const outputPath = path.join(ctx.outputDir, '..', 'CLAUDE.md');
+  await writeFile(outputPath, content);
+  const source = claudePath.includes('/stacks/') ? 'stack' : 'profile';
+  console.log(`  ✓ CLAUDE.md (from ${source})`);
+}
+
+/**
+ * Compile all commands to output directory
+ */
+export async function compileAllCommands(ctx: CompileContext): Promise<void> {
+  const commandsDir = path.join(ctx.projectRoot, DIRS.commands);
+  const outDir = path.join(ctx.outputDir, 'commands');
+
+  // Check if commands directory exists
+  if (!(await fileExists(commandsDir))) {
+    console.log('  - No commands directory found, skipping...');
+    return;
+  }
+
+  // Check for .md files
+  const files = await glob('*.md', commandsDir);
+
+  if (files.length === 0) {
+    console.log('  - No commands found, skipping...');
+    return;
+  }
+
+  await ensureDir(outDir);
+
+  for (const file of files) {
+    try {
+      const content = await readFile(path.join(commandsDir, file));
+      await writeFile(path.join(outDir, file), content);
+      console.log(`  ✓ ${file}`);
+    } catch (error) {
+      console.error(`  ✗ ${file} - ${error}`);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Create a configured Liquid engine
+ */
+export function createLiquidEngine(projectRoot: string): Liquid {
+  return new Liquid({
+    root: [path.join(projectRoot, DIRS.templates)],
+    extname: '.liquid',
+    strictVariables: false,
+    strictFilters: true,
+  });
+}
+
+/**
+ * Clean output directory (agents, skills, commands)
+ */
+export async function cleanOutputDir(outputDir: string): Promise<void> {
+  await remove(path.join(outputDir, 'agents'));
+  await remove(path.join(outputDir, 'skills'));
+  await remove(path.join(outputDir, 'commands'));
+}

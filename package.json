@@ -1,14 +1,22 @@
 {
-  "name": "claude-subagents",
-  "version": "1.0.0",
-  "description": "WIP subagents system",
+  "name": "@claude-collective/cc",
+  "version": "0.1.0",
+  "description": "CLI for managing Claude Collective skills, stacks, and agents",
+  "type": "module",
   "main": "index.js",
+  "bin": {
+    "cc": "./dist/cli/index.js"
+  },
   "scripts": {
     "build:agents": "node src/compile.mjs",
     "compile": "bun src/compile.ts",
     "compile:home": "bun src/compile.ts --profile=home",
     "compile:work": "bun src/compile.ts --profile=work",
-    "compile:watch": "bun --watch src/compile.ts"
+    "compile:watch": "bun --watch src/compile.ts",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "cli": "node dist/cli/index.js",
+    "cli:dev": "bun src/cli/index.ts"
   },
   "repository": {
     "type": "git",
@@ -22,6 +30,21 @@
   "homepage": "https://github.com/vincentbollaert/claude-subagents#readme",
   "dependencies": {
     "liquidjs": "^10.24.0",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "commander": "^12.1.0",
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.0",
+    "giget": "^1.2.0",
+    "fast-glob": "^3.3.0",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.0",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
