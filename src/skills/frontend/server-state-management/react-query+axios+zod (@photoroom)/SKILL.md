@@ -1,5 +1,5 @@
 ---
-name: frontend/react-query+axios+zod (@photoroom)
+name: frontend/server-state-react-query+axios+zod (@photoroom)
 description: React Query, Axios, API classes for Photoroom webapp
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: frontend/mobx (@photoroom)
+name: frontend/state-mobx (@photoroom)
 description: MobX stores, RootStore pattern for Photoroom webapp
 ---
 

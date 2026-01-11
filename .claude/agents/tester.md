@@ -119,16 +119,16 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 ## Available Skills
 
 
-### frontend/vitest (@vince)
+### frontend/testing-vitest (@vince)
 - Description: Playwright E2E, Vitest, React Testing Library - E2E for user flows, unit tests for pure functions only, network-level API mocking - inverted testing pyramid prioritizing E2E tests
-- Invoke: `skill: "frontend/vitest (@vince)"`
-- Use when: when working with vitest
+- Invoke: `skill: "frontend/testing-vitest (@vince)"`
+- Use when: when working with testing vitest
 
 
-### frontend/msw (@vince)
+### frontend/mocks-msw (@vince)
 - Description: MSW handlers, browser/server workers, test data. Use when setting up API mocking for development or testing, creating mock handlers with variants, or sharing mocks between browser and Node environments.
-- Invoke: `skill: "frontend/msw (@vince)"`
-- Use when: when working with msw
+- Invoke: `skill: "frontend/mocks-msw (@vince)"`
+- Use when: when working with mocks msw
 
 
 ### backend/testing (@vince)
