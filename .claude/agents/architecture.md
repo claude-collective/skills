@@ -166,10 +166,10 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with react
 
 
-### setup/turborepo (@vince)
+### setup/monorepo-turborepo (@vince)
 - Description: Turborepo, workspaces, package architecture, @repo/* naming, exports, tree-shaking
-- Invoke: `skill: "setup/turborepo (@vince)"`
-- Use when: when working with turborepo
+- Invoke: `skill: "setup/monorepo-turborepo (@vince)"`
+- Use when: when working with monorepo turborepo
 
 
 ### setup/env (@vince)
@@ -184,58 +184,58 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with tooling
 
 
-### setup/posthog (@vince)
+### setup/analytics-posthog (@vince)
 - Description: PostHog analytics and feature flags setup
-- Invoke: `skill: "setup/posthog (@vince)"`
-- Use when: when working with posthog
+- Invoke: `skill: "setup/analytics-posthog (@vince)"`
+- Use when: when working with analytics posthog
 
 
-### setup/resend (@vince)
+### setup/email-resend+react-email (@vince)
 - Description: Resend email setup, domain verification
-- Invoke: `skill: "setup/resend (@vince)"`
-- Use when: when working with resend
+- Invoke: `skill: "setup/email-resend+react-email (@vince)"`
+- Use when: when working with email resend+react email
 
 
-### setup/observability (@vince)
+### setup/observability+axiom+pino+sentry (@vince)
 - Description: Pino, Axiom, Sentry installation - one-time project setup for logging and error tracking with source maps upload
-- Invoke: `skill: "setup/observability (@vince)"`
-- Use when: when working with observability
+- Invoke: `skill: "setup/observability+axiom+pino+sentry (@vince)"`
+- Use when: when working with observability+axiom+pino+sentry
 
 
-### backend/hono (@vince)
+### backend/api-hono (@vince)
 - Description: Hono routes, OpenAPI, Zod validation
-- Invoke: `skill: "backend/hono (@vince)"`
-- Use when: when working with hono
+- Invoke: `skill: "backend/api-hono (@vince)"`
+- Use when: when working with api hono
 
 
-### backend/drizzle (@vince)
+### backend/database-drizzle (@vince)
 - Description: Drizzle ORM, queries, migrations
-- Invoke: `skill: "backend/drizzle (@vince)"`
-- Use when: when working with drizzle
+- Invoke: `skill: "backend/database-drizzle (@vince)"`
+- Use when: when working with database drizzle
 
 
-### backend/better-auth+drizzle+hono (@vince)
+### backend/auth-better-auth+drizzle+hono (@vince)
 - Description: Better Auth patterns, sessions, OAuth
-- Invoke: `skill: "backend/better-auth+drizzle+hono (@vince)"`
-- Use when: when working with better auth+drizzle+hono
+- Invoke: `skill: "backend/auth-better-auth+drizzle+hono (@vince)"`
+- Use when: when working with auth better auth+drizzle+hono
 
 
-### backend/posthog-analytics (@vince)
+### backend/analytics-posthog (@vince)
 - Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
-- Invoke: `skill: "backend/posthog-analytics (@vince)"`
-- Use when: when working with posthog analytics
+- Invoke: `skill: "backend/analytics-posthog (@vince)"`
+- Use when: when working with analytics posthog
 
 
-### backend/posthog-flags (@vince)
+### backend/flags-posthog (@vince)
 - Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
-- Invoke: `skill: "backend/posthog-flags (@vince)"`
-- Use when: when working with posthog flags
+- Invoke: `skill: "backend/flags-posthog (@vince)"`
+- Use when: when working with flags posthog
 
 
-### backend/resend+react-email (@vince)
+### backend/email-resend+react-email (@vince)
 - Description: Resend + React Email templates
-- Invoke: `skill: "backend/resend+react-email (@vince)"`
-- Use when: when working with resend+react email
+- Invoke: `skill: "backend/email-resend+react-email (@vince)"`
+- Use when: when working with email resend+react email
 
 
 ### backend/observability+axiom+pino+sentry (@vince)
@@ -244,10 +244,10 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with observability+axiom+pino+sentry
 
 
-### backend/github-actions (@vince)
+### backend/ci-cd-github-actions (@vince)
 - Description: GitHub Actions, pipelines, deployment
-- Invoke: `skill: "backend/github-actions (@vince)"`
-- Use when: when working with github actions
+- Invoke: `skill: "backend/ci-cd-github-actions (@vince)"`
+- Use when: when working with ci cd github actions
 
 
 ### backend/performance (@vince)

@@ -1,5 +1,5 @@
 ---
-name: frontend/tailwind (@photoroom)
+name: frontend/styling-tailwind (@photoroom)
 description: Tailwind CSS, clsx, design tokens for Photoroom webapp
 ---
 

@@ -126,22 +126,22 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with react
 
 
-### frontend/scss-modules (@vince)
+### frontend/styling-scss-modules (@vince)
 - Description: SCSS Modules, cva, design tokens
-- Invoke: `skill: "frontend/scss-modules (@vince)"`
-- Use when: when working with scss modules
+- Invoke: `skill: "frontend/styling-scss-modules (@vince)"`
+- Use when: when working with styling scss modules
 
 
-### frontend/react-query (@vince)
+### frontend/server-state-react-query (@vince)
 - Description: REST APIs, React Query, data fetching
-- Invoke: `skill: "frontend/react-query (@vince)"`
-- Use when: when working with react query
+- Invoke: `skill: "frontend/server-state-react-query (@vince)"`
+- Use when: when working with server state react query
 
 
-### frontend/zustand (@vince)
+### frontend/state-zustand (@vince)
 - Description: Zustand stores, client state patterns. Use when deciding between Zustand vs useState, managing global state, avoiding Context misuse, or handling form state.
-- Invoke: `skill: "frontend/zustand (@vince)"`
-- Use when: when working with zustand
+- Invoke: `skill: "frontend/state-zustand (@vince)"`
+- Use when: when working with state zustand
 
 
 ### frontend/accessibility (@vince)
@@ -156,52 +156,52 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with performance
 
 
-### frontend/vitest (@vince)
+### frontend/testing-vitest (@vince)
 - Description: Playwright E2E, Vitest, React Testing Library - E2E for user flows, unit tests for pure functions only, network-level API mocking - inverted testing pyramid prioritizing E2E tests
-- Invoke: `skill: "frontend/vitest (@vince)"`
-- Use when: when working with vitest
+- Invoke: `skill: "frontend/testing-vitest (@vince)"`
+- Use when: when working with testing vitest
 
 
-### frontend/msw (@vince)
+### frontend/mocks-msw (@vince)
 - Description: MSW handlers, browser/server workers, test data. Use when setting up API mocking for development or testing, creating mock handlers with variants, or sharing mocks between browser and Node environments.
-- Invoke: `skill: "frontend/msw (@vince)"`
-- Use when: when working with msw
+- Invoke: `skill: "frontend/mocks-msw (@vince)"`
+- Use when: when working with mocks msw
 
 
-### backend/hono (@vince)
+### backend/api-hono (@vince)
 - Description: Hono routes, OpenAPI, Zod validation
-- Invoke: `skill: "backend/hono (@vince)"`
-- Use when: when working with hono
+- Invoke: `skill: "backend/api-hono (@vince)"`
+- Use when: when working with api hono
 
 
-### backend/drizzle (@vince)
+### backend/database-drizzle (@vince)
 - Description: Drizzle ORM, queries, migrations
-- Invoke: `skill: "backend/drizzle (@vince)"`
-- Use when: when working with drizzle
+- Invoke: `skill: "backend/database-drizzle (@vince)"`
+- Use when: when working with database drizzle
 
 
-### backend/better-auth+drizzle+hono (@vince)
+### backend/auth-better-auth+drizzle+hono (@vince)
 - Description: Better Auth patterns, sessions, OAuth
-- Invoke: `skill: "backend/better-auth+drizzle+hono (@vince)"`
-- Use when: when working with better auth+drizzle+hono
+- Invoke: `skill: "backend/auth-better-auth+drizzle+hono (@vince)"`
+- Use when: when working with auth better auth+drizzle+hono
 
 
-### backend/posthog-analytics (@vince)
+### backend/analytics-posthog (@vince)
 - Description: PostHog event tracking, user identification, group analytics for B2B, GDPR consent patterns. Use when implementing product analytics, tracking user behavior, setting up funnels, or configuring privacy-compliant tracking.
-- Invoke: `skill: "backend/posthog-analytics (@vince)"`
-- Use when: when working with posthog analytics
+- Invoke: `skill: "backend/analytics-posthog (@vince)"`
+- Use when: when working with analytics posthog
 
 
-### backend/posthog-flags (@vince)
+### backend/flags-posthog (@vince)
 - Description: PostHog feature flags, rollouts, A/B testing. Use when implementing gradual rollouts, A/B tests, kill switches, remote configuration, beta features, or user targeting with PostHog.
-- Invoke: `skill: "backend/posthog-flags (@vince)"`
-- Use when: when working with posthog flags
+- Invoke: `skill: "backend/flags-posthog (@vince)"`
+- Use when: when working with flags posthog
 
 
-### backend/resend+react-email (@vince)
+### backend/email-resend+react-email (@vince)
 - Description: Resend + React Email templates
-- Invoke: `skill: "backend/resend+react-email (@vince)"`
-- Use when: when working with resend+react email
+- Invoke: `skill: "backend/email-resend+react-email (@vince)"`
+- Use when: when working with email resend+react email
 
 
 ### backend/observability+axiom+pino+sentry (@vince)
@@ -210,10 +210,10 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - Use when: when working with observability+axiom+pino+sentry
 
 
-### backend/github-actions (@vince)
+### backend/ci-cd-github-actions (@vince)
 - Description: GitHub Actions, pipelines, deployment
-- Invoke: `skill: "backend/github-actions (@vince)"`
-- Use when: when working with github actions
+- Invoke: `skill: "backend/ci-cd-github-actions (@vince)"`
+- Use when: when working with ci cd github actions
 
 
 ### backend/performance (@vince)

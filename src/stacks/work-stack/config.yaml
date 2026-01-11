@@ -12,10 +12,10 @@ version: "1.0.0"
 
 skills:
   # Frontend - Photoroom specific
-  - frontend/react (@photoroom)
-  - frontend/tailwind (@photoroom)
-  - frontend/mobx (@photoroom)
-  - frontend/react-query (@photoroom)
+  - frontend/react+mobx (@photoroom)
+  - frontend/styling-tailwind (@photoroom)
+  - frontend/state-mobx (@photoroom)
+  - frontend/server-state-react-query+axios+zod (@photoroom)
 
 agents:
   - frontend-developer
@@ -27,32 +27,32 @@ agents:
 # Per-agent skill assignments
 agent_skills:
   frontend-developer:
-    - frontend/react (@photoroom)
-    - frontend/tailwind (@photoroom)
-    - frontend/mobx (@photoroom)
-    - frontend/react-query (@photoroom)
+    - frontend/react+mobx (@photoroom)
+    - frontend/styling-tailwind (@photoroom)
+    - frontend/state-mobx (@photoroom)
+    - frontend/server-state-react-query+axios+zod (@photoroom)
 
   frontend-reviewer:
-    - frontend/react (@photoroom)
-    - frontend/tailwind (@photoroom)
-    - frontend/mobx (@photoroom)
-    - frontend/react-query (@photoroom)
+    - frontend/react+mobx (@photoroom)
+    - frontend/styling-tailwind (@photoroom)
+    - frontend/state-mobx (@photoroom)
+    - frontend/server-state-react-query+axios+zod (@photoroom)
 
   tester:
-    - frontend/react (@photoroom)
-    - frontend/mobx (@photoroom)
+    - frontend/react+mobx (@photoroom)
+    - frontend/state-mobx (@photoroom)
 
   pm:
-    - frontend/react (@photoroom)
-    - frontend/tailwind (@photoroom)
-    - frontend/mobx (@photoroom)
-    - frontend/react-query (@photoroom)
+    - frontend/react+mobx (@photoroom)
+    - frontend/styling-tailwind (@photoroom)
+    - frontend/state-mobx (@photoroom)
+    - frontend/server-state-react-query+axios+zod (@photoroom)
 
   skill-summoner:
-    - frontend/react (@photoroom)
-    - frontend/tailwind (@photoroom)
-    - frontend/mobx (@photoroom)
-    - frontend/react-query (@photoroom)
+    - frontend/react+mobx (@photoroom)
+    - frontend/styling-tailwind (@photoroom)
+    - frontend/state-mobx (@photoroom)
+    - frontend/server-state-react-query+axios+zod (@photoroom)
 
 philosophy: "Design system first, move fast"
 

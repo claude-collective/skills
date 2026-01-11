@@ -12,10 +12,10 @@ version: "1.0.0"
 
 skills:
   # Frontend - Photoroom specific
-  - frontend/react (@photoroom)
-  - frontend/tailwind (@photoroom)
-  - frontend/mobx (@photoroom)
-  - frontend/react-query (@photoroom)
+  - frontend/react+mobx (@photoroom)
+  - frontend/styling-tailwind (@photoroom)
+  - frontend/state-mobx (@photoroom)
+  - frontend/server-state-react-query+axios+zod (@photoroom)
 
 agents:
   - frontend-developer
