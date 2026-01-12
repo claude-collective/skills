@@ -58,20 +58,17 @@
     },
     "skills": {
       "type": "array",
-      "description": "Array of skill IDs to include in this stack (e.g., 'frontend/react (@vince)')",
+      "description": "Skill assignments with optional preloaded flag. Preloaded skills have content embedded in compiled agent.",
       "minItems": 1,
-      "uniqueItems": true,
       "items": {
-        "type": "string",
-        "description": "Skill ID from SKILL.md frontmatter (e.g., 'frontend/react (@vince)')",
-        "minLength": 1
+        "$ref": "#/$defs/SkillAssignment"
       },
       "examples": [
         [
-          "frontend/react (@vince)",
-          "frontend/scss-modules (@vince)",
-          "frontend/zustand (@vince)",
-          "backend/hono (@vince)"
+          { "id": "frontend/react (@vince)", "preloaded": true },
+          { "id": "frontend/styling-scss-modules (@vince)", "preloaded": true },
+          { "id": "frontend/state-zustand (@vince)" },
+          { "id": "backend/api-hono (@vince)" }
         ]
       ]
     },
@@ -89,15 +86,12 @@
     },
     "agent_skills": {
       "type": "object",
-      "description": "Per-agent skill assignments. Maps agent name to array of skill IDs. Skills must be listed in the top-level skills array.",
+      "description": "Per-agent skill assignments. Maps agent ID to array of skill assignments with preloaded flags.",
       "additionalProperties": {
         "type": "array",
         "items": {
-          "type": "string",
-          "description": "Skill ID from SKILL.md frontmatter",
-          "minLength": 1
-        },
-        "uniqueItems": true
+          "$ref": "#/$defs/SkillAssignment"
+        }
       },
       "propertyNames": {
         "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
@@ -105,8 +99,14 @@
       },
       "examples": [
         {
-          "frontend-developer": ["frontend/react (@vince)", "frontend/scss-modules (@vince)"],
-          "backend-developer": ["backend/hono (@vince)", "backend/drizzle (@vince)"]
+          "frontend-developer": [
+            { "id": "frontend/react (@vince)", "preloaded": true },
+            { "id": "frontend/scss-modules (@vince)" }
+          ],
+          "backend-developer": [
+            { "id": "backend/hono (@vince)", "preloaded": true },
+            { "id": "backend/drizzle (@vince)" }
+          ]
         }
       ]
     },
@@ -161,6 +161,24 @@
     }
   },
   "$defs": {
+    "SkillAssignment": {
+      "type": "object",
+      "description": "Skill assignment with optional preloaded flag",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Skill ID from SKILL.md frontmatter (e.g., 'frontend/react (@vince)')",
+          "minLength": 1
+        },
+        "preloaded": {
+          "type": "boolean",
+          "description": "If true, full skill content is embedded in compiled agent. Default: false (dynamic)",
+          "default": false
+        }
+      }
+    },
     "OverrideRule": {
       "type": "object",
       "description": "Override configuration for a single skill category",

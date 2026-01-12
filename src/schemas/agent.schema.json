@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-subagents.local/schemas/agent.schema.json",
+  "title": "Agent Definition",
+  "description": "Schema for agent.yaml files in agent-sources/{id}/agent.yaml",
+  "type": "object",
+  "required": ["id", "title", "description", "tools", "output_format"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique agent identifier (kebab-case)",
+      "minLength": 1,
+      "examples": ["frontend-developer", "backend-reviewer", "pm"]
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable agent name",
+      "minLength": 1,
+      "examples": ["Frontend Developer Agent", "Backend Reviewer Agent"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Purpose and behavior - shown in Task tool description",
+      "minLength": 1
+    },
+    "model": {
+      "type": "string",
+      "description": "Claude model to use",
+      "default": "opus",
+      "enum": ["opus", "sonnet", "haiku"]
+    },
+    "tools": {
+      "type": "array",
+      "description": "Tools available to this agent",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "Read",
+          "Write",
+          "Edit",
+          "Grep",
+          "Glob",
+          "Bash",
+          "WebSearch",
+          "WebFetch",
+          "Task",
+          "TaskOutput"
+        ]
+      }
+    },
+    "output_format": {
+      "type": "string",
+      "description": "Output format template (references core-prompts/{value}.md)",
+      "minLength": 1,
+      "examples": ["output-formats-developer", "output-formats-reviewer"]
+    }
+  }
+}

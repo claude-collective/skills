@@ -103,8 +103,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Override the skill's path for this profile (optional, .md for file, / for folder)",
-          "pattern": "^skills/[a-z][a-z0-9-]*/[a-z][a-z0-9-]*(\\.md|/)$"
+          "description": "Override the skill's path for this profile (optional)",
+          "minLength": 1
         },
         "name": {
           "type": "string",
@@ -120,16 +120,16 @@
     },
     "SkillId": {
       "type": "string",
-      "description": "Skill ID in hierarchical kebab-case format (category/name)",
-      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*/[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Skill ID in format: category/name (@author)",
+      "minLength": 1,
       "examples": [
-        "frontend/react",
-        "frontend/styling",
-        "backend/api",
-        "backend/authentication",
-        "security/security",
-        "shared/reviewing",
-        "setup/monorepo"
+        "frontend/react (@vince)",
+        "frontend/styling-scss-modules (@vince)",
+        "backend/api-hono (@vince)",
+        "backend/auth-better-auth+drizzle+hono (@vince)",
+        "security/security (@vince)",
+        "shared/reviewing (@vince)",
+        "setup/monorepo-turborepo (@vince)"
       ]
     }
   }
