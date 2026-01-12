@@ -105,9 +105,9 @@
     },
     "SkillReference": {
       "type": "string",
-      "description": "Reference to a skill ID or pattern. Patterns use * for wildcards (e.g., framework/* matches any framework skill). Coupled skills use + notation (e.g., backend/better-auth+drizzle+hono).",
-      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*/([a-z][a-z0-9]*(-[a-z0-9]+)*(\\+[a-z][a-z0-9]*(-[a-z0-9]+)*)*|\\*)$",
-      "examples": ["framework/react", "state/zustand", "framework/*", "backend/better-auth+drizzle+hono"]
+      "description": "Reference to a skill ID (e.g., 'frontend/react (@vince)') or pattern (e.g., 'framework/*')",
+      "minLength": 1,
+      "examples": ["frontend/react (@vince)", "backend/api-hono (@vince)", "framework/*"]
     }
   }
 }
