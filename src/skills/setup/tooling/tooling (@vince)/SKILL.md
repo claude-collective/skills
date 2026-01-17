@@ -54,7 +54,11 @@ description: ESLint 9 flat config, Prettier, TypeScript configuration, Vite, Hus
 - Commitlint for conventional commit messages
 
 **Detailed Resources:**
-- For code examples, see [examples.md](examples.md)
+- For code examples, see [examples/core.md](examples/core.md) (essential patterns)
+  - [examples/vite.md](examples/vite.md) - Vite path aliases, vendor chunks, environment builds
+  - [examples/eslint.md](examples/eslint.md) - ESLint 9 flat config, shared configs, custom rules
+  - [examples/typescript.md](examples/typescript.md) - Shared TypeScript strict config
+  - [examples/git-hooks.md](examples/git-hooks.md) - Husky, lint-staged, VS Code integration
 - For decision frameworks and anti-patterns, see [reference.md](reference.md)
 
 **Related skills:**
@@ -108,7 +112,7 @@ Vite is the build tool for frontend apps. Key features: path aliases, vendor chu
 - Conditional sourcemaps (dev only) and minification (prod only)
 - Build-time constants with `define` option
 
-See [examples.md](examples.md) for complete Vite configuration examples.
+See [examples/vite.md](examples/vite.md) for complete Vite configuration examples.
 
 ---
 
@@ -127,7 +131,7 @@ ESLint 9 uses flat config format (replaces legacy `.eslintrc`). Shared configs l
 - `no-restricted-imports`: Prevent importing from internal package paths
 - `@typescript-eslint/consistent-type-imports`: Use `import type` for types
 
-See [examples.md](examples.md) for complete ESLint configuration examples.
+See [examples/eslint.md](examples/eslint.md) for complete ESLint configuration examples.
 
 ---
 
@@ -145,7 +149,7 @@ Prettier configuration lives in `packages/prettier-config/` and is shared across
 - Reference in package.json: `"prettier": "@repo/prettier-config"`
 - Single source of truth prevents formatting inconsistencies
 
-See [examples.md](examples.md) for complete Prettier configuration examples.
+See [examples/core.md](examples/core.md) for complete Prettier configuration examples.
 
 ---
 
@@ -165,7 +169,7 @@ TypeScript configurations live in `packages/typescript-config/` with base settin
 
 For daily TypeScript enforcement rules (no unjustified `any`, explicit types), see CLAUDE.md.
 
-See [examples.md](examples.md) for complete TypeScript configuration examples.
+See [examples/typescript.md](examples/typescript.md) for complete TypeScript configuration examples.
 
 ---
 
@@ -185,9 +189,80 @@ Pre-commit hooks run linting on staged files only for fast feedback.
 
 **Rule of thumb:** Pre-commit should take < 10 seconds. Anything slower goes to pre-push or CI.
 
-See [examples.md](examples.md) for complete Husky + lint-staged examples.
+See [examples/git-hooks.md](examples/git-hooks.md) for complete Husky + lint-staged examples.
 
 </patterns>
+
+---
+
+<decision_framework>
+
+## Decision Framework
+
+### ESLint vs Biome
+
+```
+Need linting and formatting?
+├─ Large monorepo (1000+ files)?
+│   ├─ Speed is critical bottleneck?
+│   │   └─ YES → Consider Biome (20x faster)
+│   └─ NO → ESLint 9 + Prettier
+└─ Greenfield project?
+    ├─ Want single tool for lint + format?
+    │   └─ YES → Consider Biome
+    └─ Need mature plugin ecosystem?
+        └─ YES → ESLint 9 + Prettier ✓
+```
+
+**Current recommendation:** ESLint 9 + Prettier (mature, stable, extensive plugin ecosystem)
+
+### When to Use Git Hooks
+
+```
+What to run pre-commit?
+├─ Fast (< 10 seconds)?
+│   ├─ Lint with auto-fix → YES ✓
+│   ├─ Format with Prettier → YES ✓
+│   └─ Type check (--noEmit) → YES ✓
+└─ Slow (> 10 seconds)?
+    ├─ Full test suite → NO (run in CI)
+    ├─ Full build → NO (run in CI)
+    └─ E2E tests → NO (run in CI)
+```
+
+See [reference.md](reference.md) for additional decision frameworks.
+
+</decision_framework>
+
+---
+
+<red_flags>
+
+## RED FLAGS
+
+**High Priority Issues:**
+
+- ❌ Using legacy .eslintrc format instead of ESLint 9 flat config (format is being phased out)
+- ❌ Missing eslint-plugin-only-warn (errors block developers during development)
+- ❌ Disabling TypeScript strict mode (allows implicit any and null bugs)
+- ❌ Not using shared configs in monorepo (configs drift causing inconsistency)
+
+**Medium Priority Issues:**
+
+- ⚠️ Running full test suite in pre-commit hook (too slow, encourages --no-verify)
+- ⚠️ No editor integration for Prettier/ESLint (manual formatting is forgotten)
+- ⚠️ Hardcoded config values in each package instead of shared config
+
+**Gotchas & Edge Cases:**
+
+- ESLint 9 flat config uses different plugin syntax than legacy .eslintrc
+- only-warn plugin must be loaded AFTER other plugins to convert their errors
+- TypeScript path aliases must be configured in BOTH tsconfig and build tool (Vite/Next)
+- Prettier and ESLint can conflict - must use eslint-config-prettier to disable conflicting rules
+
+See [reference.md](reference.md) for full anti-patterns documentation.
+
+</red_flags>
 
 ---
 
