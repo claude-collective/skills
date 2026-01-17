@@ -58,7 +58,11 @@ description: Resend email setup, domain verification
 - Vercel deployment setup
 
 **Detailed Resources:**
-- For code examples, see [examples.md](examples.md)
+- For code examples, see [examples/](examples/):
+  - [core.md](examples/core.md) - Client setup, constants, package exports
+  - [templates.md](examples/templates.md) - Base layout, components, email templates
+  - [integrations.md](examples/integrations.md) - Better Auth, Next.js API routes
+  - [deployment.md](examples/deployment.md) - Preview server, Vercel config, checklist
 - For decision frameworks and anti-patterns, see [reference.md](reference.md)
 
 ---
@@ -289,3 +293,7 @@ packages/emails/
 - [Better Auth Email Configuration](https://www.better-auth.com/docs/concepts/email)
 - [Resend + Better Auth Integration](https://resend.com/customers/better-auth)
 - [Resend Error Handling](https://resend.com/docs/api-reference/errors)
+
+---
+
+**VERIFY ALL CRITICAL REQUIREMENTS BEFORE IMPLEMENTATION. RE-READ FILES AFTER EDITING TO CONFIRM CHANGES.**

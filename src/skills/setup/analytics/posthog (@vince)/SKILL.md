@@ -54,7 +54,10 @@ description: PostHog analytics and feature flags setup
 - Initial dashboard recommendations
 
 **Detailed Resources:**
-- For code examples, see [examples.md](examples.md)
+- For code examples, see [examples/](examples/):
+  - [core.md](examples/core.md) - Provider setup, layout integration, user identification
+  - [server.md](examples/server.md) - Server client singleton, API routes, Hono middleware
+  - [deployment.md](examples/deployment.md) - Environment variables, Vercel deployment
 - For decision frameworks and anti-patterns, see [reference.md](reference.md)
 
 ---
@@ -144,7 +147,7 @@ NEXT_PUBLIC_POSTHOG_KEY=phc_your_project_api_key_here
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
-The PostHogProvider must be a 'use client' component with proper initialization. See [examples.md](examples.md) for the full provider implementation and root layout integration.
+The PostHogProvider must be a 'use client' component with proper initialization. See [examples/core.md](examples/core.md) for the full provider implementation and root layout integration.
 
 **Why good:** `defaults: "2025-11-30"` enables automatic SPA page/leave tracking, `person_profiles: "identified_only"` reduces event costs, debug mode in development aids troubleshooting
 
@@ -171,7 +174,7 @@ POSTHOG_API_KEY=phc_your_project_api_key_here
 POSTHOG_HOST=https://us.i.posthog.com
 ```
 
-Create a server client singleton for reuse across API routes. See [examples.md](examples.md) for the full implementation including API route and Hono middleware examples.
+Create a server client singleton for reuse across API routes. See [examples/server.md](examples/server.md) for the full implementation including API route and Hono middleware examples.
 
 **Why good:** Singleton prevents multiple client instances, flushInterval/flushAt configure batching, shutdown function for graceful cleanup, works in serverless (Vercel)
 

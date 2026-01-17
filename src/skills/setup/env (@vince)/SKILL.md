@@ -53,7 +53,11 @@ description: Environment configuration, Zod validation
 - .env.example templates for documentation and onboarding
 
 **Detailed Resources:**
-- For code examples, see [examples.md](examples.md)
+- For code examples, see [examples/](examples/) folder:
+  - [examples/core.md](examples/core.md) - Essential patterns (per-app .env, Zod validation)
+  - [examples/naming-and-templates.md](examples/naming-and-templates.md) - Framework prefixes, .env.example
+  - [examples/security-and-secrets.md](examples/security-and-secrets.md) - Secret management
+  - [examples/feature-flags-and-config.md](examples/feature-flags-and-config.md) - Feature flags, centralized config
 - For decision frameworks and anti-patterns, see [reference.md](reference.md)
 
 ---
@@ -138,7 +142,7 @@ packages/
 
 **Exception:** Shared variables can go in `turbo.json` `env` array (see setup/monorepo/basic.md)
 
-See [examples.md](examples.md) for complete code examples.
+See [examples/core.md](examples/core.md) for complete code examples.
 
 ---
 
@@ -200,7 +204,7 @@ console.log(env.VITE_ENABLE_ANALYTICS); // boolean
 
 **Why good:** Type safety prevents runtime errors from typos or wrong types, runtime validation fails fast at startup with clear error messages, default values reduce required configuration, IDE autocomplete improves DX
 
-See [examples.md](examples.md) for complete good/bad comparisons.
+See [examples/core.md](examples/core.md) for complete good/bad comparisons.
 
 ---
 
@@ -229,7 +233,7 @@ Use framework-specific prefixes for client-side variables and SCREAMING_SNAKE_CA
 - `PORT` - Server port number
 - No prefix - All variables available server-side
 
-See [examples.md](examples.md) for complete code examples with good/bad comparisons.
+See [examples/naming-and-templates.md](examples/naming-and-templates.md) for complete code examples with good/bad comparisons.
 
 </patterns>
 
@@ -253,6 +257,56 @@ See [examples.md](examples.md) for complete code examples with good/bad comparis
 - Runtime feature flag services for simple boolean flags (use env vars first, upgrade to LaunchDarkly if needed)
 
 </integration>
+
+---
+
+<decision_framework>
+
+## Decision Framework
+
+```
+Need environment configuration?
+├─ Is it a secret (API key, password)?
+│   ├─ YES → Use .env.local (gitignored) + CI secrets
+│   └─ NO → Can it be public (embedded in client bundle)?
+│       ├─ YES → Use NEXT_PUBLIC_* or VITE_* prefix
+│       └─ NO → Server-side only (no prefix)
+├─ Does it change per environment?
+│   ├─ YES → Use .env.{environment} files
+│   └─ NO → Use .env with defaults
+└─ Is it app-specific or shared?
+    ├─ App-specific → Per-app .env file
+    └─ Shared → Declare in turbo.json env array
+```
+
+See [reference.md](reference.md) for complete decision frameworks including feature flag decisions.
+
+</decision_framework>
+
+---
+
+<red_flags>
+
+## RED FLAGS
+
+**High Priority Issues:**
+- Committing secrets to version control (.env files with real credentials)
+- Using environment variables directly without Zod validation (causes runtime errors)
+- Using NEXT_PUBLIC_* or VITE_* prefix for secrets (embeds in client bundle)
+
+**Medium Priority Issues:**
+- Missing .env.example documentation (poor onboarding experience)
+- Using production secrets in development (security risk)
+- Root-level .env in monorepo (causes conflicts)
+
+**Gotchas:**
+- Next.js/Vite embed prefixed variables at **build time**, not runtime - requires rebuild to change
+- Environment variables are strings - use `z.coerce.number()` or `z.coerce.boolean()` for conversion
+- Turborepo cache is NOT invalidated by env changes unless declared in `turbo.json` env array
+
+See [reference.md](reference.md) for complete RED FLAGS, anti-patterns, and checklists.
+
+</red_flags>
 
 ---
 
