@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../schemas/metadata.schema.json
+category: framework
+category_exclusive: true
+author: "@vince"
+version: 1.0.0
+tags:
+  - vue
+  - composition-api
+  - script-setup
+  - composables
+  - reactivity
+compatible_with:
+  - frontend/styling/*
+  - frontend/testing/*
+conflicts_with:
+  - frontend/framework/react (@vince)
+  - frontend/framework/react+mobx (@vince)
