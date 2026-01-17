@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: forms
+category_exclusive: false
+author: "@vince"
+version: 1.0.0
+tags:
+  - forms
+  - react-hook-form
+  - useForm
+  - useFieldArray
+  - Controller
+  - validation
