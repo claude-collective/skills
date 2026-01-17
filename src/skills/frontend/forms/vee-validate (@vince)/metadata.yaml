@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: forms
+category_exclusive: false
+author: "@vince"
+version: 1.0.0
+tags:
+  - forms
+  - vee-validate
+  - vue
+  - useForm
+  - useField
+  - defineField
+  - useFieldArray
+  - validation
