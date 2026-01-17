@@ -1,0 +1,113 @@
+# tRPC Infinite Query Pagination
+
+> Cursor-based pagination with infinite scroll. See [core.md](core.md) for setup patterns.
+
+**Prerequisites**: Understand Pattern 3 (React Query Integration) from core examples first.
+
+---
+
+## Server-Side Cursor Pagination
+
+```typescript
+// packages/api/src/routers/post.ts
+import { z } from "zod";
+import { router, publicProcedure } from "../trpc";
+
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+
+const infinitePostsSchema = z.object({
+  limit: z.number().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
+  cursor: z.string().uuid().optional(),
+  filter: z.enum(["all", "published", "draft"]).default("all"),
+});
+
+export const postRouter = router({
+  infinite: publicProcedure
+    .input(infinitePostsSchema)
+    .query(async ({ input, ctx }) => {
+      const { limit, cursor, filter } = input;
+
+      const where = filter !== "all" ? { status: filter } : {};
+
+      const posts = await ctx.db.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where,
+        orderBy: { createdAt: "desc" },
+        include: { author: { select: { name: true, avatar: true } } },
+      });
+
+      let nextCursor: string | undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return { posts, nextCursor };
+    }),
+});
+
+// Named export
+export { postRouter };
+```
+
+---
+
+## Client-Side Infinite Query
+
+```typescript
+// apps/client/components/post-feed.tsx
+import { trpc } from "@/lib/trpc";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+
+const PAGE_SIZE = 20;
+
+export function PostFeed() {
+  const { ref, inView } = useInView();
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    error,
+  } = trpc.post.infinite.useInfiniteQuery(
+    { limit: PAGE_SIZE },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  // Auto-fetch when scroll into view
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (isPending) return <PostFeedSkeleton />;
+  if (error) return <Error message={error.message} />;
+
+  return (
+    <div>
+      {data.pages.map((page) =>
+        page.posts.map((post) => <PostCard key={post.id} post={post} />)
+      )}
+
+      {/* Trigger element for infinite scroll */}
+      <div ref={ref}>
+        {isFetchingNextPage && <Spinner />}
+        {!hasNextPage && <p>No more posts</p>}
+      </div>
+    </div>
+  );
+}
+
+// Named export
+export { PostFeed };
+```
+
+---
