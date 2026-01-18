@@ -4,6 +4,11 @@
 
 **Extended patterns:** See [state-machine.md](state-machine.md), [binary.md](binary.md), and [presence.md](presence.md) for advanced patterns.
 
+**Patterns covered:**
+- Pattern 9: Custom React Hook (useWebSocket)
+- Pattern 10: Shared WebSocket Connection (Context Provider)
+- Pattern 11: bfcache Compatibility (pagehide/pageshow)
+
 ---
 
 ## Pattern 9: Custom React Hook (useWebSocket)
@@ -488,3 +493,110 @@ export function Notifications() {
 ```
 
 **Why good:** Single WebSocket connection shared across components, type-based message routing, automatic cleanup with unsubscribe function, context prevents prop drilling
+
+---
+
+## Pattern 11: bfcache Compatibility
+
+Open WebSocket connections can prevent pages from entering the browser's back/forward cache, degrading navigation performance. Handle `pagehide` and `pageshow` events to manage connections properly.
+
+```typescript
+// hooks/use-bfcache-websocket.ts
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const WS_URL = "wss://api.example.com/ws";
+
+interface UseBfcacheWebSocketReturn {
+  status: "connecting" | "open" | "closed";
+  send: (message: unknown) => void;
+}
+
+export function useBfcacheWebSocket(): UseBfcacheWebSocketReturn {
+  const [status, setStatus] = useState<"connecting" | "open" | "closed">("connecting");
+  const socketRef = useRef<WebSocket | null>(null);
+  const messageQueueRef = useRef<unknown[]>([]);
+
+  const connect = useCallback(() => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      return;
+    }
+
+    setStatus("connecting");
+    const socket = new WebSocket(WS_URL);
+    socketRef.current = socket;
+
+    socket.onopen = () => {
+      setStatus("open");
+      // Flush queued messages on reconnect
+      while (messageQueueRef.current.length > 0) {
+        const msg = messageQueueRef.current.shift();
+        socket.send(JSON.stringify(msg));
+      }
+    };
+
+    socket.onclose = () => {
+      setStatus("closed");
+    };
+
+    socket.onmessage = (event) => {
+      // Handle incoming messages
+      console.log("Received:", event.data);
+    };
+  }, []);
+
+  const disconnect = useCallback(() => {
+    socketRef.current?.close(1000, "Page hidden");
+    socketRef.current = null;
+    setStatus("closed");
+  }, []);
+
+  const send = useCallback((message: unknown) => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify(message));
+    } else {
+      messageQueueRef.current.push(message);
+    }
+  }, []);
+
+  useEffect(() => {
+    connect();
+
+    // Close WebSocket on pagehide to allow bfcache
+    const handlePageHide = () => {
+      disconnect();
+    };
+
+    // Reconnect on pageshow if page was restored from bfcache
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // Page restored from bfcache - reconnect
+        connect();
+      }
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("pageshow", handlePageShow);
+      disconnect();
+    };
+  }, [connect, disconnect]);
+
+  return { status, send };
+}
+```
+
+**Why good:** Closes WebSocket on pagehide allowing bfcache, reconnects on pageshow when persisted (restored from cache), queues messages during disconnection, clean event listener management
+
+```typescript
+// ❌ Bad Example - Blocks bfcache
+useEffect(() => {
+  const socket = new WebSocket(WS_URL);
+  // No pagehide handling - blocks bfcache
+  return () => socket.close();
+}, []);
+```
+
+**Why bad:** Open WebSocket connections prevent bfcache, users experience slower back/forward navigation, connection stays open when page is hidden wasting resources

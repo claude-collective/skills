@@ -94,7 +94,7 @@ CONNECTING → CONNECTED ↔ (events) → DISCONNECTING → DISCONNECTED
 | Namespaces | Built-in | Not available |
 | Acknowledgments | Built-in | Manual |
 | Protocol | Custom (incompatible) | Standard WebSocket |
-| Bundle size | ~40KB gzipped | Native (0KB) |
+| Bundle size | ~14.5KB gzipped | Native (0KB) |
 
 </philosophy>
 
@@ -428,18 +428,37 @@ export function setupConnectionLifecycle(
 
 ---
 
-### Pattern 4: Acknowledgments with Timeout
+### Pattern 4: Acknowledgments with Timeout and Retries
 
-Use acknowledgments to confirm message delivery with timeout handling.
+Use acknowledgments to confirm message delivery with timeout handling. Socket.IO v4.6.0+ adds automatic retry support.
 
 #### Constants
 
 ```typescript
 const ACK_TIMEOUT_MS = 5000;
 const DEFAULT_TIMEOUT_MS = 10000;
+const MAX_RETRIES = 3;
 ```
 
-#### Implementation
+#### Automatic Retries (v4.6.0+)
+
+```typescript
+// Configure socket with automatic retries
+const socket = io(url, {
+  ackTimeout: ACK_TIMEOUT_MS,  // Timeout per attempt
+  retries: MAX_RETRIES,        // Max retry attempts
+});
+
+// Events are automatically retried on timeout
+socket.emit("message:send", content, (response) => {
+  // Will be retried up to MAX_RETRIES times if no ack received
+  console.log("Message confirmed:", response);
+});
+```
+
+**Why good:** Automatic retry handling reduces boilerplate, consistent timeout behavior across all emits, server must be idempotent for retried packets
+
+#### Manual Implementation
 
 ```typescript
 // lib/socket-utils.ts

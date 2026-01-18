@@ -325,8 +325,12 @@ const socket = io(url, {
 | `reconnectionDelay` | number | 1000 | Initial delay (ms) |
 | `reconnectionDelayMax` | number | 5000 | Maximum delay (ms) |
 | `timeout` | number | 20000 | Connection timeout (ms) |
-| `transports` | string[] | ["polling", "websocket"] | Transport priority |
+| `transports` | string[] | ["polling", "websocket", "webtransport"] | Transport priority |
 | `withCredentials` | boolean | false | Send cookies cross-origin |
+| `ackTimeout` | number | - | Default acknowledgment timeout (v4.6.0+, requires `retries`) |
+| `retries` | number | - | Max packet retransmission attempts (v4.6.0+) |
+| `tryAllTransports` | boolean | false | Test all transports if initial fails (v4.8.0+) |
+| `closeOnBeforeunload` | boolean | false | Close silently on browser unload (v4.7.1+) |
 
 ### Socket Events
 

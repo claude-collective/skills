@@ -25,6 +25,10 @@ description: Native WebSocket API patterns, connection lifecycle, reconnection s
 
 **(You MUST set `binaryType` to 'arraybuffer' when handling binary data for synchronous processing)**
 
+**(You MUST use wss:// for secure origins - modern browsers block ws:// on HTTPS pages except localhost)**
+
+**(You MUST handle bfcache compatibility with pagehide/pageshow events for better navigation performance)**
+
 </critical_requirements>
 
 ---
@@ -54,6 +58,7 @@ description: Native WebSocket API patterns, connection lifecycle, reconnection s
 - One-way server-to-client streaming only (use SSE instead)
 - Simple request-response patterns (use HTTP/REST instead)
 - When library abstractions are required (use Socket.IO or similar)
+- When automatic backpressure handling is critical (consider WebSocketStream when widely supported)
 
 **Detailed Resources:**
 - For code examples, see [examples/](examples/)
@@ -83,6 +88,8 @@ CONNECTING → OPEN ↔ (messages) → CLOSING → CLOSED
                 ↓                    ↓
             (error) ← reconnect ← (close)
 ```
+
+5. **bfcache Compatibility:** Open WebSocket connections can prevent pages from using the browser's back/forward cache, degrading navigation performance. Close connections on `pagehide` and reconnect on `pageshow` when persisted.
 
 </philosophy>
 
@@ -770,7 +777,7 @@ class RoomWebSocket {
 
 **Works with:**
 
-- Your React framework via custom hooks (see Pattern 9 in examples.md)
+- Your React framework via custom hooks (see Pattern 9 in examples/)
 - Your state management solution for connection state
 - Your authentication system for token management
 
@@ -780,6 +787,10 @@ class RoomWebSocket {
 - Socket.IO library patterns (socket-io skill if exists)
 - Server-Sent Events for one-way streams (SSE skill if exists)
 - State management for storing received data (state management skills)
+
+**Alternative APIs (Future):**
+
+- **WebSocketStream** (experimental) - Promise-based API with automatic backpressure handling via Streams API. Not widely supported yet - check browser compatibility before use.
 
 </integration>
 
@@ -801,6 +812,10 @@ class RoomWebSocket {
 
 **(You MUST set `binaryType` to 'arraybuffer' when handling binary data for synchronous processing)**
 
-**Failure to follow these rules will result in connection storms, lost messages, and runtime type errors.**
+**(You MUST use wss:// for secure origins - modern browsers block ws:// on HTTPS pages except localhost)**
+
+**(You MUST close WebSocket on `pagehide` and reconnect on `pageshow` when `event.persisted` to allow bfcache)**
+
+**Failure to follow these rules will result in connection storms, lost messages, blocked connections, and degraded navigation performance.**
 
 </critical_reminders>
