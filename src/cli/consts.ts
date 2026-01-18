@@ -16,8 +16,6 @@ export const GITHUB_REPO = 'claude-collective/claude-collective';
 // Use os.homedir() instead of process.env.HOME for cross-platform
 export const CACHE_DIR = path.join(os.homedir(), '.cache', 'claude-cli');
 
-export const SKILL_SUPPORTING_FILES = ['examples.md', 'reference.md'];
-
 // Directory paths relative to project root
 export const DIRS = {
   agents: 'src/agent-sources',
