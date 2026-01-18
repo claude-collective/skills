@@ -95,6 +95,8 @@ Handling binary data?
 - **Untyped message handling** - Runtime errors when message shapes change, impossible to refactor safely
 - **Sending messages without readyState check** - Messages silently fail when connection is not open
 - **Missing cleanup on component unmount** - Memory leaks, zombie connections, duplicate handlers
+- **Using ws:// on HTTPS pages** - Modern browsers block insecure WebSocket on secure origins (except localhost)
+- **Not handling bfcache** - Open connections prevent back/forward cache, degrading navigation performance
 
 ### Medium Priority Issues
 
@@ -103,6 +105,7 @@ Handling binary data?
 - **Using Blob binaryType for frequent binary messages** - Performance penalty from async processing
 - **Not handling all close event codes** - Missing opportunities for smart reconnection decisions
 - **Single retry interval without randomization** - All clients reconnect at same time after outage
+- **Not monitoring bufferedAmount** - Sending faster than network can handle causes memory issues
 
 ### Common Mistakes
 
@@ -117,11 +120,15 @@ Handling binary data?
 - **Close code 1000 is normal closure** - Don't reconnect for code 1000
 - **onerror is always followed by onclose** - Don't duplicate error handling logic
 - **WebSocket doesn't support custom HTTP headers** - Use query string or first message for auth
-- **Browser may not fire close event on page unload** - Use `beforeunload` for cleanup
-- **Some proxies have WebSocket idle timeouts** - Heartbeats prevent proxy disconnects
+- **Browser may not fire close event on page unload** - Use `pagehide` for cleanup (not `beforeunload`)
+- **Some proxies have WebSocket idle timeouts** - Heartbeats prevent proxy disconnects (20-30 second intervals recommended)
 - **readyState changes are not synchronous** - Check readyState before every send
 - **Binary messages need `instanceof ArrayBuffer` check** - Don't assume message type
 - **JSON.parse can throw** - Always wrap in try-catch for incoming messages
+- **wss:// required on HTTPS pages** - Modern browsers block ws:// on secure origins (except localhost)
+- **Open connections block bfcache** - Close on `pagehide`, reconnect on `pageshow` when `event.persisted`
+- **No built-in backpressure** - Check `bufferedAmount` before sending large data to avoid memory issues
+- **WebSocketStream is experimental** - New promise-based API with automatic backpressure, check browser support first
 
 ---
 
@@ -304,6 +311,64 @@ socket.onclose = (event) => {
 };
 ```
 
+### Blocking bfcache
+
+Open WebSocket connections prevent pages from being cached in the browser's back/forward cache.
+
+```typescript
+// WRONG - Blocks bfcache, slower navigation
+useEffect(() => {
+  const socket = new WebSocket(url);
+  return () => socket.close();
+}, []);
+
+// CORRECT - Close on pagehide, reconnect on pageshow
+useEffect(() => {
+  let socket: WebSocket | null = new WebSocket(url);
+
+  const handlePageHide = () => {
+    socket?.close(1000, "Page hidden");
+    socket = null;
+  };
+
+  const handlePageShow = (e: PageTransitionEvent) => {
+    if (e.persisted) socket = new WebSocket(url);
+  };
+
+  window.addEventListener("pagehide", handlePageHide);
+  window.addEventListener("pageshow", handlePageShow);
+
+  return () => {
+    window.removeEventListener("pagehide", handlePageHide);
+    window.removeEventListener("pageshow", handlePageShow);
+    socket?.close();
+  };
+}, []);
+```
+
+### Ignoring bufferedAmount (Backpressure)
+
+Sending data faster than the network can handle causes memory issues.
+
+```typescript
+const MAX_BUFFER_SIZE = 1024 * 1024; // 1MB
+
+// WRONG - No backpressure check
+function sendLargeData(data: ArrayBuffer) {
+  socket.send(data); // May queue unbounded data
+}
+
+// CORRECT - Check bufferedAmount before sending
+function sendLargeData(data: ArrayBuffer): boolean {
+  if (socket.bufferedAmount > MAX_BUFFER_SIZE) {
+    console.warn("Buffer full, try again later");
+    return false;
+  }
+  socket.send(data);
+  return true;
+}
+```
+
 ---
 
 ## Close Event Codes Reference
@@ -342,12 +407,13 @@ socket.onclose = (event) => {
 
 - [ ] Implements exponential backoff with jitter
 - [ ] Has maximum retry limit
-- [ ] Has heartbeat/ping-pong mechanism
+- [ ] Has heartbeat/ping-pong mechanism (20-30s intervals recommended)
 - [ ] Queues messages during disconnection
 - [ ] Flushes queue on reconnect
 - [ ] Checks readyState before sending
 - [ ] Cleans up on component unmount
 - [ ] Distinguishes intentional vs unintentional close
+- [ ] Handles bfcache (pagehide/pageshow events)
 
 ### Message Handling Checklist
 
@@ -370,3 +436,4 @@ socket.onclose = (event) => {
 - [ ] Chunks large file uploads
 - [ ] Limits message queue size
 - [ ] Uses shared connection when multiple components need same socket
+- [ ] Monitors bufferedAmount for backpressure on large sends
