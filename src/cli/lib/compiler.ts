@@ -2,7 +2,7 @@ import { Liquid } from 'liquidjs';
 import path from 'path';
 import { readFile, readFileOptional, writeFile, ensureDir, remove, copy, glob, fileExists } from '../utils/fs';
 import { verbose } from '../utils/logger';
-import { DIRS, OUTPUT_DIR, SKILL_SUPPORTING_FILES } from '../consts';
+import { DIRS, OUTPUT_DIR } from '../consts';
 import { resolveClaudeMd } from './resolver';
 import type {
   Skill,
@@ -170,13 +170,18 @@ export async function compileAllSkills(
         await writeFile(path.join(outDir, 'SKILL.md'), mainContent);
         console.log(`  ✓ skills/${id}/SKILL.md`);
 
-        // Copy optional supporting files
-        for (const file of SKILL_SUPPORTING_FILES) {
-          const supportingContent = await readFileOptional(path.join(sourcePath, file));
-          if (supportingContent) {
-            await writeFile(path.join(outDir, file), supportingContent);
-            console.log(`  ✓ skills/${id}/${file}`);
-          }
+        // Copy reference.md if exists
+        const referenceContent = await readFileOptional(path.join(sourcePath, 'reference.md'));
+        if (referenceContent) {
+          await writeFile(path.join(outDir, 'reference.md'), referenceContent);
+          console.log(`  ✓ skills/${id}/reference.md`);
+        }
+
+        // Copy examples folder if exists
+        const examplesDir = path.join(sourcePath, 'examples');
+        if (await fileExists(examplesDir)) {
+          await copy(examplesDir, path.join(outDir, 'examples'));
+          console.log(`  ✓ skills/${id}/examples/`);
         }
 
         // Copy scripts directory if exists
