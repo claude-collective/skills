@@ -14,10 +14,14 @@
 ### Rotation Policy Constants
 
 ```typescript
-const ROTATION_CRITICAL_DAYS = 90; // Quarterly
-const ROTATION_API_KEYS_DAYS = 365; // Annually
-const ROTATION_PASSWORDS_DAYS = 90; // Every 90 days
-const CERT_EXPIRY_WARNING_DAYS = 30; // 30 days notice
+// NIST SP 800-63-4 (2025): Avoid mandatory periodic rotation for user passwords.
+// Use event-based rotation (on compromise) instead.
+// Periodic rotation is still recommended for service/privileged accounts.
+const ROTATION_SERVICE_ACCOUNT_DAYS = 90; // Quarterly for service accounts
+const ROTATION_PRIVILEGED_ACCOUNT_DAYS = 90; // Quarterly for privileged access
+const ROTATION_API_KEYS_DAYS = 365; // Annually or on compromise
+const CERT_EXPIRY_WARNING_DAYS = 30; // 30 days notice before expiry
+// User passwords: rotate on compromise only (NIST 2025 guidance)
 ```
 
 ### Good Example - Secure Token Storage
@@ -136,10 +140,12 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 res.cookie('authToken', token, {
   httpOnly: true, // Prevents JavaScript access
   secure: true, // HTTPS only
-  sameSite: 'strict', // Prevents CSRF
+  sameSite: 'lax', // Modern default - balances security and UX (use 'strict' for sensitive operations only)
   maxAge: COOKIE_MAX_AGE_SECONDS * 1000,
   path: '/',
 });
 ```
 
-**Why good:** HttpOnly prevents XSS token theft via JavaScript, Secure ensures cookies only sent over HTTPS preventing interception, SameSite=Strict blocks cross-site requests preventing CSRF, named constant makes expiration policy clear and auditable
+**Why good:** HttpOnly prevents XSS token theft via JavaScript, Secure ensures cookies only sent over HTTPS preventing interception, SameSite=Lax is the modern browser default providing CSRF protection while allowing legitimate cross-site navigation, named constant makes expiration policy clear and auditable
+
+> **Note:** Use `sameSite: 'strict'` only for cookies used in sensitive state-changing operations. For general session cookies, `'lax'` provides better UX while maintaining security.

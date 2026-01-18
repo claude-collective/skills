@@ -132,12 +132,16 @@ Secrets include: API keys, tokens, passwords, database credentials, private keys
 
 #### Rotation Policies
 
+**Note:** NIST SP 800-63-4 (2025) recommends against mandatory periodic password rotation for users. Instead, use event-based rotation (on compromise, team member departure, or security incident). Periodic rotation is still recommended for service accounts and privileged access.
+
 | Secret Type | Rotation Frequency |
 |-------------|-------------------|
-| Critical credentials | 90 days (quarterly) |
-| API keys | 365 days (annually) |
-| Passwords | 90 days |
+| Service account credentials | 90 days (quarterly) |
+| API keys | 365 days (annually) or on compromise |
+| User passwords | On compromise only (NIST 2025 guidance) |
+| Privileged account passwords | 90 days (quarterly) |
 | Certificates | 30 days warning before expiry |
+| All secrets | Immediately on team member departure |
 
 **See [examples/core.md](examples/core.md#pattern-1-secret-management) for code examples.**
 
@@ -181,6 +185,23 @@ When HTML rendering is required, use DOMPurify with a whitelist of allowed tags 
 Configure CSP headers to prevent unauthorized script execution even if XSS occurs.
 
 **See [examples/xss-prevention.md](examples/xss-prevention.md) for React, DOMPurify, and CSP code examples.**
+
+---
+
+### OWASP Top 10 2025 Coverage
+
+This skill addresses the following OWASP Top 10:2025 categories:
+
+| OWASP Category | Coverage |
+|----------------|----------|
+| A01: Broken Access Control | CODEOWNERS, branch protection, rate limiting |
+| A02: Security Misconfiguration | CSP headers, security headers, Dependabot |
+| A03: Software Supply Chain Failures (NEW) | Dependabot, CI security audits, dependency review |
+| A04: Cryptographic Failures | HttpOnly/Secure cookies, HTTPS enforcement |
+| A05: Injection (includes XSS) | DOMPurify, React auto-escaping, CSP |
+| A07: Identification & Auth Failures | HttpOnly cookies, session management |
+| A09: Security Logging & Alerting | (See observability skill) |
+| A10: Mishandling Exceptional Conditions (NEW) | Fail securely principle, error handling |
 
 </patterns>
 
