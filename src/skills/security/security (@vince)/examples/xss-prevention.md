@@ -28,6 +28,8 @@ function UserComment({ comment }: { comment: string }) {
 import DOMPurify from 'dompurify';
 import { useMemo } from 'react';
 
+// IMPORTANT: DOMPurify's default allows <style> (CSS exfiltration) and <form> (CSRF).
+// Always use explicit whitelist for security-critical applications.
 const ALLOWED_TAGS = ['b', 'i', 'em', 'strong', 'a', 'p', 'br'];
 const ALLOWED_ATTR = ['href', 'title'];
 
@@ -81,13 +83,17 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'nonce-{NONCE}'", // Dynamically generated nonce
+      // Strict CSP with nonce + strict-dynamic for CSP Level 3
+      // 'strict-dynamic' allows trusted scripts to load additional scripts
+      // 'unsafe-inline' is ignored by browsers when nonce is present (fallback for old browsers)
+      "script-src 'nonce-{NONCE}' 'strict-dynamic' https: 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'", // Needed for CSS-in-JS temporarily
       "img-src 'self' data: https:",
       "font-src 'self' data:",
       "connect-src 'self' https://api.example.com",
+      "object-src 'none'", // Prevent plugin execution (Flash, Java)
       "frame-ancestors 'none'",
-      "base-uri 'self'",
+      "base-uri 'none'", // Prevent base tag hijacking
       "form-action 'self'",
     ].join('; ')
   },
@@ -99,9 +105,12 @@ const securityHeaders = [
     key: "X-Frame-Options",
     value: "DENY",
   },
+  // Note: X-XSS-Protection is deprecated and removed from modern browsers.
+  // Setting to "0" explicitly disables it to prevent legacy browser issues.
+  // Rely on CSP for XSS protection instead.
   {
     key: "X-XSS-Protection",
-    value: "1; mode=block",
+    value: "0",
   },
 ];
 
@@ -116,7 +125,7 @@ export function middleware(request: NextRequest) {
 }
 ```
 
-**Why good:** CSP prevents unauthorized script execution even if XSS occurs, nonce-based script allowlist is more secure than 'unsafe-inline', X-Frame-Options prevents clickjacking attacks, named constant for nonce length makes security policy auditable
+**Why good:** CSP prevents unauthorized script execution even if XSS occurs, nonce + strict-dynamic is the modern best practice (CSP Level 3), object-src 'none' blocks plugin exploits, base-uri 'none' prevents base tag hijacking, X-Frame-Options prevents clickjacking, X-XSS-Protection set to 0 disables deprecated browser filter that can cause vulnerabilities
 
 ### Bad Example - No CSP Configuration
 
