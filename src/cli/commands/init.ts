@@ -2,14 +2,12 @@ import { Command } from 'commander'
 import * as p from '@clack/prompts'
 import pc from 'picocolors'
 import path from 'path'
-import { parse as parseYaml } from 'yaml'
-import { readFile } from '../utils/fs'
 import { PROJECT_ROOT } from '../consts'
-import { runWizard, buildMvpMatrix, clearTerminal, renderSelectionsHeader } from '../lib/wizard'
-import type { SkillsMatrixConfig } from '../types-matrix'
+import { runWizard, clearTerminal, renderSelectionsHeader } from '../lib/wizard'
+import { loadAndMergeSkillsMatrix } from '../lib/matrix-loader'
 
-// Default path to MVP matrix config for testing
-const DEFAULT_MATRIX_PATH = 'src/config/skills-matrix-mvp.yaml'
+// Default path to skills matrix config
+const DEFAULT_MATRIX_PATH = 'src/config/skills-matrix.yaml'
 
 export const initCommand = new Command('init')
   .description('Initialize Claude Collective in your project')
@@ -20,29 +18,24 @@ export const initCommand = new Command('init')
   })
   .showHelpAfterError(true)
   .action(async options => {
-    p.intro(pc.cyan('Claude Collective Setup') + pc.dim(' (MVP Test Mode)'))
+    p.intro(pc.cyan('Claude Collective Setup'))
 
     // Load skills matrix config
     const matrixPath = path.isAbsolute(options.matrix) ? options.matrix : path.join(PROJECT_ROOT, options.matrix)
 
-    let matrixConfig: SkillsMatrixConfig
-
     const s = p.spinner()
     s.start('Loading skills matrix...')
 
+    let matrix
     try {
-      const content = await readFile(matrixPath)
-      matrixConfig = parseYaml(content) as SkillsMatrixConfig
-      s.stop(`Loaded ${Object.keys(matrixConfig.skill_aliases).length} skills from matrix`)
+      matrix = await loadAndMergeSkillsMatrix(matrixPath, PROJECT_ROOT)
+      s.stop(`Loaded ${Object.keys(matrix.skills).length} skills from matrix`)
     } catch (error) {
       s.stop('Failed to load skills matrix')
       p.log.error(`Could not load skills matrix from ${matrixPath}`)
       p.log.info('Make sure the file exists and is valid YAML')
       process.exit(1)
     }
-
-    // Build merged matrix for wizard (MVP mode - from config only)
-    const matrix = buildMvpMatrix(matrixConfig)
 
     // Run the wizard
     const result = await runWizard(matrix)
