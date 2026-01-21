@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: api
+category_exclusive: true
+author: "@vince"
+version: 1.0.0
+tags:
+  - fastify
+  - nodejs
+  - high-performance
+  - rest-api
+  - json-schema
+  - schema-validation
+  - typebox
+  - typescript
+  - plugins
+  - encapsulation
+compatible_with:
+  - backend/authentication
+  - backend/database
+  - backend/logging
+  - backend/caching
+  - security/security
+conflicts_with:
+  - backend/api/hono
+  - backend/api/express
+  - backend/api/koa
+  - backend/api/nestjs
