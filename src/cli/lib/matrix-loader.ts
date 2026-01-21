@@ -23,7 +23,7 @@ interface RawMetadata {
   category_exclusive?: boolean
   author: string
   version: string
-  /** Short display name for CLI (e.g., "React", "Zustand", "SolidJS") */
+  /** Required for skill to load. Short display name for CLI (e.g., "React", "Zustand", "SolidJS") */
   cli_name?: string
   /** Short description for CLI display (5-6 words) */
   cli_description?: string
@@ -85,19 +85,6 @@ function validateMatrixStructure(config: SkillsMatrixConfig, configPath: string)
 }
 
 /**
- * Extract display name from skill ID
- * e.g., "frontend/state-zustand (@vince)" -> "State Zustand"
- */
-function extractDisplayName(skillId: string): string {
-  const withoutCategory = skillId.split('/').pop() || skillId
-  const withoutAuthor = withoutCategory.replace(/\s*\(@\w+\)$/, '').trim()
-  return withoutAuthor
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-/**
  * Extract skill metadata from all skills directories
  * Combines SKILL.md frontmatter (identity) with metadata.yaml (relationships)
  */
@@ -131,17 +118,20 @@ export async function extractAllSkills(skillsDir: string): Promise<ExtractedSkil
       continue
     }
 
+    // cli_name is required in metadata.yaml
+    if (!metadata.cli_name) {
+      throw new Error(`Skill at ${metadataFile} is missing required 'cli_name' field in metadata.yaml`)
+    }
+
     // Extract skill ID from frontmatter.name
     const skillId = frontmatter.name
 
     // Build extracted skill metadata
-    // Use cli_name from metadata.yaml for display name (combined with author)
-    // Use cli_description from metadata.yaml for CLI display (short, 5-6 words)
-    // Falls back to SKILL.md description if cli_description not set
+    // Display name format: "cli_name author" (e.g., "React @vince")
     const extracted: ExtractedSkillMetadata = {
       // Identity (from SKILL.md)
       id: skillId,
-      name: metadata.cli_name ? `${metadata.cli_name} ${metadata.author}` : extractDisplayName(skillId),
+      name: `${metadata.cli_name} ${metadata.author}`,
       description: metadata.cli_description || frontmatter.description,
       usageGuidance: metadata.usage_guidance,
 
