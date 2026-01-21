@@ -2,7 +2,10 @@
 category: backend
 category_exclusive: false
 author: "@vince"
-version: 1.0.0
+version: 1
+cli_name: GitHub Actions
+cli_description: CI/CD pipelines
+usage_guidance: Use when configuring CI/CD pipelines, GitHub workflows, or deployment automation.
 compatible_with:
   - setup/monorepo
   - setup/tooling
