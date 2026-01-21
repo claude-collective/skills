@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: api
+category_exclusive: true
+author: "@vince"
+version: 1.0.0
+compatible_with:
+  - backend/authentication
+  - backend/database
+  - security/security
+  - backend/observability
+conflicts_with:
+  - backend/api/hono
+  - backend/api/fastify
+  - backend/api/koa
+tags:
+  - express
+  - expressjs
+  - nodejs
+  - rest-api
+  - middleware
+  - routing
+  - http
