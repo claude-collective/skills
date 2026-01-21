@@ -13,7 +13,6 @@ import type {
   SkillRelation,
   SkillRequirement,
   SkillAlternative,
-  CategoryDefinition,
 } from '../types-matrix'
 
 /**
@@ -31,8 +30,6 @@ interface RawMetadata {
   requires_setup?: string[]
   provides_setup_for?: string[]
 }
-
-const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---/
 
 /**
  * Load and parse skills-matrix.yaml
@@ -194,17 +191,11 @@ export async function mergeMatrixWithSkills(
   const aliases = matrix.skill_aliases
   const aliasesReverse = buildReverseAliases(aliases)
 
-  // Index skills by ID for quick lookup
-  const skillsById = new Map<string, ExtractedSkillMetadata>()
-  for (const skill of skills) {
-    skillsById.set(skill.id, skill)
-  }
-
   // Build resolved skills
   const resolvedSkills: Record<string, ResolvedSkill> = {}
 
   for (const skill of skills) {
-    const resolved = buildResolvedSkill(skill, matrix, skillsById, aliases, aliasesReverse)
+    const resolved = buildResolvedSkill(skill, matrix, aliases, aliasesReverse)
     resolvedSkills[skill.id] = resolved
   }
 
@@ -233,7 +224,6 @@ export async function mergeMatrixWithSkills(
 function buildResolvedSkill(
   skill: ExtractedSkillMetadata,
   matrix: SkillsMatrixConfig,
-  skillsById: Map<string, ExtractedSkillMetadata>,
   aliases: Record<string, string>,
   aliasesReverse: Record<string, string>,
 ): ResolvedSkill {
@@ -241,6 +231,7 @@ function buildResolvedSkill(
   const recommends: SkillRelation[] = []
   const requires: SkillRequirement[] = []
   const alternatives: SkillAlternative[] = []
+  const discourages: SkillRelation[] = []
 
   // Conflicts from metadata.yaml
   for (const conflictRef of skill.conflictsWith) {
@@ -331,6 +322,26 @@ function buildResolvedSkill(
     }
   }
 
+  // Discourages from skills-matrix.yaml
+  if (matrix.relationships.discourages) {
+    for (const discourageRule of matrix.relationships.discourages) {
+      const resolvedSkills = discourageRule.skills.map(s => resolveToFullId(s, aliases))
+      if (resolvedSkills.includes(skill.id)) {
+        for (const otherSkill of resolvedSkills) {
+          if (otherSkill !== skill.id) {
+            // Avoid duplicates
+            if (!discourages.some(d => d.skillId === otherSkill)) {
+              discourages.push({
+                skillId: otherSkill,
+                reason: discourageRule.reason,
+              })
+            }
+          }
+        }
+      }
+    }
+  }
+
   return {
     // Identity
     id: skill.id,
@@ -354,6 +365,7 @@ function buildResolvedSkill(
     requires,
     requiredBy: [], // Computed later
     alternatives,
+    discourages,
 
     // Setup relationships
     requiresSetup: skill.requiresSetup.map(s => resolveToFullId(s, aliases)),
