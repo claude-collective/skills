@@ -1,7 +1,7 @@
-import path from 'path';
-import { fileExists } from '../utils/fs';
-import { DIRS } from '../consts';
-import { loadStack } from './loader';
+import path from "path";
+import { fileExists } from "../utils/fs";
+import { DIRS } from "../consts";
+import { loadStack, getDirs, type CompileMode } from "./loader";
 import type {
   AgentConfig,
   AgentDefinition,
@@ -12,21 +12,28 @@ import type {
   SkillDefinition,
   SkillReference,
   StackConfig,
-} from '../types';
+} from "../types";
 
 /**
  * Resolve agent template: Stack -> Default
  */
 export async function resolveTemplate(
   projectRoot: string,
-  stackId: string
+  stackId: string,
+  mode: CompileMode = "dev",
 ): Promise<string> {
+  const dirs = getDirs(mode);
   // 1. Stack-specific template
-  const stackTemplate = path.join(projectRoot, DIRS.stacks, stackId, 'agent.liquid');
+  const stackTemplate = path.join(
+    projectRoot,
+    dirs.stacks,
+    stackId,
+    "agent.liquid",
+  );
   if (await fileExists(stackTemplate)) return stackTemplate;
 
   // 2. Default template
-  return path.join(projectRoot, DIRS.templates, 'agent.liquid');
+  return path.join(projectRoot, dirs.templates, "agent.liquid");
 }
 
 /**
@@ -34,9 +41,11 @@ export async function resolveTemplate(
  */
 export async function resolveClaudeMd(
   projectRoot: string,
-  stackId: string
+  stackId: string,
+  mode: CompileMode = "dev",
 ): Promise<string> {
-  const stackClaude = path.join(projectRoot, DIRS.stacks, stackId, 'CLAUDE.md');
+  const dirs = getDirs(mode);
+  const stackClaude = path.join(projectRoot, dirs.stacks, stackId, "CLAUDE.md");
   if (await fileExists(stackClaude)) return stackClaude;
 
   throw new Error(`No CLAUDE.md found for stack ${stackId}`);
@@ -47,7 +56,7 @@ export async function resolveClaudeMd(
  */
 export function resolveSkillReference(
   ref: SkillReference,
-  skills: Record<string, SkillDefinition>
+  skills: Record<string, SkillDefinition>,
 ): Skill {
   const definition = skills[ref.id];
   if (!definition) {
@@ -68,7 +77,7 @@ export function resolveSkillReference(
  */
 export function resolveSkillReferences(
   skillRefs: SkillReference[],
-  skills: Record<string, SkillDefinition>
+  skills: Record<string, SkillDefinition>,
 ): Skill[] {
   return skillRefs.map((ref) => resolveSkillReference(ref, skills));
 }
@@ -85,7 +94,7 @@ function getStackSkillIds(stackSkills: SkillAssignment[]): string[] {
  * Format: { framework: [...], styling: [...] } -> [...]
  */
 function flattenAgentSkills(
-  categorizedSkills: Record<string, SkillAssignment[]>
+  categorizedSkills: Record<string, SkillAssignment[]>,
 ): SkillAssignment[] {
   const assignments: SkillAssignment[] = [];
   for (const category of Object.keys(categorizedSkills)) {
@@ -101,7 +110,7 @@ function flattenAgentSkills(
 export function resolveStackSkills(
   stack: StackConfig,
   agentName: string,
-  skills: Record<string, SkillDefinition>
+  skills: Record<string, SkillDefinition>,
 ): SkillReference[] {
   const skillRefs: SkillReference[] = [];
 
@@ -120,14 +129,14 @@ export function resolveStackSkills(
     // Validate skill exists in scanned skills
     if (!skills[skillId]) {
       throw new Error(
-        `Stack "${stack.name}" references skill "${skillId}" for agent "${agentName}" not found in scanned skills`
+        `Stack "${stack.name}" references skill "${skillId}" for agent "${agentName}" not found in scanned skills`,
       );
     }
 
     // Validate skill is in stack's skill list (if using per-agent skills)
     if (agentSkillCategories && !validSkillIds.includes(skillId)) {
       throw new Error(
-        `Stack "${stack.name}" agent_skills for "${agentName}" includes skill "${skillId}" not in stack's skills array`
+        `Stack "${stack.name}" agent_skills for "${agentName}" includes skill "${skillId}" not in stack's skills array`,
       );
     }
 
@@ -150,7 +159,7 @@ export async function getAgentSkills(
   agentConfig: CompileAgentConfig,
   compileConfig: CompileConfig,
   skills: Record<string, SkillDefinition>,
-  projectRoot: string
+  projectRoot: string,
 ): Promise<SkillReference[]> {
   // If agent has explicit skills defined, use those
   if (agentConfig.skills && agentConfig.skills.length > 0) {
@@ -159,7 +168,9 @@ export async function getAgentSkills(
 
   // Resolve from stack
   if (compileConfig.stack) {
-    console.log(`  Resolving skills from stack "${compileConfig.stack}" for ${agentName}`);
+    console.log(
+      `  Resolving skills from stack "${compileConfig.stack}" for ${agentName}`,
+    );
     const stack = await loadStack(compileConfig.stack, projectRoot);
     return resolveStackSkills(stack, agentName, skills);
   }
@@ -175,7 +186,7 @@ export async function resolveAgents(
   agents: Record<string, AgentDefinition>,
   skills: Record<string, SkillDefinition>,
   compileConfig: CompileConfig,
-  projectRoot: string
+  projectRoot: string,
 ): Promise<Record<string, AgentConfig>> {
   const resolved: Record<string, AgentConfig> = {};
   const agentNames = Object.keys(compileConfig.agents);
@@ -184,7 +195,7 @@ export async function resolveAgents(
     const definition = agents[agentName];
     if (!definition) {
       throw new Error(
-        `Agent "${agentName}" in compile config but not found in scanned agents`
+        `Agent "${agentName}" in compile config but not found in scanned agents`,
       );
     }
 
@@ -196,7 +207,7 @@ export async function resolveAgents(
       agentConfig,
       compileConfig,
       skills,
-      projectRoot
+      projectRoot,
     );
 
     // Resolve skill references to full skill objects
@@ -223,26 +234,26 @@ export async function resolveAgents(
  */
 export function stackToCompileConfig(
   stackId: string,
-  stack: StackConfig
+  stack: StackConfig,
 ): CompileConfig {
   const agents: Record<string, CompileAgentConfig> = {};
 
   for (const agentId of stack.agents) {
     agents[agentId] = {
       core_prompts: [
-        'core-principles',
-        'investigation-requirement',
-        'write-verification',
-        'anti-over-engineering',
+        "core-principles",
+        "investigation-requirement",
+        "write-verification",
+        "anti-over-engineering",
       ],
-      ending_prompts: ['context-management', 'improvement-protocol'],
+      ending_prompts: ["context-management", "improvement-protocol"],
     };
   }
 
   return {
     name: stack.name,
-    description: stack.description || '',
-    claude_md: '',
+    description: stack.description || "",
+    claude_md: "",
     stack: stackId,
     agents,
   };

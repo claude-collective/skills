@@ -190,8 +190,8 @@ export async function compileAllSkills(
     const outDir = path.join(ctx.outputDir, "skills", id);
     await ensureDir(outDir);
 
-    // Skills are in src/skills/ directory
-    const sourcePath = path.join(ctx.projectRoot, "src", skill.path);
+    // skill.path now includes full relative path (e.g., "src/stacks/..." or ".claude-collective/stacks/...")
+    const sourcePath = path.join(ctx.projectRoot, skill.path);
     const isFolder = skill.path.endsWith("/");
 
     try {
@@ -240,7 +240,11 @@ export async function compileAllSkills(
  * Copy CLAUDE.md to output
  */
 export async function copyClaude(ctx: CompileContext): Promise<void> {
-  const claudePath = await resolveClaudeMd(ctx.projectRoot, ctx.stackId);
+  const claudePath = await resolveClaudeMd(
+    ctx.projectRoot,
+    ctx.stackId,
+    ctx.mode,
+  );
 
   const content = await readFile(claudePath);
   const outputPath = path.join(ctx.outputDir, "..", "CLAUDE.md");
