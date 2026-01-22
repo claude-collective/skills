@@ -1,15 +1,57 @@
-import { parse as parseYaml } from 'yaml';
-import path from 'path';
-import { glob, readFile } from '../utils/fs';
-import { verbose } from '../utils/logger';
-import { DIRS } from '../consts';
+import { parse as parseYaml } from "yaml";
+import path from "path";
+import { glob, readFile, directoryExists } from "../utils/fs";
+import { verbose } from "../utils/logger";
+import { DIRS, COLLECTIVE_DIR, COLLECTIVE_STACKS_SUBDIR } from "../consts";
 import type {
   AgentDefinition,
   AgentYamlConfig,
   SkillDefinition,
   SkillFrontmatter,
   StackConfig,
-} from '../types';
+} from "../types";
+
+/**
+ * Compile mode: 'dev' for this repo (src/stacks), 'user' for user projects (.claude-collective/stacks)
+ */
+export type CompileMode = "dev" | "user";
+
+/**
+ * Detect compile mode based on whether .claude-collective/stacks exists
+ */
+export async function detectCompileMode(
+  projectRoot: string,
+): Promise<CompileMode> {
+  const collectiveStacksDir = path.join(
+    projectRoot,
+    COLLECTIVE_DIR,
+    COLLECTIVE_STACKS_SUBDIR,
+  );
+  if (await directoryExists(collectiveStacksDir)) {
+    return "user";
+  }
+  return "dev";
+}
+
+/**
+ * Get directories based on compile mode
+ */
+export function getDirs(mode: CompileMode) {
+  if (mode === "user") {
+    return {
+      agents: "src/agent-sources", // Always from CLI repo for now
+      skills: `${COLLECTIVE_DIR}/skills`, // Future: user-defined skills
+      stacks: `${COLLECTIVE_DIR}/${COLLECTIVE_STACKS_SUBDIR}`,
+      corePrompts: "src/core-prompts",
+      agentOutputs: "src/agent-outputs",
+      templates: "src/templates",
+      commands: "src/commands",
+    } as const;
+  }
+
+  // Dev mode (current behavior)
+  return DIRS;
+}
 
 const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---/;
 
@@ -32,24 +74,24 @@ export function parseFrontmatter(content: string): SkillFrontmatter | null {
  * e.g., "frontend/react (@vince)" -> "React"
  */
 function extractDisplayName(skillId: string): string {
-  const withoutCategory = skillId.split('/').pop() || skillId;
-  const withoutAuthor = withoutCategory.replace(/\s*\(@\w+\)$/, '').trim();
+  const withoutCategory = skillId.split("/").pop() || skillId;
+  const withoutAuthor = withoutCategory.replace(/\s*\(@\w+\)$/, "").trim();
   return withoutAuthor
-    .split('-')
+    .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 /**
  * Load all agents by scanning agent-sources/{agentId}/agent.yaml
  */
 export async function loadAllAgents(
-  projectRoot: string
+  projectRoot: string,
 ): Promise<Record<string, AgentDefinition>> {
   const agents: Record<string, AgentDefinition> = {};
   const agentSourcesDir = path.join(projectRoot, DIRS.agents);
 
-  const files = await glob('*/agent.yaml', agentSourcesDir);
+  const files = await glob("*/agent.yaml", agentSourcesDir);
 
   for (const file of files) {
     const fullPath = path.join(agentSourcesDir, file);
@@ -76,12 +118,14 @@ export async function loadAllAgents(
  */
 export async function loadStackSkills(
   stackId: string,
-  projectRoot: string
+  projectRoot: string,
+  mode: CompileMode = "dev",
 ): Promise<Record<string, SkillDefinition>> {
   const skills: Record<string, SkillDefinition> = {};
-  const stackSkillsDir = path.join(projectRoot, DIRS.stacks, stackId, 'skills');
+  const dirs = getDirs(mode);
+  const stackSkillsDir = path.join(projectRoot, dirs.stacks, stackId, "skills");
 
-  const files = await glob('**/SKILL.md', stackSkillsDir);
+  const files = await glob("**/SKILL.md", stackSkillsDir);
 
   for (const file of files) {
     const fullPath = path.join(stackSkillsDir, file);
@@ -89,13 +133,20 @@ export async function loadStackSkills(
 
     const frontmatter = parseFrontmatter(content);
     if (!frontmatter) {
-      console.warn(`  Warning: Skipping ${file}: Missing or invalid frontmatter`);
+      console.warn(
+        `  Warning: Skipping ${file}: Missing or invalid frontmatter`,
+      );
       continue;
     }
 
-    const folderPath = file.replace('/SKILL.md', '');
-    // Path points to stack's embedded skill location (relative to src/)
-    const skillPath = `stacks/${stackId}/skills/${folderPath}/`;
+    const folderPath = file.replace("/SKILL.md", "");
+    // Path points to stack's embedded skill location (full relative path from project root)
+    // For dev mode: src/stacks/{stackId}/skills/{folderPath}/
+    // For user mode: .claude-collective/stacks/{stackId}/skills/{folderPath}/
+    const skillPath =
+      mode === "dev"
+        ? `src/stacks/${stackId}/skills/${folderPath}/`
+        : `${dirs.stacks}/${stackId}/skills/${folderPath}/`;
     const skillId = frontmatter.name;
 
     skills[skillId] = {
@@ -110,7 +161,7 @@ export async function loadStackSkills(
   return skills;
 }
 
-// Cache for loaded stacks
+// Cache for loaded stacks (keyed by mode:stackId)
 const stackCache = new Map<string, StackConfig>();
 
 /**
@@ -118,21 +169,23 @@ const stackCache = new Map<string, StackConfig>();
  */
 export async function loadStack(
   stackId: string,
-  projectRoot: string
+  projectRoot: string,
+  mode: CompileMode = "dev",
 ): Promise<StackConfig> {
-  const cached = stackCache.get(stackId);
+  const cacheKey = `${mode}:${stackId}`;
+  const cached = stackCache.get(cacheKey);
   if (cached) return cached;
 
-  const stackPath = path.join(projectRoot, DIRS.stacks, stackId, 'config.yaml');
+  const dirs = getDirs(mode);
+  const stackPath = path.join(projectRoot, dirs.stacks, stackId, "config.yaml");
 
   try {
     const content = await readFile(stackPath);
     const stack = parseYaml(content) as StackConfig;
-    stackCache.set(stackId, stack);
+    stackCache.set(cacheKey, stack);
     verbose(`Loaded stack: ${stack.name} (${stackId})`);
     return stack;
   } catch (error) {
     throw new Error(`Failed to load stack "${stackId}": ${error}`);
   }
 }
-

@@ -2,7 +2,12 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
 import path from "path";
-import { PROJECT_ROOT, DEFAULT_MATRIX_PATH } from "../consts";
+import {
+  PROJECT_ROOT,
+  DEFAULT_MATRIX_PATH,
+  COLLECTIVE_DIR,
+  COLLECTIVE_STACKS_SUBDIR,
+} from "../consts";
 import { ensureDir, directoryExists } from "../utils/fs";
 import {
   runWizard,
@@ -15,12 +20,17 @@ import {
   promptStackName,
   displayStackSummary,
 } from "../lib/stack-creator";
+import { writeActiveStack } from "../lib/active-stack";
 
 /**
- * Check if a project has been initialized (.claude/stacks/ directory exists)
+ * Check if a project has been initialized (.claude-collective/stacks/ directory exists)
  */
 async function isInitialized(projectDir: string): Promise<boolean> {
-  const stacksDir = path.join(projectDir, ".claude", "stacks");
+  const stacksDir = path.join(
+    projectDir,
+    COLLECTIVE_DIR,
+    COLLECTIVE_STACKS_SUBDIR,
+  );
   return directoryExists(stacksDir);
 }
 
@@ -117,19 +127,25 @@ export const initCommand = new Command("init")
       process.exit(0);
     }
 
-    // Create .claude directory
-    const claudeDir = path.join(projectDir, ".claude");
+    // Create .claude-collective directory
+    const collectiveDir = path.join(projectDir, COLLECTIVE_DIR);
     if (dryRun) {
-      p.log.info(pc.yellow(`[dry-run] Would create directory: ${claudeDir}`));
+      p.log.info(
+        pc.yellow(`[dry-run] Would create directory: ${collectiveDir}`),
+      );
     } else {
-      s.start("Creating .claude directory...");
-      await ensureDir(claudeDir);
-      s.stop("Created .claude directory");
+      s.start("Creating .claude-collective directory...");
+      await ensureDir(collectiveDir);
+      s.stop("Created .claude-collective directory");
     }
 
     // Create the stack
     if (dryRun) {
-      const stackDir = path.join(claudeDir, "stacks", stackName as string);
+      const stackDir = path.join(
+        collectiveDir,
+        COLLECTIVE_STACKS_SUBDIR,
+        stackName as string,
+      );
       p.log.info(
         pc.yellow(`[dry-run] Would create stack directory: ${stackDir}`),
       );
@@ -139,6 +155,9 @@ export const initCommand = new Command("init")
         ),
       );
       p.log.info(pc.yellow(`[dry-run] Would create config.yaml`));
+      p.log.info(
+        pc.yellow(`[dry-run] Would set "${stackName}" as active stack`),
+      );
       p.outro(pc.green("[dry-run] Preview complete - no files were created"));
     } else {
       s.start(`Creating stack "${stackName}"...`);
@@ -153,10 +172,14 @@ export const initCommand = new Command("init")
         );
         s.stop(`Stack created with ${createResult.skillCount} skills`);
 
+        // Set as active stack
+        await writeActiveStack(projectDir, stackName as string);
+
         // Display summary
         displayStackSummary(createResult);
 
-        p.outro(pc.green("Claude Collective initialized successfully!"));
+        p.outro(pc.green(`Stack "${stackName}" created and set as active!`));
+        p.log.info(`Run ${pc.cyan("cc compile")} to compile your stack.`);
       } catch (error) {
         s.stop("Failed to create stack");
         p.log.error(`Error: ${error}`);

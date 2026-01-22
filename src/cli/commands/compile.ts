@@ -4,7 +4,12 @@ import pc from "picocolors";
 import path from "path";
 import { setVerbose } from "../utils/logger";
 import { OUTPUT_DIR, DIRS } from "../consts";
-import { loadAllAgents, loadStackSkills, loadStack } from "../lib/loader";
+import {
+  loadAllAgents,
+  loadStackSkills,
+  loadStack,
+  detectCompileMode,
+} from "../lib/loader";
 import { resolveAgents, stackToCompileConfig } from "../lib/resolver";
 import { validate, printValidationResult } from "../lib/validator";
 import {
@@ -16,11 +21,15 @@ import {
   cleanOutputDir,
 } from "../lib/compiler";
 import { versionAllSkills, printVersionResults } from "../lib/versioning";
+import { readActiveStack } from "../lib/active-stack";
 import type { CompileConfig, CompileContext } from "../types";
 
 export const compileCommand = new Command("compile")
   .description("Compile agents from a stack")
-  .requiredOption("-s, --stack <name>", "Stack to compile")
+  .option(
+    "-s, --stack <name>",
+    "Stack to compile (uses active stack if not specified)",
+  )
   .option("-v, --verbose", "Enable verbose logging", false)
   .option(
     "--version-skills",
@@ -40,13 +49,38 @@ export const compileCommand = new Command("compile")
     // Set verbose mode globally
     setVerbose(options.verbose);
 
-    const stackId = options.stack;
-
     // Determine project root (where we're running from)
     const projectRoot = process.cwd();
+
+    // Detect compile mode
+    const mode = await detectCompileMode(projectRoot);
+
+    // Resolve stack ID
+    let stackId = options.stack;
+
+    if (!stackId) {
+      if (mode === "user") {
+        // In user mode, fall back to active stack
+        const activeStack = await readActiveStack(projectRoot);
+        if (!activeStack) {
+          p.log.error("No active stack set and no -s flag provided.");
+          p.log.info(
+            `Use ${pc.cyan("cc switch <name>")} to set an active stack, or ${pc.cyan("cc list")} to see available stacks.`,
+          );
+          process.exit(1);
+        }
+        stackId = activeStack;
+        console.log(`Using active stack: ${pc.cyan(stackId)}`);
+      } else {
+        // Dev mode requires explicit stack
+        p.log.error("Stack name required in dev mode. Use -s flag.");
+        process.exit(1);
+      }
+    }
+
     const outputDir = path.join(projectRoot, OUTPUT_DIR);
 
-    console.log(`\n📦 Compiling stack: ${stackId}\n`);
+    console.log(`\nCompiling stack: ${stackId} (mode: ${mode})\n`);
 
     if (dryRun) {
       console.log(
@@ -77,7 +111,7 @@ export const compileCommand = new Command("compile")
 
       // Load stack configuration
       s.start("Loading stack configuration...");
-      const stack = await loadStack(stackId, projectRoot);
+      const stack = await loadStack(stackId, projectRoot, mode);
       const compileConfig: CompileConfig = stackToCompileConfig(stackId, stack);
       s.stop(
         `Stack loaded: ${stack.agents.length} agents, ${stack.skills.length} skills`,
@@ -85,7 +119,7 @@ export const compileCommand = new Command("compile")
 
       // Load skills from stack
       s.start("Loading skills...");
-      const skills = await loadStackSkills(stackId, projectRoot);
+      const skills = await loadStackSkills(stackId, projectRoot, mode);
       s.stop(
         `Loaded ${Object.keys(skills).length} skills from stack: ${stackId}`,
       );
@@ -114,6 +148,7 @@ export const compileCommand = new Command("compile")
         verbose: options.verbose,
         projectRoot,
         outputDir,
+        mode,
       };
 
       const validation = await validate(

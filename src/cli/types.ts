@@ -1,5 +1,7 @@
 // Re-export all shared types from the main types file
-export * from '../types';
+export * from "../types";
+
+import type { CompileMode } from "./lib/loader";
 
 // CLI-specific types
 
@@ -9,4 +11,5 @@ export interface CompileContext {
   verbose: boolean;
   projectRoot: string;
   outputDir: string;
+  mode: CompileMode;
 }
