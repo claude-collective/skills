@@ -6,7 +6,7 @@
 # For testing, use skills-matrix-mvp.yaml (minimal 10-skill dataset).
 # =============================================================================
 
-version: '1.0.0'
+version: "1.0.0"
 
 # =============================================================================
 # Categories (What the user selects)
@@ -23,7 +23,7 @@ categories:
     exclusive: false
     required: false
     order: 1
-    icon: '⚛️'
+    icon: "⚛️"
 
   backend:
     id: backend
@@ -32,7 +32,7 @@ categories:
     exclusive: false
     required: false
     order: 2
-    icon: '🔌'
+    icon: "🔌"
 
   mobile:
     id: mobile
@@ -41,7 +41,7 @@ categories:
     exclusive: false
     required: false
     order: 3
-    icon: '📱'
+    icon: "📱"
 
   setup:
     id: setup
@@ -50,7 +50,7 @@ categories:
     exclusive: false
     required: false
     order: 4
-    icon: '🛠️'
+    icon: "🛠️"
 
   # ─────────────────────────────────────────────────────────────────
   # Frontend subcategories
@@ -237,55 +237,55 @@ relationships:
   conflicts:
     # Framework conflicts (only one core framework)
     - skills: [react, vue, angular, solidjs]
-      reason: 'Core frameworks are mutually exclusive - choose one'
+      reason: "Core frameworks are mutually exclusive - choose one"
 
     # Meta-framework conflicts
     - skills: [nextjs-app-router, remix, nuxt]
-      reason: 'Meta-frameworks are mutually exclusive - choose one'
+      reason: "Meta-frameworks are mutually exclusive - choose one"
 
     # Styling conflicts
     - skills: [scss-modules, tailwind]
-      reason: 'Different CSS paradigms - SCSS Modules vs Tailwind utility-first'
+      reason: "Different CSS paradigms - SCSS Modules vs Tailwind utility-first"
 
     # Client state management conflicts (React ecosystem)
     - skills: [zustand, redux-toolkit, mobx]
-      reason: 'React state libraries - choose one approach'
+      reason: "React state libraries - choose one approach"
 
     # Client state management (Vue ecosystem)
     - skills: [pinia, zustand, redux-toolkit, mobx]
-      reason: 'Pinia is Vue-only, others are React-only'
+      reason: "Pinia is Vue-only, others are React-only"
 
     # Client state management (Angular ecosystem)
     - skills: [ngrx-signalstore, zustand, pinia, redux-toolkit, mobx]
-      reason: 'NgRx SignalStore is Angular-only'
+      reason: "NgRx SignalStore is Angular-only"
 
     # Server state / data fetching conflicts
     - skills: [react-query, swr]
-      reason: 'Both solve server state caching - choose one'
+      reason: "Both solve server state caching - choose one"
 
     # GraphQL client conflicts
     - skills: [graphql-apollo, graphql-urql]
-      reason: 'Both are GraphQL clients - choose one'
+      reason: "Both are GraphQL clients - choose one"
 
     # E2E testing conflicts
     - skills: [playwright-e2e, cypress-e2e]
-      reason: 'Both are E2E frameworks - choose one'
+      reason: "Both are E2E frameworks - choose one"
 
     # Form libraries by framework
     - skills: [react-hook-form, vee-validate]
-      reason: 'react-hook-form is React-only, vee-validate is Vue-only'
+      reason: "react-hook-form is React-only, vee-validate is Vue-only"
 
     # Testing library conflicts
     - skills: [react-testing-library, vue-test-utils]
-      reason: 'Framework-specific testing libraries'
+      reason: "Framework-specific testing libraries"
 
     # Backend API framework conflicts
     - skills: [hono, express, fastify]
-      reason: 'API frameworks are mutually exclusive'
+      reason: "API frameworks are mutually exclusive"
 
     # Database ORM conflicts
     - skills: [drizzle, prisma]
-      reason: 'Both are ORMs - choose one'
+      reason: "Both are ORMs - choose one"
 
   # ─────────────────────────────────────────────────────────────────
   # DISCOURAGES (Soft warnings - selecting A shows warning for B but doesn't disable)
@@ -293,26 +293,26 @@ relationships:
   discourages:
     # Styling paradigm mixing is unusual
     - skills: [scss-modules, tailwind]
-      reason: 'Mixing CSS paradigms (SCSS Modules + Tailwind) is unusual - most projects pick one approach'
+      reason: "Mixing CSS paradigms (SCSS Modules + Tailwind) is unusual - most projects pick one approach"
 
     # Redux is heavy for small projects with Zustand available
     - skills: [redux-toolkit, zustand]
-      reason: 'Redux Toolkit adds more boilerplate than Zustand - consider if you need its features'
+      reason: "Redux Toolkit adds more boilerplate than Zustand - consider if you need its features"
 
     # SWR is simpler but less featured than React Query
     - skills: [swr, react-query]
-      reason: 'SWR is simpler but React Query has more features - consider your needs'
+      reason: "SWR is simpler but React Query has more features - consider your needs"
 
     # Express is legacy compared to modern alternatives
     - skills: [express, hono]
-      reason: 'Express is mature but Hono offers better performance and edge support'
+      reason: "Express is mature but Hono offers better performance and edge support"
 
     - skills: [express, fastify]
-      reason: 'Express is mature but Fastify offers better performance'
+      reason: "Express is mature but Fastify offers better performance"
 
     # Cypress vs Playwright for cross-browser
     - skills: [cypress-e2e, playwright-e2e]
-      reason: 'Cypress has better DX but Playwright has better cross-browser support'
+      reason: "Cypress has better DX but Playwright has better cross-browser support"
 
   # ─────────────────────────────────────────────────────────────────
   # RECOMMENDS (Soft suggestions - selecting A highlights B)
@@ -320,119 +320,120 @@ relationships:
   recommends:
     # React ecosystem recommendations
     - when: react
-      suggest: [zustand, react-query, vitest, react-hook-form, react-testing-library]
-      reason: 'Best-in-class React libraries'
+      suggest:
+        [zustand, react-query, vitest, react-hook-form, react-testing-library]
+      reason: "Best-in-class React libraries"
 
     # Next.js recommendations
     - when: nextjs-app-router
       suggest: [react-query, zustand, shadcn-ui]
-      reason: 'Next.js App Router ecosystem'
+      reason: "Next.js App Router ecosystem"
 
     # Remix recommendations
     - when: remix
       suggest: [zustand, vitest, zod-validation]
-      reason: 'Remix-compatible libraries'
+      reason: "Remix-compatible libraries"
 
     # Vue ecosystem recommendations
     - when: vue
       suggest: [pinia, vee-validate, vue-test-utils]
-      reason: 'Official Vue ecosystem libraries'
+      reason: "Official Vue ecosystem libraries"
 
     # Angular ecosystem recommendations
     - when: angular
       suggest: [ngrx-signalstore]
-      reason: 'Angular Signals-based state management'
+      reason: "Angular Signals-based state management"
 
     # SolidJS recommendations
     - when: solidjs
       suggest: [vitest, tailwind]
-      reason: 'SolidJS-compatible libraries'
+      reason: "SolidJS-compatible libraries"
 
     # Backend recommendations
     - when: hono
       suggest: [drizzle, better-auth, zod-validation]
-      reason: 'Hono + Drizzle + Better Auth is a powerful combo'
+      reason: "Hono + Drizzle + Better Auth is a powerful combo"
 
     - when: drizzle
       suggest: [zod-validation]
-      reason: 'Drizzle types work great with Zod'
+      reason: "Drizzle types work great with Zod"
 
     # Styling recommendations
     - when: scss-modules
       suggest: [radix-ui]
-      reason: 'Radix primitives work well with any CSS approach'
+      reason: "Radix primitives work well with any CSS approach"
 
     - when: tailwind
       suggest: [shadcn-ui]
-      reason: 'shadcn/ui is built for Tailwind'
+      reason: "shadcn/ui is built for Tailwind"
 
     # UI component recommendations
     - when: shadcn-ui
       suggest: [radix-ui, tailwind]
-      reason: 'shadcn/ui uses Radix primitives and Tailwind'
+      reason: "shadcn/ui uses Radix primitives and Tailwind"
 
     # Form recommendations
     - when: react-hook-form
       suggest: [zod-validation]
-      reason: 'react-hook-form + Zod is the standard pattern'
+      reason: "react-hook-form + Zod is the standard pattern"
 
     - when: vee-validate
       suggest: [zod-validation]
-      reason: 'vee-validate supports Zod schemas'
+      reason: "vee-validate supports Zod schemas"
 
     # Testing recommendations
     - when: vitest
       suggest: [react-testing-library, msw]
-      reason: 'Vitest + RTL + MSW is the modern testing stack'
+      reason: "Vitest + RTL + MSW is the modern testing stack"
 
     - when: playwright-e2e
       suggest: [vitest]
-      reason: 'Playwright for E2E, Vitest for unit/integration'
+      reason: "Playwright for E2E, Vitest for unit/integration"
 
     # Server state recommendations
     - when: react-query
       suggest: [zod-validation]
-      reason: 'Type-safe API responses with Zod'
+      reason: "Type-safe API responses with Zod"
 
     # Mobile recommendations
     - when: react-native
       suggest: [zustand, react-query, react-hook-form, zod-validation]
-      reason: 'React Native shares React ecosystem'
+      reason: "React Native shares React ecosystem"
 
     # Observability recommendations
     - when: axiom-pino-sentry
       suggest: [posthog]
-      reason: 'Complete observability with analytics'
+      reason: "Complete observability with analytics"
 
     # Email recommendations
     - when: resend
       suggest: [react]
-      reason: 'React Email templates work with Resend'
+      reason: "React Email templates work with Resend"
 
     # Fastify recommendations
     - when: fastify
       suggest: [drizzle, zod-validation]
-      reason: 'Fastify + Drizzle + Zod is a solid backend stack'
+      reason: "Fastify + Drizzle + Zod is a solid backend stack"
 
     # Express recommendations
     - when: express
       suggest: [prisma]
-      reason: 'Express + Prisma is a classic combination'
+      reason: "Express + Prisma is a classic combination"
 
     # Nuxt recommendations
     - when: nuxt
       suggest: [pinia, tailwind, playwright-e2e]
-      reason: 'Nuxt ecosystem libraries'
+      reason: "Nuxt ecosystem libraries"
 
     # MSW recommendations
     - when: msw
       suggest: [vitest, react-testing-library]
-      reason: 'MSW + Vitest + RTL is the modern testing stack'
+      reason: "MSW + Vitest + RTL is the modern testing stack"
 
     # Cypress recommendations
     - when: cypress-e2e
       suggest: [vitest]
-      reason: 'Cypress for E2E, Vitest for unit tests'
+      reason: "Cypress for E2E, Vitest for unit tests"
 
   # ─────────────────────────────────────────────────────────────────
   # REQUIRES (Hard dependencies - A requires B to be selected first)
@@ -442,156 +443,156 @@ relationships:
     - skill: zustand
       needs: [react, react-native]
       needs_any: true
-      reason: 'Zustand is React/React Native only'
+      reason: "Zustand is React/React Native only"
 
     - skill: redux-toolkit
       needs: [react, react-native]
       needs_any: true
-      reason: 'Redux Toolkit is React/React Native only'
+      reason: "Redux Toolkit is React/React Native only"
 
     - skill: mobx
       needs: [react]
-      reason: 'MobX skill is configured for React'
+      reason: "MobX skill is configured for React"
 
     - skill: react-query
       needs: [react, react-native]
       needs_any: true
-      reason: 'TanStack Query React adapter'
+      reason: "TanStack Query React adapter"
 
     - skill: swr
       needs: [react]
-      reason: 'SWR is React only'
+      reason: "SWR is React only"
 
     - skill: react-hook-form
       needs: [react, react-native]
       needs_any: true
-      reason: 'React Hook Form is React only'
+      reason: "React Hook Form is React only"
 
     - skill: react-testing-library
       needs: [react]
-      reason: 'React Testing Library is React only'
+      reason: "React Testing Library is React only"
 
     # Vue-specific libraries
     - skill: pinia
       needs: [vue]
-      reason: 'Pinia is Vue only'
+      reason: "Pinia is Vue only"
 
     - skill: vee-validate
       needs: [vue]
-      reason: 'VeeValidate is Vue only'
+      reason: "VeeValidate is Vue only"
 
     - skill: vue-test-utils
       needs: [vue]
-      reason: 'Vue Test Utils is Vue only'
+      reason: "Vue Test Utils is Vue only"
 
     # Angular-specific libraries
     - skill: ngrx-signalstore
       needs: [angular]
-      reason: 'NgRx SignalStore is Angular only'
+      reason: "NgRx SignalStore is Angular only"
 
     # Next.js specific
     - skill: nextjs-app-router
       needs: [react]
-      reason: 'Next.js is built on React'
+      reason: "Next.js is built on React"
 
     # Remix specific
     - skill: remix
       needs: [react]
-      reason: 'Remix is built on React'
+      reason: "Remix is built on React"
 
     # Backend dependencies
     - skill: better-auth
       needs: [drizzle]
-      reason: 'Better Auth integration uses Drizzle'
+      reason: "Better Auth integration uses Drizzle"
 
     - skill: drizzle
       needs: [hono, express, fastify]
       needs_any: true
-      reason: 'Drizzle needs an API framework'
+      reason: "Drizzle needs an API framework"
 
     - skill: prisma
       needs: [hono, express, fastify]
       needs_any: true
-      reason: 'Prisma needs an API framework'
+      reason: "Prisma needs an API framework"
 
     # UI component dependencies
     - skill: shadcn-ui
       needs: [react, tailwind]
-      reason: 'shadcn/ui requires React and Tailwind'
+      reason: "shadcn/ui requires React and Tailwind"
 
     # GraphQL clients need a framework
     - skill: graphql-apollo
       needs: [react, vue]
       needs_any: true
-      reason: 'Apollo Client for React or Vue'
+      reason: "Apollo Client for React or Vue"
 
     - skill: graphql-urql
       needs: [react, vue]
       needs_any: true
-      reason: 'URQL for React or Vue'
+      reason: "URQL for React or Vue"
 
   # ─────────────────────────────────────────────────────────────────
   # ALTERNATIVES (Interchangeable options for same purpose)
   # ─────────────────────────────────────────────────────────────────
   alternatives:
-    - purpose: 'Frontend Framework'
+    - purpose: "Frontend Framework"
       skills: [react, vue, angular, solidjs]
 
-    - purpose: 'React Meta-Framework'
+    - purpose: "React Meta-Framework"
       skills: [nextjs-app-router, remix]
 
-    - purpose: 'Styling'
+    - purpose: "Styling"
       skills: [scss-modules, tailwind]
 
-    - purpose: 'Client State (React)'
+    - purpose: "Client State (React)"
       skills: [zustand, redux-toolkit, mobx]
 
-    - purpose: 'Client State (Vue)'
+    - purpose: "Client State (Vue)"
       skills: [pinia]
 
-    - purpose: 'Client State (Angular)'
+    - purpose: "Client State (Angular)"
       skills: [ngrx-signalstore]
 
-    - purpose: 'Server State / Data Fetching'
+    - purpose: "Server State / Data Fetching"
       skills: [react-query, swr]
 
-    - purpose: 'GraphQL Client'
+    - purpose: "GraphQL Client"
       skills: [graphql-apollo, graphql-urql]
 
-    - purpose: 'API Framework'
+    - purpose: "API Framework"
       skills: [hono, express, fastify]
 
-    - purpose: 'Database ORM'
+    - purpose: "Database ORM"
       skills: [drizzle, prisma]
 
-    - purpose: 'Forms (React)'
+    - purpose: "Forms (React)"
       skills: [react-hook-form]
 
-    - purpose: 'Forms (Vue)'
+    - purpose: "Forms (Vue)"
       skills: [vee-validate]
 
-    - purpose: 'Validation'
+    - purpose: "Validation"
       skills: [zod-validation]
 
-    - purpose: 'Unit Testing'
+    - purpose: "Unit Testing"
       skills: [vitest]
 
-    - purpose: 'Component Testing (React)'
+    - purpose: "Component Testing (React)"
       skills: [react-testing-library]
 
-    - purpose: 'Component Testing (Vue)'
+    - purpose: "Component Testing (Vue)"
       skills: [vue-test-utils]
 
-    - purpose: 'E2E Testing'
+    - purpose: "E2E Testing"
       skills: [playwright-e2e, cypress-e2e]
 
-    - purpose: 'API Mocking'
+    - purpose: "API Mocking"
       skills: [msw]
 
-    - purpose: 'UI Components (React + Tailwind)'
+    - purpose: "UI Components (React + Tailwind)"
       skills: [shadcn-ui]
 
-    - purpose: 'Mobile'
+    - purpose: "Mobile"
       skills: [react-native]
 
 # =============================================================================
@@ -620,7 +621,45 @@ suggested_stacks:
         api: hono
         database: drizzle
         auth: better-auth
-    philosophy: 'Ship fast, iterate faster'
+    philosophy: "Ship fast, iterate faster"
+
+  - id: fullstack-react
+    name: Fullstack React
+    description: Production-ready React with complete backend infrastructure
+    audience: [production, startups, fullstack]
+    skills:
+      frontend:
+        framework: react
+        meta-framework: nextjs-app-router
+        styling: scss-modules
+        client-state: zustand
+        server-state: react-query
+        forms: react-hook-form
+        validation: zod-validation
+        testing: vitest
+        component-testing: react-testing-library
+        e2e: playwright-e2e
+        mocking: msw
+        accessibility: accessibility
+        performance: frontend-performance
+      backend:
+        api: hono
+        database: drizzle
+        auth: better-auth
+        analytics: posthog
+        flags: posthog-flags
+        email: resend
+        observability: axiom-pino-sentry
+        ci-cd: github-actions
+        performance: backend-performance
+        testing: backend-testing
+      security:
+        security: security
+      setup:
+        monorepo: turborepo
+        env: env-config
+        tooling: tooling
+    philosophy: "Production-ready from day one"
 
   - id: modern-react-tailwind
     name: Modern React + Tailwind Stack
@@ -642,7 +681,7 @@ suggested_stacks:
         api: hono
         database: drizzle
         auth: better-auth
-    philosophy: 'Beautiful UIs with utility-first CSS'
+    philosophy: "Beautiful UIs with utility-first CSS"
 
   - id: vue-stack
     name: Modern Vue Stack
@@ -659,7 +698,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Progressive and approachable'
+    philosophy: "Progressive and approachable"
 
   - id: angular-stack
     name: Modern Angular Stack
@@ -673,7 +712,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Enterprise-grade and type-safe'
+    philosophy: "Enterprise-grade and type-safe"
 
   - id: minimal-backend
     name: Minimal Backend
@@ -683,7 +722,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Just the essentials'
+    philosophy: "Just the essentials"
 
   - id: mobile-stack
     name: React Native Mobile Stack
@@ -697,7 +736,7 @@ suggested_stacks:
         server-state: react-query
         forms: react-hook-form
         validation: zod-validation
-    philosophy: 'One codebase, iOS and Android'
+    philosophy: "One codebase, iOS and Android"
 
   - id: full-observability
     name: Full Observability Stack
@@ -739,7 +778,7 @@ suggested_stacks:
         api: hono
         database: drizzle
         auth: better-auth
-    philosophy: 'Strict patterns for large teams'
+    philosophy: "Strict patterns for large teams"
 
   - id: solidjs-stack
     name: SolidJS Stack
@@ -753,7 +792,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Maximum performance with minimal overhead'
+    philosophy: "Maximum performance with minimal overhead"
 
   - id: remix-stack
     name: Remix Full-Stack
@@ -772,7 +811,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Web standards and excellent forms handling'
+    philosophy: "Web standards and excellent forms handling"
 
   - id: nuxt-stack
     name: Nuxt Full-Stack
@@ -790,7 +829,7 @@ suggested_stacks:
       backend:
         api: hono
         database: drizzle
-    philosophy: 'Progressive Vue with Nuxt power'
+    philosophy: "Progressive Vue with Nuxt power"
 
 # =============================================================================
 # Skill Aliases (Map short names to full IDs)
@@ -800,121 +839,121 @@ skill_aliases:
   # ─────────────────────────────────────────────────────────────────
   # Frameworks (actual skill IDs from the skills directory)
   # ─────────────────────────────────────────────────────────────────
-  react: 'frontend/react (@vince)'
-  vue: 'frontend/framework/vue-composition-api (@vince)'
-  angular: 'frontend/angular-standalone (@vince)'
-  solidjs: 'frontend/framework/solidjs (@vince)'
+  react: "frontend/react (@vince)"
+  vue: "frontend/framework/vue-composition-api (@vince)"
+  angular: "frontend/angular-standalone (@vince)"
+  solidjs: "frontend/framework/solidjs (@vince)"
 
   # Meta-frameworks
-  nextjs-app-router: 'frontend/nextjs-app-router (@vince)'
-  nextjs-server-actions: 'frontend/framework/nextjs-server-actions (@vince)'
-  remix: 'frontend/framework/remix (@vince)'
-  nuxt: 'frontend/framework/nuxt (@vince)'
+  nextjs-app-router: "frontend/nextjs-app-router (@vince)"
+  nextjs-server-actions: "frontend/framework/nextjs-server-actions (@vince)"
+  remix: "frontend/framework/remix (@vince)"
+  nuxt: "frontend/framework/nuxt (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Styling
   # ─────────────────────────────────────────────────────────────────
-  scss-modules: 'frontend/styling-scss-modules (@vince)'
-  tailwind: 'frontend/styling-tailwind (@vince)'
-  cva: 'frontend/styling/cva (@vince)'
+  scss-modules: "frontend/styling-scss-modules (@vince)"
+  tailwind: "frontend/styling-tailwind (@vince)"
+  cva: "frontend/styling/cva (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Client State
   # ─────────────────────────────────────────────────────────────────
-  zustand: 'frontend/state-zustand (@vince)'
-  redux-toolkit: 'frontend/client-state-management/redux-toolkit (@vince)'
-  mobx: 'frontend/state-mobx (@vince)'
-  pinia: 'frontend/state-pinia (@vince)'
-  ngrx-signalstore: 'frontend/client-state-management/ngrx-signalstore (@vince)'
+  zustand: "frontend/state-zustand (@vince)"
+  redux-toolkit: "frontend/client-state-management/redux-toolkit (@vince)"
+  mobx: "frontend/state-mobx (@vince)"
+  pinia: "frontend/state-pinia (@vince)"
+  ngrx-signalstore: "frontend/client-state-management/ngrx-signalstore (@vince)"
   # Note: jotai skill does not exist yet
 
   # ─────────────────────────────────────────────────────────────────
   # Server State / Data Fetching
   # ─────────────────────────────────────────────────────────────────
-  react-query: 'frontend/server-state-react-query (@vince)'
-  swr: 'frontend/swr (@vince)'
-  graphql-apollo: 'frontend/graphql-apollo (@vince)'
-  graphql-urql: 'frontend/graphql-urql (@vince)'
-  trpc: 'frontend/trpc (@vince)'
+  react-query: "frontend/server-state-react-query (@vince)"
+  swr: "frontend/swr (@vince)"
+  graphql-apollo: "frontend/graphql-apollo (@vince)"
+  graphql-urql: "frontend/graphql-urql (@vince)"
+  trpc: "frontend/trpc (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Forms & Validation
   # ─────────────────────────────────────────────────────────────────
-  react-hook-form: 'frontend/forms/react-hook-form (@vince)'
-  vee-validate: 'frontend/forms/vee-validate (@vince)'
-  zod-validation: 'frontend/forms/zod-validation (@vince)'
+  react-hook-form: "frontend/forms/react-hook-form (@vince)"
+  vee-validate: "frontend/forms/vee-validate (@vince)"
+  zod-validation: "frontend/forms/zod-validation (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Testing
   # ─────────────────────────────────────────────────────────────────
-  vitest: 'frontend/testing-vitest (@vince)'
-  playwright-e2e: 'frontend/testing/playwright-e2e (@vince)'
-  cypress-e2e: 'frontend/testing/cypress-e2e (@vince)'
-  react-testing-library: 'frontend/testing/react-testing-library (@vince)'
-  vue-test-utils: 'frontend/testing/vue-test-utils (@vince)'
+  vitest: "frontend/testing-vitest (@vince)"
+  playwright-e2e: "frontend/testing/playwright-e2e (@vince)"
+  cypress-e2e: "frontend/testing/cypress-e2e (@vince)"
+  react-testing-library: "frontend/testing/react-testing-library (@vince)"
+  vue-test-utils: "frontend/testing/vue-test-utils (@vince)"
 
   # Mocking
-  msw: 'frontend/mocks-msw (@vince)'
+  msw: "frontend/mocks-msw (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # UI Components
   # ─────────────────────────────────────────────────────────────────
-  shadcn-ui: 'frontend/ui-shadcn-ui (@vince)'
-  tanstack-table: 'frontend/ui-tanstack-table (@vince)'
+  shadcn-ui: "frontend/ui-shadcn-ui (@vince)"
+  tanstack-table: "frontend/ui-tanstack-table (@vince)"
   # Note: radix-ui skill does not exist yet
 
   # ─────────────────────────────────────────────────────────────────
   # Backend
   # ─────────────────────────────────────────────────────────────────
-  hono: 'backend/api-hono (@vince)'
-  express: 'backend/api-express (@vince)'
-  fastify: 'backend/api-fastify (@vince)'
+  hono: "backend/api-hono (@vince)"
+  express: "backend/api-express (@vince)"
+  fastify: "backend/api-fastify (@vince)"
 
-  drizzle: 'backend/database-drizzle (@vince)'
-  prisma: 'backend/database-prisma (@vince)'
+  drizzle: "backend/database-drizzle (@vince)"
+  prisma: "backend/database-prisma (@vince)"
 
-  better-auth: 'backend/auth-better-auth+drizzle+hono (@vince)'
+  better-auth: "backend/auth-better-auth+drizzle+hono (@vince)"
 
-  axiom-pino-sentry: 'backend/observability+axiom+pino+sentry (@vince)'
-  posthog: 'backend/analytics-posthog (@vince)'
-  posthog-flags: 'backend/flags-posthog (@vince)'
+  axiom-pino-sentry: "backend/observability+axiom+pino+sentry (@vince)"
+  posthog: "backend/analytics-posthog (@vince)"
+  posthog-flags: "backend/flags-posthog (@vince)"
 
-  resend: 'backend/email-resend+react-email (@vince)'
+  resend: "backend/email-resend+react-email (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Mobile
   # ─────────────────────────────────────────────────────────────────
-  react-native: 'mobile/react-native (@vince)'
+  react-native: "mobile/react-native (@vince)"
   # Note: expo skill does not exist yet
 
   # ─────────────────────────────────────────────────────────────────
   # Setup
   # ─────────────────────────────────────────────────────────────────
-  turborepo: 'setup/monorepo-turborepo (@vince)'
-  tooling: 'setup/tooling (@vince)'
-  posthog-setup: 'setup/analytics-posthog (@vince)'
-  env: 'setup/env (@vince)'
-  observability-setup: 'setup/observability+axiom+pino+sentry (@vince)'
-  email-setup: 'setup/email-resend+react-email (@vince)'
+  turborepo: "setup/monorepo-turborepo (@vince)"
+  tooling: "setup/tooling (@vince)"
+  posthog-setup: "setup/analytics-posthog (@vince)"
+  env: "setup/env (@vince)"
+  observability-setup: "setup/observability+axiom+pino+sentry (@vince)"
+  email-setup: "setup/email-resend+react-email (@vince)"
 
   # ─────────────────────────────────────────────────────────────────
   # Additional Skills (Animation, PWA, Realtime, etc.)
   # ─────────────────────────────────────────────────────────────────
-  framer-motion: 'frontend/animation/framer-motion (@vince)'
-  css-animations: 'frontend/animation/css-animations (@vince)'
-  view-transitions: 'frontend/animation/view-transitions (@vince)'
-  storybook: 'frontend/tooling/storybook (@vince)'
-  error-boundaries: 'frontend/error-boundaries (@vince)'
-  accessibility: 'frontend/accessibility (@vince)'
-  websockets: 'frontend/realtime/websockets (@vince)'
-  sse: 'frontend/realtime/sse (@vince)'
-  socket-io: 'frontend/realtime/socket-io (@vince)'
-  service-workers: 'frontend/pwa/service-workers (@vince)'
-  file-upload: 'frontend/file-upload/file-upload-patterns (@vince)'
-  image-handling: 'frontend/files/image-handling (@vince)'
-  date-fns: 'frontend/utilities/date-fns (@vince)'
-  github-actions: 'backend/ci-cd-github-actions (@vince)'
-  backend-testing: 'backend/testing (@vince)'
-  backend-performance: 'backend/performance (@vince)'
-  frontend-performance: 'frontend/performance (@vince)'
-  security: 'security/security (@vince)'
+  framer-motion: "frontend/animation/framer-motion (@vince)"
+  css-animations: "frontend/animation/css-animations (@vince)"
+  view-transitions: "frontend/animation/view-transitions (@vince)"
+  storybook: "frontend/tooling/storybook (@vince)"
+  error-boundaries: "frontend/error-boundaries (@vince)"
+  accessibility: "frontend/accessibility (@vince)"
+  websockets: "frontend/realtime/websockets (@vince)"
+  sse: "frontend/realtime/sse (@vince)"
+  socket-io: "frontend/realtime/socket-io (@vince)"
+  service-workers: "frontend/pwa/service-workers (@vince)"
+  file-upload: "frontend/file-upload/file-upload-patterns (@vince)"
+  image-handling: "frontend/files/image-handling (@vince)"
+  date-fns: "frontend/utilities/date-fns (@vince)"
+  github-actions: "backend/ci-cd-github-actions (@vince)"
+  backend-testing: "backend/testing (@vince)"
+  backend-performance: "backend/performance (@vince)"
+  frontend-performance: "frontend/performance (@vince)"
+  security: "security/security (@vince)"

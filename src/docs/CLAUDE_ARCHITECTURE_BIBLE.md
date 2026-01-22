@@ -5,6 +5,7 @@
 ## Overview
 
 This system compiles modular source files into standalone agent/skill markdown files using:
+
 - **TypeScript compiler**: `src/compile.ts`
 - **LiquidJS templates**: `src/templates/agent.liquid`
 - **Agent definitions**: `src/agents.yaml` (single source of truth)
@@ -14,13 +15,14 @@ This system compiles modular source files into standalone agent/skill markdown f
 
 **Agents are GENERIC. Skills are STACK-SPECIFIC.**
 
-| Layer | Location | Purpose | Changes Per Stack |
-|-------|----------|---------|-------------------|
-| **Agents** | `src/agent-sources/` | Define *role* + *workflow* | NO - single source |
-| **Skills** | `src/stacks/{stack}/skills/` | Define *implementation patterns* | YES - vary by tech stack |
-| **Config** | `src/stacks/{stack}/config.yaml` | Control which agents/skills compile | YES - stack-specific |
+| Layer      | Location                         | Purpose                             | Changes Per Stack        |
+| ---------- | -------------------------------- | ----------------------------------- | ------------------------ |
+| **Agents** | `src/agent-sources/`             | Define _role_ + _workflow_          | NO - single source       |
+| **Skills** | `src/stacks/{stack}/skills/`     | Define _implementation patterns_    | YES - vary by tech stack |
+| **Config** | `src/stacks/{stack}/config.yaml` | Control which agents/skills compile | YES - stack-specific     |
 
 **Example:**
+
 - `frontend-developer` agent (generic): "You implement React components following patterns"
 - `frontend/react` skill (home-stack): "Use Zustand, SCSS Modules, React Query"
 - `frontend/react` skill (work-stack): "Use MobX, Tailwind, observer() pattern"
@@ -38,6 +40,7 @@ bunx compile -s home-stack
 ```
 
 **What happens:**
+
 1. `.claude/agents/` is **cleared completely**
 2. `.claude/skills/` is **cleared completely**
 3. Only agents defined in the stack's `config.yaml` are compiled
@@ -105,6 +108,7 @@ The agent's role definition. **Do NOT include `<role>` tags** - the template add
 **CRITICAL: Include Expansion Modifiers** (See PROMPT_BIBLE Technique #6)
 
 Sonnet/Opus 4.5 are conservative by default. Without expansion modifiers, they produce minimal implementations. Every intro.md MUST include phrases like:
+
 - "be comprehensive and thorough"
 - "include all necessary edge cases"
 - "go beyond the basics"
@@ -117,10 +121,12 @@ You are an expert [role description].
 **Your mission:** [Clear mission statement]
 
 **Your focus:**
+
 - [Focus area 1]
 - [Focus area 2]
 
 **Defer to specialists for:**
+
 - [Area] -> [Other Agent]
 ```
 
@@ -137,10 +143,11 @@ Agent-specific processes. Include XML tags for semantic sections:
 
 \`\`\`xml
 <mandatory_investigation>
+
 1. [Step 1]
 2. [Step 2]
-</mandatory_investigation>
-\`\`\`
+   </mandatory_investigation>
+   \`\`\`
 
 ---
 
@@ -149,15 +156,17 @@ Agent-specific processes. Include XML tags for semantic sections:
 \`\`\`xml
 <development_workflow>
 **Step 1: [Name]**
+
 - [Details]
 
 <post_action_reflection>
 After each step, evaluate:
+
 1. Did this achieve the goal?
 2. What gaps remain?
-</post_action_reflection>
-</development_workflow>
-\`\`\`
+   </post_action_reflection>
+   </development_workflow>
+   \`\`\`
 
 ---
 
@@ -165,8 +174,9 @@ After each step, evaluate:
 
 <self_correction_triggers>
 **If you notice yourself:**
+
 - **[Bad behavior]** → STOP. [Correction]
-</self_correction_triggers>
+  </self_correction_triggers>
 ```
 
 ### 3. critical-requirements.md
@@ -207,12 +217,15 @@ Example outputs showing ideal agent behavior:
 Here's what a complete, high-quality output looks like:
 
 \`\`\`markdown
+
 # [Example Title]
 
 ## [Section 1]
+
 [Content]
 
 ## Verification Checklist
+
 ✅ [Criterion 1]
 ✅ [Criterion 2]
 \`\`\`
@@ -226,23 +239,27 @@ These guidelines apply to ALL agent source files. Following them ensures optimal
 
 **CRITICAL for Opus 4.5:** The word "think" and its variants can cause confusion when extended thinking is disabled. Replace with alternatives:
 
-| Avoid | Use Instead |
-|-------|-------------|
-| think | consider, evaluate, analyze |
-| think about | reflect on, assess |
-| think through | work through, examine |
-| thinking | reasoning, analysis |
+| Avoid         | Use Instead                 |
+| ------------- | --------------------------- |
+| think         | consider, evaluate, analyze |
+| think about   | reflect on, assess          |
+| think through | work through, examine       |
+| thinking      | reasoning, analysis         |
 
 **Example:**
+
 ```markdown
 # ❌ Bad
+
 Think about the implications before proceeding.
 
 # ✅ Good
+
 Consider the implications before proceeding.
 ```
 
 **Exception - Claude Code Triggers:** When making requests TO Claude Code (not in agent prompts), you CAN use these trigger words to allocate thinking budget:
+
 - `think` (~4K tokens) - routine tasks
 - `megathink` (~10K tokens) - intermediate problems
 - `ultrathink` (~32K tokens) - major architectural challenges
@@ -253,10 +270,12 @@ Frame constraints positively (what TO do) rather than negatively (what NOT to do
 
 ```markdown
 # ❌ Bad
+
 Do NOT use default exports.
 Never create magic numbers.
 
 # ✅ Good
+
 Use named exports for all public APIs.
 Define all numeric values as named constants.
 ```
@@ -267,12 +286,12 @@ Define all numeric values as named constants.
 
 Use these formatting patterns for emphasis:
 
-| Format | When to Use | Example |
-|--------|-------------|---------|
-| **Bold** | Important rules | **Always verify changes** |
-| **(Bold + parentheses)** | Ultra-critical MUST rules | **(You MUST read files before editing)** |
-| ALL CAPS | Section headers only | ## CRITICAL REMINDERS |
-| `code` | File names, commands, tags | `intro.md`, `<role>` |
+| Format                   | When to Use                | Example                                  |
+| ------------------------ | -------------------------- | ---------------------------------------- |
+| **Bold**                 | Important rules            | **Always verify changes**                |
+| **(Bold + parentheses)** | Ultra-critical MUST rules  | **(You MUST read files before editing)** |
+| ALL CAPS                 | Section headers only       | ## CRITICAL REMINDERS                    |
+| `code`                   | File names, commands, tags | `intro.md`, `<role>`                     |
 
 ---
 
@@ -304,6 +323,7 @@ Every compiled agent includes a `<preloaded_content>` section (added by template
 ### Purpose
 
 Without this section, agents may:
+
 - Attempt to read files already bundled into their context (wastes tokens)
 - Get confused about what's available vs. what needs loading
 
@@ -316,15 +336,17 @@ The template generates this section automatically based on `config.yaml`:
 **IMPORTANT: The following content is already in your context. DO NOT read these files from the filesystem:**
 
 **Core Prompts (loaded at beginning):**
+
 - Core Principles
 - Investigation Requirement
 - Write Verification
 - Anti-Over-Engineering
 
 **Ending Prompts (loaded at end):**
+
 - Context Management
 - Improvement Protocol
-</preloaded_content>
+  </preloaded_content>
 ```
 
 ### How It Works
@@ -355,12 +377,15 @@ The protocol enforces explicit skill evaluation before implementation:
 
 ```markdown
 ### Step 1 - EVALUATE
+
 For EACH skill, explicitly state YES/NO with reason in a table format.
 
 ### Step 2 - ACTIVATE
+
 For EVERY skill marked YES, invoke the Skill tool IMMEDIATELY.
 
 ### Step 3 - IMPLEMENT
+
 ONLY after evaluation and activation are complete, begin implementation.
 ```
 
@@ -380,6 +405,7 @@ Skills are listed with simplified formatting:
 
 ```markdown
 ### {{ skill.id }}
+
 - Description: {{ skill.description }}
 - Invoke: `skill: "{{ skill.id }}"`
 - Use when: {{ skill.usage }}
@@ -409,22 +435,22 @@ agents:
 
 These tags MUST appear in compiled agents:
 
-| Tag | Source | Purpose |
-|-----|--------|---------|
-| `<role>` | Template wraps intro.md | Agent identity |
-| `<preloaded_content>` | Template | Lists what's already loaded |
-| `<critical_requirements>` | Template wraps critical-requirements.md | Top MUST rules |
-| `<skill_activation_protocol>` | Template | Three-step skill activation with emphatic warnings |
-| `<critical_reminders>` | Template wraps critical-reminders.md | Bottom MUST reminders |
-| `<core_principles>` | core-prompts/core-principles.md | 5 principles + self-reminder |
-| `<investigation_requirement>` | core-prompts/investigation-requirement.md | Investigation-first |
-| `<write_verification_protocol>` | core-prompts/write-verification.md | Verify writes |
-| `<anti_over_engineering>` | core-prompts/anti-over-engineering.md | Minimal changes |
-| `<self_correction_triggers>` | workflow.md | Mid-task corrections |
-| `<post_action_reflection>` | workflow.md | After-step evaluation |
-| `<output_format>` | core-prompts/output-formats-*.md | Response structure |
-| `<context_management>` | core-prompts/context-management.md | Token management |
-| `<improvement_protocol>` | core-prompts/improvement-protocol.md | Self-improvement |
+| Tag                             | Source                                    | Purpose                                            |
+| ------------------------------- | ----------------------------------------- | -------------------------------------------------- |
+| `<role>`                        | Template wraps intro.md                   | Agent identity                                     |
+| `<preloaded_content>`           | Template                                  | Lists what's already loaded                        |
+| `<critical_requirements>`       | Template wraps critical-requirements.md   | Top MUST rules                                     |
+| `<skill_activation_protocol>`   | Template                                  | Three-step skill activation with emphatic warnings |
+| `<critical_reminders>`          | Template wraps critical-reminders.md      | Bottom MUST reminders                              |
+| `<core_principles>`             | core-prompts/core-principles.md           | 5 principles + self-reminder                       |
+| `<investigation_requirement>`   | core-prompts/investigation-requirement.md | Investigation-first                                |
+| `<write_verification_protocol>` | core-prompts/write-verification.md        | Verify writes                                      |
+| `<anti_over_engineering>`       | core-prompts/anti-over-engineering.md     | Minimal changes                                    |
+| `<self_correction_triggers>`    | workflow.md                               | Mid-task corrections                               |
+| `<post_action_reflection>`      | workflow.md                               | After-step evaluation                              |
+| `<output_format>`               | core-prompts/output-formats-\*.md         | Response structure                                 |
+| `<context_management>`          | core-prompts/context-management.md        | Token management                                   |
+| `<improvement_protocol>`        | core-prompts/improvement-protocol.md      | Self-improvement                                   |
 
 ## Technique Compliance Mapping
 
@@ -434,21 +460,21 @@ This section maps the 13 Essential Techniques from `PROMPT_BIBLE.md` to their im
 
 ### Technique-to-Implementation Mapping
 
-| # | Technique | Impact | Implemented In | How |
-|---|-----------|--------|----------------|-----|
-| 1 | **Self-Reminder Loop** | 60-70% ↓ off-task | `core-prompts/core-principles.md` + template final lines | Core principles displayed every response + dual closing reminder |
-| 2 | **Investigation-First** | 80% ↓ hallucination | `core-prompts/investigation-requirement.md` + `workflow.md` | Investigation requirement + agent-specific investigation steps |
-| 3 | **Emphatic Repetition** | 70% ↓ scope creep | `critical-requirements.md` + `critical-reminders.md` | Template wraps both with XML tags, rules repeated top AND bottom |
-| 4 | **XML Semantic Tags** | 30% ↑ accuracy | All files | Template adds semantic tags; source files use semantic XML |
-| 5 | **Documents First, Query Last** | 30% ↑ performance | Template ordering | Template places content before instructions (for 20K+ agents) |
-| 6 | **Expansion Modifiers** | Unlocks capability | `intro.md` | MUST include "comprehensive and thorough" (see intro.md section) |
-| 7 | **Self-Correction Triggers** | 74.4% SWE-bench | `workflow.md` | `<self_correction_triggers>` with "If you notice yourself..." |
-| 8 | **Post-Action Reflection** | ↑ long-horizon | `workflow.md` | `<post_action_reflection>` after major workflow steps |
-| 9 | **Progress Tracking** | 30+ hour focus | `workflow.md` | `<progress_tracking>` section for extended sessions |
-| 10 | **Positive Framing** | Better adherence | All files | Writing Style Guidelines: "Use X" not "Don't do Y" |
-| 11 | **"Think" Alternatives** | Prevents Opus confusion | All files | Writing Style Guidelines: consider/evaluate/analyze |
-| 12 | **Just-in-Time Loading** | Preserves context | `workflow.md` | `<retrieval_strategy>` with Glob → Grep → Read pattern |
-| 13 | **Write Verification** | Prevents false-success | `core-prompts/write-verification.md` + template | Write verification protocol + second closing reminder |
+| #   | Technique                       | Impact                  | Implemented In                                              | How                                                              |
+| --- | ------------------------------- | ----------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- |
+| 1   | **Self-Reminder Loop**          | 60-70% ↓ off-task       | `core-prompts/core-principles.md` + template final lines    | Core principles displayed every response + dual closing reminder |
+| 2   | **Investigation-First**         | 80% ↓ hallucination     | `core-prompts/investigation-requirement.md` + `workflow.md` | Investigation requirement + agent-specific investigation steps   |
+| 3   | **Emphatic Repetition**         | 70% ↓ scope creep       | `critical-requirements.md` + `critical-reminders.md`        | Template wraps both with XML tags, rules repeated top AND bottom |
+| 4   | **XML Semantic Tags**           | 30% ↑ accuracy          | All files                                                   | Template adds semantic tags; source files use semantic XML       |
+| 5   | **Documents First, Query Last** | 30% ↑ performance       | Template ordering                                           | Template places content before instructions (for 20K+ agents)    |
+| 6   | **Expansion Modifiers**         | Unlocks capability      | `intro.md`                                                  | MUST include "comprehensive and thorough" (see intro.md section) |
+| 7   | **Self-Correction Triggers**    | 74.4% SWE-bench         | `workflow.md`                                               | `<self_correction_triggers>` with "If you notice yourself..."    |
+| 8   | **Post-Action Reflection**      | ↑ long-horizon          | `workflow.md`                                               | `<post_action_reflection>` after major workflow steps            |
+| 9   | **Progress Tracking**           | 30+ hour focus          | `workflow.md`                                               | `<progress_tracking>` section for extended sessions              |
+| 10  | **Positive Framing**            | Better adherence        | All files                                                   | Writing Style Guidelines: "Use X" not "Don't do Y"               |
+| 11  | **"Think" Alternatives**        | Prevents Opus confusion | All files                                                   | Writing Style Guidelines: consider/evaluate/analyze              |
+| 12  | **Just-in-Time Loading**        | Preserves context       | `workflow.md`                                               | `<retrieval_strategy>` with Glob → Grep → Read pattern           |
+| 13  | **Write Verification**          | Prevents false-success  | `core-prompts/write-verification.md` + template             | Write verification protocol + second closing reminder            |
 
 ### Validation Checklist
 
@@ -456,6 +482,7 @@ Use this checklist to verify an agent is 100% compliant:
 
 ```markdown
 ## Structural Compliance
+
 - [ ] Has REQUIRED source files: intro.md, workflow.md
 - [ ] Has OPTIONAL source files (recommended): critical-requirements.md, critical-reminders.md, examples.md
 - [ ] intro.md includes expansion modifiers ("comprehensive and thorough")
@@ -465,11 +492,13 @@ Use this checklist to verify an agent is 100% compliant:
 - [ ] If present: critical-reminders.md repeats rules from critical-requirements.md
 
 ## Template Output Compliance (verify after compilation)
+
 - [ ] Compiled agent has all 13 Required XML Tags
 - [ ] Ends with both final reminder lines
 - [ ] <preloaded_content> lists all bundled content
 
 ## Writing Style Compliance
+
 - [ ] No bare "think" usage (use consider/evaluate/analyze)
 - [ ] Constraints stated positively (what TO do first)
 - [ ] Critical rules use emphatic formatting
@@ -597,14 +626,14 @@ This section documents behavioral differences and optimization strategies for Cl
 
 ### Sonnet 4.5 vs Opus 4.5 Comparison
 
-| Characteristic | Sonnet 4.5 | Opus 4.5 |
-|----------------|------------|----------|
-| Default behavior | Conservative, minimal | Over-engineering tendency |
-| Instruction following | Very literal | More interpretive |
-| Expansion modifiers | **Required** to unlock capability | Helpful but less critical |
-| "Think" sensitivity | Low | **High** (avoid in prompts) |
-| System prompt responsiveness | Standard | **More responsive** |
-| Parallel tool execution | Standard | **Excels** at parallel ops |
+| Characteristic               | Sonnet 4.5                        | Opus 4.5                    |
+| ---------------------------- | --------------------------------- | --------------------------- |
+| Default behavior             | Conservative, minimal             | Over-engineering tendency   |
+| Instruction following        | Very literal                      | More interpretive           |
+| Expansion modifiers          | **Required** to unlock capability | Helpful but less critical   |
+| "Think" sensitivity          | Low                               | **High** (avoid in prompts) |
+| System prompt responsiveness | Standard                          | **More responsive**         |
+| Parallel tool execution      | Standard                          | **Excels** at parallel ops  |
 
 ### Sonnet 4.5 Optimizations
 
@@ -613,6 +642,7 @@ This section documents behavioral differences and optimization strategies for Cl
 Sonnet 4.5 is more conservative than Claude 3.5 despite higher capability. Without expansion modifiers, it produces minimal implementations.
 
 **Required in every intro.md:**
+
 ```markdown
 **When implementing features, be comprehensive and thorough. Include all necessary edge cases and error handling.**
 ```
@@ -620,6 +650,7 @@ Sonnet 4.5 is more conservative than Claude 3.5 despite higher capability. Witho
 **2. Explicit Permission for Changes**
 
 Sonnet 4.5 needs explicit permission for substantial changes:
+
 ```markdown
 Feel free to refactor architecture if needed to achieve the goal.
 You have permission to make substantial changes within [scope].
@@ -628,12 +659,16 @@ You have permission to make substantial changes within [scope].
 **3. Stricter Instruction Following**
 
 Sonnet interprets constraints literally. Be precise:
+
 ```markdown
 # ❌ Vague (Sonnet may under-deliver)
+
 Add a user profile feature
 
 # ✅ Explicit (Sonnet delivers fully)
+
 Add a user profile feature with:
+
 - Avatar upload with preview
 - Bio field (markdown supported)
 - Social links section
@@ -651,6 +686,7 @@ When extended thinking is disabled, Opus 4.5 is particularly sensitive to "think
 **2. Over-Engineering Tendency**
 
 Opus tends to add unnecessary abstractions and features. Counter with explicit guidance:
+
 ```markdown
 <anti_over_engineering>
 Avoid over-engineering. Only make changes that are directly requested or clearly necessary. Keep solutions simple and focused. Don't add features, refactor code, or make "improvements" beyond what was asked.
@@ -660,6 +696,7 @@ Avoid over-engineering. Only make changes that are directly requested or clearly
 **3. System Prompt Responsiveness**
 
 Opus is more responsive to system prompts than previous models:
+
 - Aggressive directives (CRITICAL, MUST) may cause over-caution
 - Use clear, direct language without excessive emphasis
 - Positive framing works better than prohibitions
@@ -667,11 +704,14 @@ Opus is more responsive to system prompts than previous models:
 **4. Parallel Tool Execution**
 
 Opus excels at parallel tool execution. Structure prompts to allow simultaneous operations:
+
 ```markdown
 # Good - Opus can parallelize
+
 Read these 3 files and compare their patterns: file1.ts, file2.ts, file3.ts
 
 # Less optimal - forces sequential
+
 Read file1.ts. Then read file2.ts. Then read file3.ts.
 ```
 
@@ -679,19 +719,21 @@ Read file1.ts. Then read file2.ts. Then read file3.ts.
 
 When making requests TO Claude Code (not in agent prompts), use these trigger words to allocate thinking budget:
 
-| Trigger | Token Budget | When to Use |
-|---------|--------------|-------------|
-| `think` | ~4K tokens | Routine debugging, simple features |
-| `megathink` | ~10K tokens | API integration, performance optimization, refactoring |
-| `ultrathink` | ~32K tokens | Major architecture, critical migrations, complex debugging |
+| Trigger      | Token Budget | When to Use                                                |
+| ------------ | ------------ | ---------------------------------------------------------- |
+| `think`      | ~4K tokens   | Routine debugging, simple features                         |
+| `megathink`  | ~10K tokens  | API integration, performance optimization, refactoring     |
+| `ultrathink` | ~32K tokens  | Major architecture, critical migrations, complex debugging |
 
 **Ultrathink trigger phrases:** "think harder", "think intensely", "think longer", "think really hard", "think super hard", "think very hard", "ultrathink"
 
 **Key distinction:**
+
 - **In agent prompts** (static text): Avoid "think" → use consider/evaluate/analyze
 - **In user requests to Claude Code**: Use "think"/"megathink"/"ultrathink" to explicitly allocate thinking budget
 
 **When to escalate to ultrathink:**
+
 - Claude gets stuck in repetitive loops
 - Complex architectural decisions needed
 - Critical migration or systemic problem resolution
@@ -717,8 +759,8 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer      # References core_prompt_sets in stack config
-    ending_prompts: developer    # References ending_prompt_sets in stack config
+    core_prompts: developer # References core_prompt_sets in stack config
+    ending_prompts: developer # References ending_prompt_sets in stack config
     output_format: output-formats-developer
 
   backend-developer:
@@ -734,6 +776,7 @@ agents:
 ```
 
 **Key points:**
+
 - Agent definitions do NOT include skills - skills are stack-specific
 - All agents available across all stacks are defined here
 - Stack configs reference these agents by name
@@ -741,6 +784,7 @@ agents:
 ## Config.yaml Structure (Unified Skills)
 
 Each stack's `config.yaml` specifies:
+
 1. **Stack metadata** (name, description, CLAUDE.md path)
 2. **Agent configurations** (core_prompts, ending_prompts, skills)
 
@@ -758,7 +802,7 @@ claude_md: ./CLAUDE.md
 
 # Agent configurations (keys determine which agents are compiled!)
 agents:
-  frontend-developer:          # This agent WILL be compiled
+  frontend-developer: # This agent WILL be compiled
     core_prompts:
       - core-principles
       - investigation-requirement
@@ -767,7 +811,7 @@ agents:
     ending_prompts:
       - context-management
       - improvement-protocol
-    skills:                    # Unified skills array - all loaded via Skill tool
+    skills: # Unified skills array - all loaded via Skill tool
       - id: frontend/react
         usage: when implementing React components
       - id: frontend/styling
@@ -777,7 +821,7 @@ agents:
       - id: frontend/accessibility
         usage: when implementing accessible components or ARIA patterns
 
-  frontend-reviewer:           # This agent WILL be compiled
+  frontend-reviewer: # This agent WILL be compiled
     core_prompts:
       - core-principles
       - investigation-requirement
@@ -798,11 +842,11 @@ agents:
 
 The same agent can have different skill configurations per stack:
 
-| Agent | Home Stack | Work Stack |
-|-------|------------|------------|
-| `frontend-developer` | Zustand, SCSS Modules | MobX, Tailwind |
-| `tester` | Vitest, MSW | Karma, Mocha, Chai, Sinon |
-| `backend-developer` | In agent_skills | Not in agent_skills |
+| Agent                | Home Stack            | Work Stack                |
+| -------------------- | --------------------- | ------------------------- |
+| `frontend-developer` | Zustand, SCSS Modules | MobX, Tailwind            |
+| `tester`             | Vitest, MSW           | Karma, Mocha, Chai, Sinon |
+| `backend-developer`  | In agent_skills       | Not in agent_skills       |
 
 ## Skill File Structure
 
@@ -816,6 +860,7 @@ Skills are single markdown files with this structure:
 ---
 
 <critical_requirements>
+
 ## ⚠️ CRITICAL: Before Using This Skill
 
 **(You MUST [requirement])**
@@ -826,10 +871,12 @@ Skills are single markdown files with this structure:
 **Auto-detection:** [Triggers for when to use]
 
 **When to use:**
+
 - [Use case 1]
 - [Use case 2]
 
 **When NOT to use:**
+
 - [Anti-pattern 1]
 
 ---
@@ -867,6 +914,7 @@ Skills are single markdown files with this structure:
 ---
 
 <anti_patterns>
+
 ## Anti-Patterns
 
 ### ❌ [Anti-pattern Name]
@@ -894,6 +942,7 @@ Every agent MUST end with these two lines (added by template):
 ```
 
 This closes:
+
 1. **Self-reminder loop** - 60-70% reduction in off-task behavior
 2. **Write verification loop** - Prevents false-success reports
 
@@ -928,7 +977,7 @@ agents:
   my-new-agent:
     title: My New Agent
     description: "What this agent does - one-line for Claude Code"
-    model: opus  # or sonnet, haiku
+    model: opus # or sonnet, haiku
     tools:
       - Read
       - Write
@@ -936,8 +985,8 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer      # References core_prompt_sets in stack config
-    ending_prompts: developer    # References ending_prompt_sets in stack config
+    core_prompts: developer # References core_prompt_sets in stack config
+    ending_prompts: developer # References ending_prompt_sets in stack config
     output_format: output-formats-developer
 ```
 
@@ -953,7 +1002,7 @@ Add the agent to each stack's `agents` section. **The agent will be compiled bec
 agents:
   # ... existing agents ...
 
-  my-new-agent:                          # Adding this key enables the agent
+  my-new-agent: # Adding this key enables the agent
     core_prompts:
       - core-principles
       - investigation-requirement
@@ -961,7 +1010,7 @@ agents:
       - context-management
     skills:
       - id: frontend/react
-        usage: when implementing components   # Uses WORK stack's skill
+        usage: when implementing components # Uses WORK stack's skill
 ```
 
 ### Step 4: Compile and Verify
@@ -1006,6 +1055,7 @@ src/stacks/home-stack/skills/frontend/react.md
 ---
 
 <critical_requirements>
+
 ## ⚠️ CRITICAL: Before Using This Skill
 
 **(You MUST [requirement])**
@@ -1024,13 +1074,16 @@ src/stacks/home-stack/skills/frontend/react.md
 ## Core Patterns
 
 ### Pattern 1: [Name]
+
 [Good/bad examples with explanations]
 </patterns>
 
 ---
 
 <anti_patterns>
+
 ## Anti-Patterns
+
 [What to avoid]
 </anti_patterns>
 ```
@@ -1055,3 +1108,196 @@ agents:
 - `frontend/react` in home-stack -> Zustand patterns
 - Skills are resolved from the **active stack's** `skills/` directory via registry.yaml
 - All skills are loaded via the Skill tool (no precompiled embedding)
+
+---
+
+## Skill Schema Requirements
+
+Every skill consists of two required files: `SKILL.md` and `metadata.yaml`. Both have strict schema requirements that are validated by `cc validate`.
+
+### SKILL.md Frontmatter (REQUIRED)
+
+Every `SKILL.md` file **MUST** start with YAML frontmatter containing `name` and `description`:
+
+```markdown
+---
+name: frontend/react (@vince)
+description: Component architecture, hooks, patterns
+---
+
+# React Components
+
+> **Quick Guide:** ...
+```
+
+**Required frontmatter fields:**
+
+| Field         | Description                    | Example                                   |
+| ------------- | ------------------------------ | ----------------------------------------- |
+| `name`        | Skill identifier with author   | `frontend/react (@vince)`                 |
+| `description` | Short description (5-10 words) | `Component architecture, hooks, patterns` |
+
+**Validation:** Files without valid frontmatter will fail `cc validate` with "Failed to extract content (no valid frontmatter found)".
+
+---
+
+### metadata.yaml Schema (REQUIRED)
+
+Every skill must have a `metadata.yaml` file. The schema is defined in `src/schemas/metadata.schema.json`.
+
+**Required fields:**
+
+| Field             | Type          | Description                       | Example                                 |
+| ----------------- | ------------- | --------------------------------- | --------------------------------------- |
+| `category`        | string (enum) | Skill category                    | `framework`, `client-state`, `testing`  |
+| `author`          | string        | Author handle with @ prefix       | `@vince`, `@photoroom`                  |
+| `version`         | integer       | Skill version (1, 2, 3...)        | `1`                                     |
+| `cli_name`        | string        | Display name for CLI              | `React`, `Zustand`                      |
+| `cli_description` | string        | Brief description (5-6 words max) | `React component patterns`              |
+| `usage_guidance`  | string        | When AI should invoke this skill  | `Use when building React components...` |
+
+**Optional fields:**
+
+| Field                | Type    | Description                                                              |
+| -------------------- | ------- | ------------------------------------------------------------------------ |
+| `category_exclusive` | boolean | If true, only one skill from this category can be active (default: true) |
+| `requires`           | array   | Hard dependencies - skill IDs that must be present                       |
+| `compatible_with`    | array   | Soft recommendations - skills this works well with                       |
+| `conflicts_with`     | array   | Mutual exclusions - skills that cannot coexist                           |
+| `tags`               | array   | Tags for discoverability                                                 |
+| `requires_setup`     | array   | Setup skills that must be completed first                                |
+| `provides_setup_for` | array   | Usage skills this setup skill provides for                               |
+| `forked_from`        | object  | Provenance tracking for forked skills                                    |
+
+---
+
+### Strict Validation Rules
+
+**⚠️ CRITICAL: These patterns are enforced by schema validation**
+
+#### 1. Tags MUST be kebab-case
+
+Tags follow the pattern `^[a-z][a-z0-9-]*$` - lowercase letters, numbers, and hyphens only.
+
+```yaml
+# ✅ GOOD - kebab-case tags
+tags:
+  - react-19
+  - use-action-state
+  - use-form-status
+  - react-query
+  - state-management
+
+# ❌ BAD - camelCase or dots (FAILS VALIDATION)
+tags:
+  - useActionState    # camelCase - INVALID
+  - useFormStatus     # camelCase - INVALID
+  - wcag-2.2          # dots - INVALID (use wcag-2-2)
+  - React19           # PascalCase - INVALID
+```
+
+#### 2. Author MUST use @ prefix
+
+Author format follows the pattern `^@[a-z][a-z0-9-]*$`:
+
+```yaml
+# ✅ GOOD
+author: "@vince"
+author: "@photoroom"
+
+# ❌ BAD (FAILS VALIDATION)
+author: "vince"       # Missing @ prefix
+author: "@Vince"      # Uppercase not allowed
+author: "Vincent"     # No @ prefix
+```
+
+#### 3. Category MUST be from allowed enum
+
+Valid category values (from `src/schemas/metadata.schema.json`):
+
+```
+framework, meta-framework, client-state, server-state, styling, testing,
+mocking, api, database, auth, analytics, observability, email, forms,
+ui-components, i18n, error-handling, files, file-upload, utilities,
+tooling, monorepo, mobile-framework, frontend, backend, security, shared,
+setup, research, performance, ci-cd, flags, accessibility,
+frontend/realtime, frontend/animation
+```
+
+```yaml
+# ✅ GOOD
+category: client-state    # For Zustand, MobX, Jotai
+category: server-state    # For React Query, SWR
+category: framework       # For React, Vue, Angular
+
+# ❌ BAD - NOT in allowed enum (FAILS VALIDATION)
+category: state           # Use "client-state" or "server-state"
+category: data-fetching   # Use "server-state"
+category: ui              # Use "ui-components"
+```
+
+#### 4. Version MUST be an integer
+
+Version is a simple integer, NOT semantic versioning:
+
+```yaml
+# ✅ GOOD
+version: 1
+version: 2
+version: 10
+
+# ❌ BAD (FAILS VALIDATION)
+version: "1.0.0"    # Semantic version - INVALID
+version: 1.0        # Float - INVALID
+version: "1"        # String - INVALID
+```
+
+---
+
+### Complete metadata.yaml Example
+
+```yaml
+# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+category: framework
+category_exclusive: true
+author: "@vince"
+version: 1
+cli_name: React
+cli_description: React component patterns
+usage_guidance: Use when building React components, hooks, or following React 19 patterns.
+compatible_with:
+  - frontend/client-state-management/zustand
+  - frontend/server-state-management/react-query
+tags:
+  - react
+  - react-19
+  - components
+  - hooks
+  - use-action-state
+  - use-form-status
+  - jsx
+  - tsx
+```
+
+---
+
+### Validation Commands
+
+Run these commands to validate skills:
+
+```bash
+# Validate all skills and metadata
+bun src/cli/index.ts validate
+
+# Or use the package.json script
+bun cc:validate
+```
+
+**Common validation errors and fixes:**
+
+| Error                                                    | Cause                                 | Fix                                           |
+| -------------------------------------------------------- | ------------------------------------- | --------------------------------------------- |
+| `tags.N: must match pattern "^[a-z][a-z0-9-]*$"`         | camelCase or special chars in tag     | Convert to kebab-case                         |
+| `Failed to extract content (no valid frontmatter found)` | Missing `---` frontmatter in SKILL.md | Add frontmatter with `name` and `description` |
+| `category: must be equal to one of the allowed values`   | Invalid category value                | Use value from enum list                      |
+| `author: must match pattern "^@[a-z][a-z0-9-]*$"`        | Missing @ or uppercase                | Use `@lowercase` format                       |

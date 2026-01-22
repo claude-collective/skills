@@ -66,10 +66,10 @@ When a skill defines its own bridge/adapter utility (like MobxQuery that bridges
 
 ```typescript
 // ALLOWED in MobX skill - defines the bridge pattern itself
-import { MobxQuery } from './mobx-query'
+import { MobxQuery } from "./mobx-query";
 
 // NOT ALLOWED in MobX skill - prescribes external tool
-import { useQuery } from '@tanstack/react-query' // VIOLATION
+import { useQuery } from "@tanstack/react-query"; // VIOLATION
 ```
 
 ---
@@ -82,12 +82,12 @@ Examples that import from other domains.
 
 ```typescript
 // VIOLATION - React skill importing styling
-import styles from './button.module.scss'
-import { cva } from 'class-variance-authority'
+import styles from "./button.module.scss";
+import { cva } from "class-variance-authority";
 
 // VIOLATION - Testing skill importing specific mock library
-import { server } from 'msw/node'
-import { rest } from 'msw'
+import { server } from "msw/node";
+import { rest } from "msw";
 
 // FIXED - Generic comment
 // Apply your styling solution via className prop
@@ -217,12 +217,12 @@ Imports from workspace packages that assume specific structure.
 
 ```typescript
 // VIOLATION
-import { handlers } from '@repo/api-mocks'
-import { Button } from '@repo/ui'
-import { apiClient } from '@repo/api'
+import { handlers } from "@repo/api-mocks";
+import { Button } from "@repo/ui";
+import { apiClient } from "@repo/api";
 
 // FIXED
-import { handlers } from './handlers' // Generic relative import
+import { handlers } from "./handlers"; // Generic relative import
 // Use your component library's Button
 // Use your API client
 ```
@@ -323,7 +323,7 @@ Apply changes based on categorization:
 
 ```typescript
 // Before
-import styles from './button.module.scss'
+import styles from "./button.module.scss";
 
 // After
 // Apply your styling solution via className
@@ -501,6 +501,16 @@ When removing valuable content that belongs in another skill:
 
 **A skill transformation is NOT complete until ALL boxes are checked:**
 
+### Schema Compliance (REQUIRED)
+
+- [ ] `SKILL.md` has frontmatter with `name` and `description`
+- [ ] `metadata.yaml` has all required fields (category, author, version, cli_name, cli_description, usage_guidance)
+- [ ] Tags use kebab-case only (`^[a-z][a-z0-9-]*$`) - NO camelCase or dots
+- [ ] Author uses `@` prefix (`@vince`, not `vince`)
+- [ ] Category is from allowed enum (see CLAUDE_ARCHITECTURE_BIBLE.md)
+- [ ] Version is an integer (1, 2, 3) - NOT semantic versioning
+- [ ] `bun cc:validate` passes with no errors
+
 ### Import Purity
 
 - [ ] No imports from other domains in any code example
@@ -540,6 +550,7 @@ When removing valuable content that belongs in another skill:
 - [ ] Grep verification shows 0 violation matches
 - [ ] Full read-through confirms no violations missed
 - [ ] Transformation documented in log
+- [ ] Schema validation passes (`bun cc:validate`)
 
 ---
 
@@ -713,8 +724,8 @@ Is it server data (from API)?
 ### Usage
 
 ```tsx
-import { ChevronUp } from 'lucide-react'
-;<ChevronUp className={styles.icon} size={16} />
+import { ChevronUp } from "lucide-react";
+<ChevronUp className={styles.icon} size={16} />;
 ```
 ````
 
@@ -767,18 +778,18 @@ afterAll(() => server.close());
 
 beforeAll(() => {
   // Initialize mock server
-  mockServer.listen()
-})
+  mockServer.listen();
+});
 
 afterEach(() => {
   // Reset handlers between tests
-  mockServer.resetHandlers()
-})
+  mockServer.resetHandlers();
+});
 
 afterAll(() => {
   // Cleanup
-  mockServer.close()
-})
+  mockServer.close();
+});
 ```
 
 ---
@@ -799,12 +810,12 @@ afterAll(() => {
 
 ```typescript
 // Apply styles via className prop
-className = { className }
+className = { className };
 
 // Pass state via props - source doesn't matter
 interface Props {
-  data: User[]
-  isLoading: boolean
+  data: User[];
+  isLoading: boolean;
 }
 ```
 
@@ -818,14 +829,14 @@ interface Props {
 
 ```typescript
 // Removed import, left broken code
-const buttonClass = styles.button // styles is undefined!
+const buttonClass = styles.button; // styles is undefined!
 ```
 
 **Good:**
 
 ```typescript
 // Rewrite to work without the import
-const buttonClass = className // Passed in via props
+const buttonClass = className; // Passed in via props
 ```
 
 **Rule:** Examples must compile conceptually after transformation.
@@ -943,15 +954,15 @@ Violations are often concentrated in `examples.md` because that's where imports 
 
 ```typescript
 // Before: Depends on external import
-import { useQuery } from '@tanstack/react-query'
-const { data } = useQuery({ queryKey: ['users'] })
+import { useQuery } from "@tanstack/react-query";
+const { data } = useQuery({ queryKey: ["users"] });
 
 // After: Conceptually complete
 // Assume data comes from your data fetching solution
 interface Props {
-  data: User[] | undefined
-  isLoading: boolean
-  error: Error | null
+  data: User[] | undefined;
+  isLoading: boolean;
+  error: Error | null;
 }
 
 function UserList({ data, isLoading, error }: Props) {
