@@ -2,7 +2,11 @@ import path from "path";
 import { stringify as stringifyYaml, parse as parseYaml } from "yaml";
 import { copy, ensureDir, readFile, writeFile } from "../utils/fs";
 import { hashFile } from "./hash";
-import { PROJECT_ROOT } from "../consts";
+import {
+  PROJECT_ROOT,
+  COLLECTIVE_DIR,
+  COLLECTIVE_STACKS_SUBDIR,
+} from "../consts";
 import type { MergedSkillsMatrix, ResolvedSkill } from "../types-matrix";
 
 /**
@@ -179,8 +183,13 @@ export async function copySkillsToStack(
 }
 
 /**
- * Get the stack directory path
+ * Get the stack directory path in .claude-collective/stacks/
  */
 export function getStackDir(projectDir: string, stackName: string): string {
-  return path.join(projectDir, ".claude", "stacks", stackName);
+  return path.join(
+    projectDir,
+    COLLECTIVE_DIR,
+    COLLECTIVE_STACKS_SUBDIR,
+    stackName,
+  );
 }

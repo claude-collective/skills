@@ -35,8 +35,9 @@ The source of truth for the modular agent & skill compilation system.
 - How agents are generic (role + workflow) while skills are stack-specific (implementation patterns)
 - Adding new agents and skills
 - Template system (`src/templates/agent.liquid`)
+- **Skill schema requirements** (metadata.yaml, SKILL.md frontmatter, validation rules)
 
-**Use when:** Creating or modifying agents, understanding the build system, switching stacks.
+**Use when:** Creating or modifying agents, understanding the build system, switching stacks, authoring new skills.
 
 ---
 
@@ -106,13 +107,13 @@ The CLI (`cc`) is the user-facing tool for managing skills, stacks, and agents.
 
 ### Core CLI Documents
 
-| Document                          | Path                            | Purpose                                                                |
-| --------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| `CLI-DATA-DRIVEN-ARCHITECTURE.md` | `src/docs/`                     | **Start here** - Data-driven design, skills matrix schema, MVP dataset |
-| `CLI-AGENT-INVOCATION-RESEARCH.md`| `src/docs/`                     | **Key Discovery** - Inline agent invocation via `--agents` JSON flag   |
-| `CLI-FRAMEWORK-RESEARCH.md`       | `src/docs/`                     | Framework comparison (@clack vs Ink vs Inquirer)                       |
-| `CLI-IMPLEMENTATION-PLAN.md`      | `.claude/research/findings/v2/` | Phase 1-5 implementation details                                       |
-| `CLI-PHASE-2-PLAN.md`             | `.claude/research/findings/v2/` | Remaining features (list, create, update)                              |
+| Document                           | Path                            | Purpose                                                                |
+| ---------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
+| `CLI-DATA-DRIVEN-ARCHITECTURE.md`  | `src/docs/`                     | **Start here** - Data-driven design, skills matrix schema, MVP dataset |
+| `CLI-AGENT-INVOCATION-RESEARCH.md` | `src/docs/`                     | **Key Discovery** - Inline agent invocation via `--agents` JSON flag   |
+| `CLI-FRAMEWORK-RESEARCH.md`        | `src/docs/`                     | Framework comparison (@clack vs Ink vs Inquirer)                       |
+| `CLI-IMPLEMENTATION-PLAN.md`       | `.claude/research/findings/v2/` | Phase 1-5 implementation details                                       |
+| `CLI-PHASE-2-PLAN.md`              | `.claude/research/findings/v2/` | Remaining features (list, create, update)                              |
 
 ### CLI Architecture Principles
 
@@ -340,11 +341,11 @@ Located in `.claude/research/`:
 
 ## Project Configuration
 
-| Document      | Path                      | Purpose                                                  |
-| ------------- | ------------------------- | -------------------------------------------------------- |
-| `CLAUDE.md`   | Root                      | Project memory - decision trees, conventions, checklists |
-| `agents.yaml` | `src/`                    | Single source of truth for all agent definitions         |
-| `config.yaml` | `src/stacks/{stack}/`     | Stack-specific agent/skill assignments                   |
+| Document      | Path                  | Purpose                                                  |
+| ------------- | --------------------- | -------------------------------------------------------- |
+| `CLAUDE.md`   | Root                  | Project memory - decision trees, conventions, checklists |
+| `agents.yaml` | `src/`                | Single source of truth for all agent definitions         |
+| `config.yaml` | `src/stacks/{stack}/` | Stack-specific agent/skill assignments                   |
 
 ---
 
