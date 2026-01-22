@@ -13,14 +13,13 @@ The system has three layers with clear responsibilities:
 | Layer | Purpose | Complexity |
 |-------|---------|------------|
 | **Skills** | Atomic, portable knowledge units | Rich (SKILL.md + metadata.yaml) |
+| **Agents** | Role-based AI assistants with assigned skills | Medium (agent.yaml + intro.md + workflow.md) |
 | **Stacks** | Curated skill collections with conventions | Medium (config + CLAUDE.md + optional template) |
-| **Profiles** | Thin overlay pointing to a stack | Minimal (just references stack) |
 
 **Key Principles:**
 - SKILL.md frontmatter is the **single source of truth** for skill identity
 - `name` field IS the identifier (no separate `id` field)
-- Templates cascade: Profile → Stack → Default
-- CLAUDE.md cascades: Profile → Stack
+- Templates cascade: Stack → Default
 - Skills stay in central directory (deferred: copying into stacks for independent versioning)
 
 ---
@@ -40,7 +39,7 @@ Registry.yaml removed. Agents and skills discovered via directory scanning:
 Skill identity (name, description) is duplicated across:
 1. skill.yaml (has id, name, description + metadata)
 2. SKILL.md frontmatter (has name, description)
-3. Profile config.yaml (references skills by name)
+3. Stack config.yaml (references skills by name)
 
 ### Solution: SKILL.md Frontmatter = Source of Truth
 
@@ -164,107 +163,45 @@ src/stacks/{stack-id}/
 
 ---
 
-## Phase 0D.1: Stack Compilation ⏳ NEXT
+## Phase 0D.1: Stack Compilation ✅ COMPLETE
 
-Add `--stack` flag to compile.ts for direct stack compilation.
+Stack compilation is now the primary compilation method.
 
-### Tasks
+### Implementation
 
-1. Add `--stack=<stack-id>` option to compile.ts
-2. Stack compilation outputs to same `.claude/` directory as profile compilation
-3. Create `home-stack` - exact 1:1 mapping of current home profile
-4. Create `work-stack` - exact 1:1 mapping of current work profile
-
-### Verification (Manual)
-
-Before proceeding to 0E, manually verify that stack compilation produces **identical output** to profile compilation:
-
-```bash
-# Compile using profile
-bun src/compile.ts --profile=home
-# Save output or checksum
-
-# Compile using stack
-bun src/compile.ts --stack=home-stack
-# Compare output - must be IDENTICAL
-
-# Same for work
-bun src/compile.ts --profile=work
-bun src/compile.ts --stack=work-stack
-# Compare output - must be IDENTICAL
-```
-
-**Only proceed to Phase 0E after personal verification that outputs are identical.**
-
----
-
-## Phase 0E: Profile Simplification ⏳ AFTER VERIFICATION
-
-### Profile Structure
-
-Profiles are **extremely simple** - thin overlays that point to stacks:
-
-```
-src/profiles/{profile}/
-├── config.yaml           # ONLY points to a stack
-├── CLAUDE.md             # Optional: overrides stack's CLAUDE.md
-└── agent.liquid          # Optional: overrides stack's template
-```
-
-### Profile config.yaml (Minimal)
-
-```yaml
-name: home
-stack: home-stack       # That's it. Points to src/stacks/home-stack/
-```
-
-**Profiles do exactly 3 things:**
-1. Point to a stack
-2. Optionally provide their own CLAUDE.md (overrides stack's)
-3. Optionally provide their own agent.liquid (overrides stack's)
-
-**Profiles do NOT:**
-- Define skills (that's what stacks do)
-- Override skills (no override mechanism)
-- Have complex configuration
+1. `--stack=<stack-id>` option added to compile.ts
+2. Stack compilation outputs to `.claude/` directory
+3. Created `home-stack` and `work-stack` stacks
 
 ---
 
 ## Template & CLAUDE.md Cascade
 
-### Resolution Order: Profile → Stack → Default
+### Resolution Order: Stack → Default
 
-| Asset | Check 1 (Profile) | Check 2 (Stack) | Check 3 (Default) |
-|-------|------------------|-----------------|-------------------|
-| **agent.liquid** | `profiles/{p}/agent.liquid` | `stacks/{s}/agent.liquid` | `templates/agent.liquid` |
-| **CLAUDE.md** | `profiles/{p}/CLAUDE.md` | `stacks/{s}/CLAUDE.md` | Error (required) |
+| Asset | Check 1 (Stack) | Check 2 (Default) |
+|-------|-----------------|-------------------|
+| **agent.liquid** | `stacks/{s}/agent.liquid` | `templates/agent.liquid` |
+| **CLAUDE.md** | `stacks/{s}/CLAUDE.md` | Error (required) |
 
 ### Implementation in compile.ts
 
 ```typescript
-async function resolveTemplate(profile: string, stack: string): Promise<string> {
-  // 1. Profile-specific template
-  const profileTemplate = `${ROOT}/profiles/${profile}/agent.liquid`;
-  if (await exists(profileTemplate)) return profileTemplate;
-
-  // 2. Stack-specific template
+async function resolveTemplate(stack: string): Promise<string> {
+  // 1. Stack-specific template
   const stackTemplate = `${ROOT}/stacks/${stack}/agent.liquid`;
   if (await exists(stackTemplate)) return stackTemplate;
 
-  // 3. Default template
+  // 2. Default template
   return `${ROOT}/templates/agent.liquid`;
 }
 
-async function resolveClaudeMd(profile: string, stack: string): Promise<string> {
-  // 1. Profile-specific CLAUDE.md
-  const profileClaude = `${ROOT}/profiles/${profile}/CLAUDE.md`;
-  if (await exists(profileClaude)) return profileClaude;
-
-  // 2. Stack-specific CLAUDE.md
+async function resolveClaudeMd(stack: string): Promise<string> {
+  // Stack-specific CLAUDE.md
   const stackClaude = `${ROOT}/stacks/${stack}/CLAUDE.md`;
   if (await exists(stackClaude)) return stackClaude;
 
-  throw new Error(`No CLAUDE.md found for profile ${profile} or stack ${stack}`);
+  throw new Error(`No CLAUDE.md found for stack ${stack}`);
 }
 ```
 
@@ -296,11 +233,6 @@ src/
 │       ├── config.yaml                     # Stack config (skill references, agents)
 │       ├── CLAUDE.md                       # Stack conventions
 │       └── agent.liquid                    # Optional: stack template
-├── profiles/                               # Thin overlays
-│   └── {profile}/
-│       ├── config.yaml                     # Just: name + stack reference
-│       ├── CLAUDE.md                       # Optional: override stack CLAUDE.md
-│       └── agent.liquid                    # Optional: override stack template
 ├── core-prompts/                           # Shared prompts
 └── schemas/                                # JSON schemas for validation
 ```
