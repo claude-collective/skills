@@ -85,16 +85,13 @@ Test 4: Roundtrip (Manual)
 
 > Complete these while skills and CLI live in same repo. Focus on making CLI work end-to-end.
 
-| Order | Task                          | Description                                                                                                    | Status      |
-| ----- | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
-| A1    | Complete stack plugin on init | `cc init` creates complete plugin with skills folder + compiled agents. See "Stack Plugin Architecture" below. | **DONE**    |
-| A2    | Implement recompileAgents     | `cc add` should automatically recompile agents after adding skill (TODO at add.ts:129)                         | **DONE**    |
-| A3    | Manual testing                | Test all flows end-to-end (Phase 3 checklist)                                                                  | Not Started |
-| A4    | Phase 4: Versioning           | Integer version + content hash on compile                                                                      | Not Started |
-| A5    | Hooks in agent frontmatter    | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml, generate hooks.json                                   | Not Started |
-| A6    | `cc create skill`             | Scaffold new skill + `--generate` flag for inline agent invocation                                             | Not Started |
-| A7    | `cc create agent`             | Scaffold new agent + `--generate` flag for inline agent invocation                                             | Not Started |
-| A8    | Inline agent invocation       | Test `--agents` JSON flag with model/tools (see cli/CLI-AGENT-INVOCATION-RESEARCH.md)                          | Partial     |
+| Order | Task                       | Description                                                                           | Status      |
+| ----- | -------------------------- | ------------------------------------------------------------------------------------- | ----------- |
+| A4    | Phase 4: Versioning        | Integer version + content hash on compile                                             | Not Started |
+| A5    | Hooks in agent frontmatter | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml, generate hooks.json          | Not Started |
+| A6    | `cc create skill`          | Scaffold new skill + `--generate` flag for inline agent invocation                    | Not Started |
+| A7    | `cc create agent`          | Scaffold new agent + `--generate` flag for inline agent invocation                    | Not Started |
+| A8    | Inline agent invocation    | Test `--agents` JSON flag with model/tools (see cli/CLI-AGENT-INVOCATION-RESEARCH.md) | Partial     |
 
 #### Phase B: Repo Split (Milestone)
 
@@ -404,12 +401,24 @@ claude --agents '{"test": {"description": "Test", "prompt": "List files in curre
 
 - [x] `cc init` - Creates .claude/, copies skills
 - [x] `cc compile` - Compiles agents with skills
-- [x] `cc add` - Add additional stacks after init
+- [x] `cc edit` - Edit skills in active stack (replaced `cc add`)
 - [x] `cc update` - Update existing stack's skill selection
+- [x] `cc switch` - Switch between stacks (with optional interactive selector)
+- [x] `cc list` - List all stacks with active marker and skill counts
 - [x] `src/cli/lib/hash.ts` - content hashing utility
 - [x] `src/cli/lib/skill-copier.ts` - copy skills to local stack
 - [x] `src/cli/lib/stack-config.ts` - stack config handling
 - [x] `src/cli/lib/stack-creator.ts` - shared stack creation logic
+- [x] `src/cli/lib/stack-list.ts` - shared stack listing utility
+- [x] `src/cli/lib/stack-skills.ts` - map installed skills to IDs
+
+## Phase A Completed
+
+| Task                          | Description                                                   | Completed  |
+| ----------------------------- | ------------------------------------------------------------- | ---------- |
+| A1: Stack plugin on init      | `cc init` creates complete plugin with skills + agents        | 2026-01-24 |
+| A2: Implement recompileAgents | `cc edit` automatically recompiles agents after skill changes | 2026-01-24 |
+| A3: Manual testing            | All 18 tests pass (MANUAL-TESTING-GUIDE.md)                   | 2026-01-24 |
 
 ## Configuration System (2026-01-22)
 

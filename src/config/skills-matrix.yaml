@@ -52,6 +52,15 @@ categories:
     order: 4
     icon: "🛠️"
 
+  shared:
+    id: shared
+    name: Shared / Meta
+    description: Cross-cutting skills like reviewing and research methodology
+    exclusive: false
+    required: false
+    order: 5
+    icon: "🔗"
+
   # ─────────────────────────────────────────────────────────────────
   # Frontend subcategories
   # ─────────────────────────────────────────────────────────────────
@@ -621,6 +630,9 @@ suggested_stacks:
         api: hono
         database: drizzle
         auth: better-auth
+      shared:
+        reviewing: reviewing
+        research: research-methodology
     philosophy: "Ship fast, iterate faster"
 
   - id: fullstack-react
@@ -659,6 +671,9 @@ suggested_stacks:
         monorepo: turborepo
         env: env
         tooling: tooling
+      shared:
+        reviewing: reviewing
+        research: research-methodology
     philosophy: "Production-ready from day one"
 
   - id: modern-react-tailwind
@@ -957,3 +972,9 @@ skill_aliases:
   backend-performance: "backend/performance/performance (@vince)"
   frontend-performance: "frontend/performance/performance (@vince)"
   security: "security/security (@vince)"
+
+  # ─────────────────────────────────────────────────────────────────
+  # Shared / Meta
+  # ─────────────────────────────────────────────────────────────────
+  reviewing: "shared/reviewing (@vince)"
+  research-methodology: "research/research-methodology/research-methodology (@vince)"

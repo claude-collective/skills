@@ -5,7 +5,7 @@ import { compilePluginsCommand } from "./commands/compile-plugins";
 import { compileStackCommand } from "./commands/compile-stack";
 import { generateMarketplaceCommand } from "./commands/generate-marketplace";
 import { initCommand } from "./commands/init";
-import { addCommand } from "./commands/add";
+import { editCommand } from "./commands/edit";
 import { updateCommand } from "./commands/update";
 import { validateCommand } from "./commands/validate";
 import { listCommand } from "./commands/list";
@@ -35,7 +35,7 @@ async function main() {
 
   // Register commands
   program.addCommand(initCommand);
-  program.addCommand(addCommand);
+  program.addCommand(editCommand);
   program.addCommand(updateCommand);
   program.addCommand(compileCommand);
   program.addCommand(compilePluginsCommand);
