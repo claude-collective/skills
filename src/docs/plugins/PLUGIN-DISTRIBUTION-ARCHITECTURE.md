@@ -1,25 +1,61 @@
 # Plugin Distribution Architecture
 
 > **Purpose**: CLI compiles skills into plugins for native Claude Code distribution.
-> **Date**: 2026-01-23
-> **Status**: Architecture finalized, implementation in progress
+> **Date**: 2026-01-24
+> **Status**: Architecture finalized, implementation complete
 
 ---
 
 ## Architecture Overview
 
-The Claude Collective CLI compiles skills from a marketplace repository into complete Claude Code plugins. The CLI is thin (no bundled content) and fetches all definitions from the marketplace during compilation.
+The Claude Collective CLI uses a stack-based architecture with a single shared plugin. Skills are organized into switchable stacks stored in `~/.claude-collective/stacks/`, and one plugin at `~/.claude/plugins/claude-collective/` serves all stacks.
 
 ### Key Principles
 
-1. **Marketplace is single source of truth** - Skills, agent definitions, principles, and templates all live in the marketplace repo
-2. **CLI is stateless** - No bundled content, requires network for all operations
-3. **Complete plugin output** - `cc init` produces a ready-to-use plugin with skills AND compiled agents
-4. **Skills embedded in stacks** - Skills are copied into the stack and can evolve together
+1. **Stacks are source of truth** - Skills live in `~/.claude-collective/stacks/{name}/skills/`
+2. **Single shared plugin** - One plugin at `~/.claude/plugins/claude-collective/`
+3. **Agents fetch from marketplace** - Agent definitions, principles, templates fetched at compile time
+4. **Skills switch instantly** - `cc switch` copies skills from stack to plugin
 
 ---
 
 ## Storage Model
+
+### User's Machine
+
+```
+~/.claude-collective/                    # SOURCE (our domain)
+├── config.yaml                          # source, active_stack
+└── stacks/
+    ├── work-stack/
+    │   └── skills/
+    │       ├── react/SKILL.md
+    │       └── hono/SKILL.md
+    └── home-stack/
+        └── skills/
+            ├── react/SKILL.md
+            └── zustand/SKILL.md
+
+~/.claude/plugins/claude-collective/     # OUTPUT (Claude's domain)
+├── .claude-plugin/plugin.json
+├── agents/                              # Shared agents (fetched from source)
+│   ├── frontend-developer.md
+│   └── backend-developer.md
+├── skills/                              # Active stack's skills (copied on switch)
+│   ├── react/SKILL.md
+│   └── zustand/SKILL.md
+├── hooks/hooks.json
+├── CLAUDE.md
+└── README.md
+```
+
+### Config File
+
+```yaml
+# ~/.claude-collective/config.yaml
+source: github:claude-collective/skills
+active_stack: work-stack
+```
 
 ### Marketplace Repository
 
@@ -43,58 +79,23 @@ marketplace-repo/
 │   ├── agents/                      # Agent definitions
 │   │   ├── developer/
 │   │   │   ├── frontend-developer/
-│   │   │   │   ├── agent.yaml       # Agent config
+│   │   │   │   ├── agent.yaml
 │   │   │   │   ├── intro.md
 │   │   │   │   ├── workflow.md
 │   │   │   │   └── examples.md
 │   │   │   └── backend-developer/
-│   │   ├── reviewer/
-│   │   ├── researcher/
-│   │   ├── planning/
-│   │   ├── pattern/
-│   │   ├── meta/
-│   │   ├── tester/
 │   │   ├── _principles/             # Shared principles
 │   │   │   ├── core.md
-│   │   │   ├── code-quality.md
-│   │   │   ├── investigation-requirement.md
 │   │   │   └── ...
 │   │   └── _templates/              # LiquidJS templates
 │   │       └── agent.liquid
 │   │
 │   └── stacks/                      # Pre-built stack configs
 │       ├── fullstack-react/
-│       │   └── config.yaml
 │       └── work-stack/
-│           └── config.yaml
 │
 ├── skills-matrix.yaml               # Skill relationships and metadata
 └── marketplace.json                 # Registry of available skills
-```
-
-### User's Plugin (Output)
-
-When user runs `cc init`, a complete plugin is created:
-
-```
-~/.claude/plugins/my-stack/          # Or .claude/plugins/ for project scope
-├── .claude-plugin/
-│   └── plugin.json                  # Plugin manifest
-├── skills/                          # Skills copied from marketplace
-│   ├── react/
-│   │   ├── SKILL.md
-│   │   └── examples/
-│   ├── zustand/
-│   │   └── SKILL.md
-│   └── ...
-├── agents/                          # Compiled agents (skill content embedded)
-│   ├── frontend-developer.md
-│   ├── backend-developer.md
-│   └── ...
-├── hooks/
-│   └── hooks.json                   # If hooks configured
-├── CLAUDE.md                        # Project conventions
-└── README.md                        # Generated documentation
 ```
 
 ### CLI (Thin Client)
@@ -119,55 +120,48 @@ All content is fetched from the marketplace at runtime.
 
 ## Command Flows
 
-### `cc init --name my-stack`
+### `cc init --name X`
 
-Creates a complete plugin from scratch:
+Creates a new stack. First stack also creates the shared plugin:
 
 ```
-1. Fetch skills-matrix.yaml from marketplace
-2. Run wizard:
+1. Create ~/.claude-collective/stacks/X/skills/
+2. Fetch skills-matrix.yaml from marketplace
+3. Run wizard:
    - User selects approach (pre-built stack or custom)
    - User selects skills (or uses stack defaults)
-3. Fetch selected skills from marketplace
-4. Copy skills to ~/.claude/plugins/my-stack/skills/
-5. Fetch agent definitions from marketplace
-6. Fetch principles from marketplace
-7. Fetch templates from marketplace
-8. Compile agents (embed skill content into agent markdown)
-9. Write compiled agents to ~/.claude/plugins/my-stack/agents/
-10. Generate plugin.json, CLAUDE.md, README.md, hooks.json
-11. Complete plugin ready for use
+4. Fetch selected skills from marketplace
+5. Copy skills to ~/.claude-collective/stacks/X/skills/
+6. If first stack:
+   a. Create ~/.claude/plugins/claude-collective/
+   b. Fetch agent definitions, principles, templates
+   c. Compile agents
+   d. Generate plugin.json, CLAUDE.md, README.md, hooks.json
+7. Run switch logic to activate new stack
 ```
 
-### `cc add skill-jotai`
+### `cc switch X`
 
-Adds a skill to an existing plugin and recompiles:
-
-```
-1. Locate existing plugin (current directory or specified)
-2. Fetch skill-jotai from marketplace
-3. Copy to ~/.claude/plugins/my-stack/skills/jotai/
-4. Fetch agent definitions from marketplace
-5. Fetch principles from marketplace
-6. Fetch templates from marketplace
-7. Recompile all agents (with new skill available)
-8. Update plugin.json if needed
-9. Plugin updated in place
-```
-
-### `cc update skill-react`
-
-Updates an existing skill and recompiles:
+Switches to a different stack:
 
 ```
-1. Locate existing plugin
-2. Fetch latest skill-react from marketplace
-3. Replace ~/.claude/plugins/my-stack/skills/react/
-4. Fetch agent definitions from marketplace
-5. Fetch principles from marketplace
-6. Fetch templates from marketplace
-7. Recompile all agents
-8. Plugin updated in place
+1. Validate stack exists in ~/.claude-collective/stacks/X/
+2. Remove ~/.claude/plugins/claude-collective/skills/
+3. Copy from ~/.claude-collective/stacks/X/skills/ to plugin
+4. Update active_stack in ~/.claude-collective/config.yaml
+5. Switched to X
+```
+
+### `cc add Y`
+
+Adds a skill to the active stack:
+
+```
+1. Get active stack from config
+2. Error if no active stack
+3. Fetch skill Y from marketplace
+4. Copy to ~/.claude-collective/stacks/{active}/skills/
+5. Run switch logic to update plugin
 ```
 
 ### `cc compile`
@@ -175,13 +169,23 @@ Updates an existing skill and recompiles:
 Recompiles agents without fetching new skills (useful after manual skill edits):
 
 ```
-1. Locate existing plugin
-2. Read skills from local plugin's skills/ folder
-3. Fetch agent definitions from marketplace
-4. Fetch principles from marketplace
-5. Fetch templates from marketplace
-6. Compile agents
-7. Write to agents/ folder
+1. Read skills from ~/.claude/plugins/claude-collective/skills/
+2. Fetch agent definitions from marketplace
+3. Fetch principles from marketplace
+4. Fetch templates from marketplace
+5. Compile agents (embed skill references)
+6. Write to ~/.claude/plugins/claude-collective/agents/
+```
+
+### `cc list`
+
+Lists all stacks with active marker:
+
+```
+1. Read stacks from ~/.claude-collective/stacks/
+2. Read active_stack from config
+3. Display stacks with * for active
+4. Show skill count per stack
 ```
 
 ---
@@ -322,15 +326,6 @@ You are a senior frontend developer specializing in React and TypeScript...
 
 ---
 
-## Scope Options
-
-| Scope     | Output Path                | Use Case                             |
-| --------- | -------------------------- | ------------------------------------ |
-| `user`    | `~/.claude/plugins/<name>` | Personal plugins, available globally |
-| `project` | `.claude/plugins/<name>`   | Team sharing via git                 |
-
----
-
 ## Implementation Status
 
 ### Complete
@@ -340,17 +335,17 @@ You are a senior frontend developer specializing in React and TypeScript...
 - [x] Marketplace generator
 - [x] Plugin validator
 - [x] CLI commands: compile-plugins, compile-stack, generate-marketplace, validate, version
-
-### In Progress
-
-- [ ] Update `cc init` to produce complete plugins
-- [ ] Update `cc add` to modify plugin in place and recompile
-- [ ] Remove `.claude-collective/` directory support
-- [ ] Network fetching for agents/principles/templates during compile
+- [x] Stack-based architecture with single plugin
+- [x] `cc init` - Create stacks with skills
+- [x] `cc switch` - Switch between stacks
+- [x] `cc add` - Add skills to active stack
+- [x] `cc list` - List stacks with active marker
+- [x] `cc compile` - Recompile agents from plugin skills
+- [x] Config system with active_stack tracking
 
 ### Lowest Priority
 
-- [ ] `cc remove` - Remove skill from plugin
+- [ ] `cc remove` - Remove skill from stack
 - [ ] `cc swap` - Swap one skill for another
 - [ ] `cc outdated` - Check for skill updates
 - [ ] `cc customize --principles` - Add custom principles
@@ -358,16 +353,15 @@ You are a senior frontend developer specializing in React and TypeScript...
 
 ---
 
-## Deprecated Concepts
+## Key Concepts
 
-The following are no longer part of the architecture:
-
-| Concept                          | Replacement                                     |
-| -------------------------------- | ----------------------------------------------- |
-| `.claude-collective/` directory  | Plugins output directly to `~/.claude/plugins/` |
-| `skills:` array in plugin.json   | `skills/` folder with actual skill content      |
-| Classic mode vs plugin mode      | Always plugin mode                              |
-| Bundled agents/principles in CLI | Fetched from marketplace at runtime             |
+| Concept      | Description                                                     |
+| ------------ | --------------------------------------------------------------- |
+| Stack        | Collection of skills stored in `~/.claude-collective/stacks/X/` |
+| Active Stack | Currently active stack, tracked in config.yaml                  |
+| Plugin       | Single plugin at `~/.claude/plugins/claude-collective/`         |
+| Switch       | Copies skills from stack to plugin, updates active_stack        |
+| Source       | Marketplace URL (default: `github:claude-collective/skills`)    |
 
 ---
 
@@ -396,4 +390,4 @@ The plugin format is just the **output container**. The compilation is the magic
 
 ---
 
-_Last updated: 2026-01-23_
+_Last updated: 2026-01-24_

@@ -4,6 +4,31 @@ A plugin distribution system for Claude Code. Compile skills into distributable 
 
 ## Quick Start
 
+### Build Custom Stack
+
+```bash
+# Create your first stack (also creates the shared plugin)
+cc init --name my-stack
+
+# Select skills through the wizard
+# Outputs to:
+#   ~/.claude-collective/stacks/my-stack/skills/  (source)
+#   ~/.claude/plugins/claude-collective/          (plugin)
+```
+
+### Managing Stacks
+
+```bash
+# List all stacks
+cc list
+
+# Switch to a different stack
+cc switch work-stack
+
+# Add a skill to the active stack
+cc add zustand
+```
+
 ### Install from Marketplace
 
 ```bash
@@ -12,19 +37,9 @@ A plugin distribution system for Claude Code. Compile skills into distributable 
 
 # Install individual skills
 /plugin install skill-react@claude-collective
-/plugin install skill-zustand@claude-collective
 
 # Or install a pre-built stack
 /plugin install stack-fullstack-react@claude-collective
-```
-
-### Build Custom Stack
-
-```bash
-# Interactive wizard
-npx @claude-collective/cli init --name my-stack --plugin
-
-# Select skills through the wizard, outputs to ~/.claude/plugins/my-stack
 ```
 
 ---
@@ -54,36 +69,49 @@ See [marketplace README](./.claude-plugin/README.md) for the full list.
 
 ### Architecture
 
-Each skill compiles into its own plugin:
+The CLI uses a stack-based architecture with a single shared plugin:
 
 ```
-skill-react/
-  .claude-plugin/
-    plugin.json         # Plugin manifest
-  skills/
-    react/
-      SKILL.md          # Skill content
-  README.md
-```
+~/.claude-collective/                    # SOURCE
+├── config.yaml                          # source, active_stack
+└── stacks/
+    ├── work-stack/
+    │   └── skills/
+    │       ├── react/SKILL.md
+    │       └── hono/SKILL.md
+    └── home-stack/
+        └── skills/
+            ├── react/SKILL.md
+            └── zustand/SKILL.md
 
-Stacks bundle multiple skills with pre-configured agents:
-
-```
-stack-fullstack-react/
-  .claude-plugin/
-    plugin.json
-  agents/
-    frontend-developer.md
-    backend-developer.md
-  skills/
-    react/
-    zustand/
-    hono/
-    drizzle/
-  CLAUDE.md
+~/.claude/plugins/claude-collective/     # OUTPUT
+├── .claude-plugin/plugin.json
+├── agents/                              # Compiled agents
+├── skills/                              # Active stack's skills
+├── CLAUDE.md
+└── README.md
 ```
 
 ### CLI Commands
+
+```bash
+# Create a new stack
+cc init --name my-stack
+
+# Switch active stack
+cc switch work-stack
+
+# Add skill to active stack
+cc add zustand
+
+# List all stacks
+cc list
+
+# Recompile agents after manual edits
+cc compile
+```
+
+### Publishing Commands (CI Only)
 
 ```bash
 # Compile all skills to plugins
@@ -97,9 +125,6 @@ cc generate-marketplace
 
 # Validate plugins
 cc validate ./dist/plugins --all
-
-# Bump version
-cc version patch
 ```
 
 See [CLI Reference](./src/docs/plugins/CLI-REFERENCE.md) for complete documentation.
@@ -133,17 +158,22 @@ claude-collective/
 # Install dependencies
 bun install
 
-# Compile all plugins
-bun run cc compile-plugins
+# Run CLI commands
+bun src/cli/index.ts init --name my-stack
+bun src/cli/index.ts switch work-stack
+bun src/cli/index.ts add zustand
 
-# Compile stacks
-bun run cc compile-stack
+# Compile all plugins (for marketplace)
+bun src/cli/index.ts compile-plugins
+
+# Compile stacks (for marketplace)
+bun src/cli/index.ts compile-stack -s fullstack-react
 
 # Generate marketplace
-bun run cc generate-marketplace
+bun src/cli/index.ts generate-marketplace
 
 # Validate all plugins
-bun run cc validate dist/plugins --all
+bun src/cli/index.ts validate dist/plugins --all
 ```
 
 ### Adding a New Skill

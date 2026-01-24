@@ -1,28 +1,26 @@
+import path from "path";
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
-import { directoryExists, ensureDir, glob } from "../utils/fs";
-import { findPluginDirectory, getPluginSkillsDir } from "../lib/plugin-finder";
+import { directoryExists, ensureDir, glob, remove, copy } from "../utils/fs";
+import { getCollectivePluginDir } from "../lib/plugin-finder";
 import { bumpPluginVersion } from "../lib/plugin-version";
 import { fetchMarketplace } from "../lib/source-fetcher";
 import { fetchSkills } from "../lib/skill-fetcher";
 import { fetchAgentDefinitions } from "../lib/agent-fetcher";
-import { resolveSource } from "../lib/config";
+import { resolveSource, getActiveStack } from "../lib/config";
 import { verbose } from "../utils/logger";
 import { recompileAgents } from "../lib/agent-recompiler";
+import { getUserStacksDir } from "../consts";
 
 export const addCommand = new Command("add")
-  .description("Add a skill to an existing plugin")
+  .description("Add a skill to the active stack")
   .argument("<skill>", "Skill name to add (e.g., 'jotai', 'zustand')")
   .option(
     "--source <url>",
     "Marketplace source URL (e.g., github:org/repo or local path)",
   )
   .option("--refresh", "Force refresh from marketplace", false)
-  .option(
-    "--plugin <name>",
-    "Target plugin name (finds first plugin if not specified)",
-  )
   .configureOutput({
     writeErr: (str) => console.error(pc.red(str)),
   })
@@ -32,33 +30,32 @@ export const addCommand = new Command("add")
 
     const s = p.spinner();
 
-    // 1. Find existing plugin
-    s.start("Finding plugin...");
-    const pluginLocation = await findPluginDirectory(options.plugin);
+    // 1. Get active stack
+    s.start("Finding active stack...");
+    const activeStack = await getActiveStack();
 
-    if (!pluginLocation) {
-      s.stop("No plugin found");
-      p.log.error("No plugin found.");
-      p.log.info(
-        `Run ${pc.cyan("cc init --name <name>")} first to create a plugin.`,
-      );
+    if (!activeStack) {
+      s.stop("No active stack");
+      p.log.error("No active stack. Run 'cc init --name <name>' first.");
       process.exit(1);
     }
 
-    s.stop(
-      `Found plugin: ${pluginLocation.manifest.name} (${pluginLocation.scope})`,
-    );
+    const stackDir = path.join(getUserStacksDir(), activeStack);
+    const stackSkillsDir = path.join(stackDir, "skills");
+    s.stop(`Active stack: ${activeStack}`);
 
-    // 2. Check if skill already exists
-    const skillsDir = getPluginSkillsDir(pluginLocation.path);
-
-    // Skills can be nested, so we need to check for any directory containing the skill name
-    if (await directoryExists(skillsDir)) {
+    // 2. Check if skill already exists in stack
+    if (await directoryExists(stackSkillsDir)) {
       // Check if this specific skill exists
-      const existingSkills = await glob(`**/${skillName}*/SKILL.md`, skillsDir);
+      const existingSkills = await glob(
+        `**/${skillName}*/SKILL.md`,
+        stackSkillsDir,
+      );
 
       if (existingSkills.length > 0) {
-        p.log.error(`Skill "${skillName}" already exists in this plugin.`);
+        p.log.error(
+          `Skill "${skillName}" already exists in stack "${activeStack}".`,
+        );
         p.log.info(`Found at: ${existingSkills[0]}`);
         process.exit(1);
       }
@@ -92,14 +89,14 @@ export const addCommand = new Command("add")
       process.exit(1);
     }
 
-    // 5. Fetch and copy skill
+    // 5. Fetch and copy skill to stack
     s.start(`Fetching skill: ${skillName}...`);
     try {
-      await ensureDir(skillsDir);
+      await ensureDir(stackSkillsDir);
       const copiedSkills = await fetchSkills(
         [skillName],
         marketplaceResult.marketplace,
-        pluginLocation.path,
+        stackDir,
         marketplaceResult.sourcePath,
         { forceRefresh: options.refresh },
       );
@@ -110,7 +107,25 @@ export const addCommand = new Command("add")
       process.exit(1);
     }
 
-    // 6. Fetch agent definitions
+    // 6. Sync skills to plugin (like switch command does)
+    s.start("Syncing skills to plugin...");
+    const pluginDir = getCollectivePluginDir();
+    const pluginSkillsDir = path.join(pluginDir, "skills");
+    try {
+      // Remove existing skills from plugin
+      if (await directoryExists(pluginSkillsDir)) {
+        await remove(pluginSkillsDir);
+      }
+      // Copy all skills from stack to plugin
+      await copy(stackSkillsDir, pluginSkillsDir);
+      s.stop("Skills synced to plugin");
+    } catch (error) {
+      s.stop("Failed to sync skills");
+      p.log.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+
+    // 7. Fetch agent definitions
     s.start("Fetching agent definitions...");
     let agentDefs;
     try {
@@ -127,7 +142,7 @@ export const addCommand = new Command("add")
       process.exit(1);
     }
 
-    // 7. Recompile agents with updated skills
+    // 8. Recompile agents with updated skills
     s.start("Recompiling agents...");
     try {
       // agentDefs contains paths to source directories
@@ -135,7 +150,7 @@ export const addCommand = new Command("add")
       const sourcePath = agentDefs.sourcePath;
 
       const recompileResult = await recompileAgents({
-        pluginDir: pluginLocation.path,
+        pluginDir,
         sourcePath,
       });
 
@@ -159,10 +174,10 @@ export const addCommand = new Command("add")
       p.log.info(pc.dim("You can manually recompile with 'cc compile'."));
     }
 
-    // 8. Bump patch version
+    // 9. Bump patch version
     s.start("Updating plugin version...");
     try {
-      const newVersion = await bumpPluginVersion(pluginLocation.path, "patch");
+      const newVersion = await bumpPluginVersion(pluginDir, "patch");
       s.stop(`Version bumped to ${newVersion}`);
     } catch (error) {
       s.stop("Failed to update version");
@@ -172,9 +187,5 @@ export const addCommand = new Command("add")
 
     // Success message
     console.log("");
-    p.outro(
-      pc.green(
-        `Skill "${skillName}" added to ${pluginLocation.manifest.name}!`,
-      ),
-    );
+    p.outro(pc.green(`Skill "${skillName}" added to stack "${activeStack}"!`));
   });

@@ -3,39 +3,17 @@ import * as p from "@clack/prompts";
 import pc from "picocolors";
 import path from "path";
 import { setVerbose, verbose } from "../utils/logger";
-import { OUTPUT_DIR, DIRS } from "../consts";
 import {
-  loadAllAgents,
-  loadStackSkills,
-  loadStack,
-  detectCompileMode,
-} from "../lib/loader";
-import { resolveAgents, stackToCompileConfig } from "../lib/resolver";
-import { validate, printValidationResult } from "../lib/validator";
-import {
-  compileAllAgents,
-  compileAllSkills,
-  copyClaude,
-  compileAllCommands,
-  createLiquidEngine,
-  cleanOutputDir,
-} from "../lib/compiler";
-import { versionAllSkills, printVersionResults } from "../lib/versioning";
-import {
-  findPluginDirectory,
+  getCollectivePluginDir,
   getPluginSkillsDir,
   getPluginAgentsDir,
+  getPluginManifestPath,
 } from "../lib/plugin-finder";
 import { fetchAgentDefinitions } from "../lib/agent-fetcher";
 import { resolveSource } from "../lib/config";
-import { directoryExists, glob, readFile } from "../utils/fs";
-import type {
-  AgentConfig,
-  CompileConfig,
-  CompileContext,
-  Skill,
-  AgentSourcePaths,
-} from "../types";
+import { directoryExists, glob, readFile, fileExists } from "../utils/fs";
+import { recompileAgents } from "../lib/agent-recompiler";
+import type { Skill, AgentSourcePaths, PluginManifest } from "../types";
 
 /**
  * Load skills from a plugin's local skills directory
@@ -105,26 +83,11 @@ async function loadLocalSkills(
 }
 
 export const compileCommand = new Command("compile")
-  .description("Compile agents from a stack or plugin")
-  .option(
-    "-s, --stack <name>",
-    "Stack to compile (uses active stack if not specified)",
+  .description(
+    "Compile agents using local skills and fetched agent definitions",
   )
   .option("-v, --verbose", "Enable verbose logging", false)
-  .option(
-    "--version-skills",
-    "Auto-increment version and update content_hash for changed source skills",
-    false,
-  )
-  .option(
-    "--plugin",
-    "Compile from plugin mode (uses local skills, fetches agent definitions)",
-    false,
-  )
-  .option(
-    "--source <url>",
-    "Marketplace source for agent definitions (plugin mode only)",
-  )
+  .option("--source <url>", "Marketplace source for agent definitions")
   .option("--refresh", "Force refresh agent definitions from source", false)
   .configureOutput({
     writeErr: (str) => console.error(pc.red(str)),
@@ -139,169 +102,30 @@ export const compileCommand = new Command("compile")
     // Set verbose mode globally
     setVerbose(options.verbose);
 
-    // Determine project root (where we're running from)
-    const projectRoot = process.cwd();
-
-    // Check if plugin mode is requested
-    if (options.plugin) {
-      await runPluginModeCompile(s, options, dryRun);
-      return;
-    }
-
-    // Detect compile mode (existing behavior)
-    const mode = await detectCompileMode(projectRoot);
-
-    // Resolve stack ID - always required now (user mode with active stack removed)
-    const stackId = options.stack;
-
-    if (!stackId) {
-      p.log.error("Stack name required. Use -s flag.");
-      p.log.info(`Example: ${pc.cyan("cc compile -s fullstack-react")}`);
-      p.log.info(
-        `Or use ${pc.cyan("cc compile --plugin")} to compile from a plugin.`,
-      );
-      process.exit(1);
-    }
-
-    const outputDir = path.join(projectRoot, OUTPUT_DIR);
-
-    console.log(`\nCompiling stack: ${stackId} (mode: ${mode})\n`);
-
-    if (dryRun) {
-      console.log(
-        pc.yellow("[dry-run] Preview mode - no files will be written\n"),
-      );
-    }
-
-    try {
-      // Version source skills if requested
-      if (options.versionSkills) {
-        s.start("Versioning source skills...");
-        const skillsDir = path.join(projectRoot, DIRS.skills);
-        const versionResults = await versionAllSkills(skillsDir);
-        const changedCount = versionResults.filter((r) => r.changed).length;
-        s.stop(
-          `Versioned skills: ${changedCount} updated, ${versionResults.length - changedCount} unchanged`,
-        );
-
-        if (changedCount > 0 && options.verbose) {
-          printVersionResults(versionResults);
-        }
-      }
-
-      // Load agents first (shared across all stacks)
-      s.start("Loading agents...");
-      const agents = await loadAllAgents(projectRoot);
-      s.stop(`Loaded ${Object.keys(agents).length} agents`);
-
-      // Load stack configuration
-      s.start("Loading stack configuration...");
-      const stack = await loadStack(stackId, projectRoot, mode);
-      const compileConfig: CompileConfig = stackToCompileConfig(stackId, stack);
-      // StackConfig always has agents[] and skills[] properties
-      const agentCount = stack.agents.length;
-      const skillCount = stack.skills.length;
-      s.stop(`Stack loaded: ${agentCount} agents, ${skillCount} skills`);
-
-      // Load skills from stack
-      s.start("Loading skills...");
-      const skills = await loadStackSkills(stackId, projectRoot, mode);
-      s.stop(
-        `Loaded ${Object.keys(skills).length} skills from stack: ${stackId}`,
-      );
-
-      // Resolve agents
-      s.start("Resolving agents...");
-      let resolvedAgents: Record<string, AgentConfig>;
-      try {
-        resolvedAgents = await resolveAgents(
-          agents,
-          skills,
-          compileConfig,
-          projectRoot,
-        );
-        s.stop(`Resolved ${Object.keys(resolvedAgents).length} agents`);
-      } catch (error) {
-        s.stop("Failed to resolve agents");
-        p.log.error(String(error));
-        process.exit(1);
-      }
-
-      // Validate
-      s.start("Validating configuration...");
-      const ctx: CompileContext = {
-        stackId,
-        verbose: options.verbose,
-        projectRoot,
-        outputDir,
-        mode,
-      };
-
-      const validation = await validate(resolvedAgents, stackId, projectRoot);
-      s.stop("Validation complete");
-
-      printValidationResult(validation);
-
-      if (!validation.valid) {
-        process.exit(1);
-      }
-
-      if (dryRun) {
-        // Dry-run: show what would happen without executing
-        console.log(
-          pc.yellow(`[dry-run] Would clean output directory: ${outputDir}`),
-        );
-        console.log(
-          pc.yellow(
-            `[dry-run] Would compile ${Object.keys(resolvedAgents).length} agents`,
-          ),
-        );
-
-        // Count total skills across all agents
-        const totalSkills = Object.values(resolvedAgents).reduce(
-          (sum, agent) => sum + agent.skills.length,
-          0,
-        );
-        console.log(
-          pc.yellow(`[dry-run] Would compile ${totalSkills} skill references`),
-        );
-        console.log(pc.yellow("[dry-run] Would compile commands"));
-        console.log(pc.yellow("[dry-run] Would copy CLAUDE.md"));
-
-        p.outro(pc.green("[dry-run] Preview complete - no files were written"));
-      } else {
-        // Clean output directory
-        s.start("Cleaning output directory...");
-        await cleanOutputDir(outputDir);
-        s.stop("Output directory cleaned");
-
-        // Create Liquid engine
-        const engine = createLiquidEngine(projectRoot);
-
-        // Compile agents
-        console.log("\nCompiling agents...");
-        await compileAllAgents(resolvedAgents, compileConfig, ctx, engine);
-
-        // Compile skills
-        console.log("\nCompiling skills...");
-        await compileAllSkills(resolvedAgents, ctx);
-
-        // Compile commands
-        console.log("\nCompiling commands...");
-        await compileAllCommands(ctx);
-
-        // Copy CLAUDE.md
-        console.log("\nCopying CLAUDE.md...");
-        await copyClaude(ctx);
-
-        p.outro(pc.green("Compilation complete!"));
-      }
-    } catch (error) {
-      s.stop("Compilation failed");
-      p.log.error(String(error));
-      process.exit(1);
-    }
+    // Always run in plugin mode
+    await runPluginModeCompile(s, options, dryRun);
   });
+
+/**
+ * Read plugin manifest from the collective plugin directory
+ * Returns null if manifest doesn't exist or is invalid
+ */
+async function readPluginManifest(
+  pluginDir: string,
+): Promise<PluginManifest | null> {
+  const manifestPath = getPluginManifestPath(pluginDir);
+
+  if (!(await fileExists(manifestPath))) {
+    return null;
+  }
+
+  try {
+    const content = await readFile(manifestPath);
+    return JSON.parse(content) as PluginManifest;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Run compilation in plugin mode
@@ -314,11 +138,12 @@ async function runPluginModeCompile(
 ): Promise<void> {
   console.log(`\n${pc.cyan("Plugin Mode Compile")}\n`);
 
-  // 1. Find existing plugin
+  // 1. Get the collective plugin directory (always ~/.claude/plugins/claude-collective/)
+  const pluginDir = getCollectivePluginDir();
   s.start("Finding plugin...");
-  const pluginLocation = await findPluginDirectory();
 
-  if (!pluginLocation) {
+  // Check if plugin exists
+  if (!(await directoryExists(pluginDir))) {
     s.stop("No plugin found");
     p.log.error("No plugin found.");
     p.log.info(
@@ -327,13 +152,15 @@ async function runPluginModeCompile(
     process.exit(1);
   }
 
-  s.stop(
-    `Found plugin: ${pluginLocation.manifest.name} (${pluginLocation.scope})`,
-  );
-  verbose(`  Path: ${pluginLocation.path}`);
+  // Read manifest to get plugin name
+  const manifest = await readPluginManifest(pluginDir);
+  const pluginName = manifest?.name ?? "claude-collective";
 
-  // 2. Read local skills (do NOT fetch)
-  const skillsDir = getPluginSkillsDir(pluginLocation.path);
+  s.stop(`Found plugin: ${pluginName}`);
+  verbose(`  Path: ${pluginDir}`);
+
+  // 2. Read local skills from the plugin's skills/ directory (do NOT fetch)
+  const skillsDir = getPluginSkillsDir(pluginDir);
   s.start("Loading local skills...");
   const skills = await loadLocalSkills(skillsDir);
   const skillCount = Object.keys(skills).length;
@@ -346,7 +173,7 @@ async function runPluginModeCompile(
 
   s.stop(`Loaded ${skillCount} local skills`);
 
-  // 3. Resolve source and fetch agent definitions
+  // 3. Resolve source and fetch agent definitions from marketplace
   s.start("Resolving marketplace source...");
   let sourceConfig;
   try {
@@ -382,25 +209,42 @@ async function runPluginModeCompile(
       ),
     );
     console.log(
-      pc.yellow(
-        `[dry-run] Would output to: ${getPluginAgentsDir(pluginLocation.path)}`,
-      ),
+      pc.yellow(`[dry-run] Would output to: ${getPluginAgentsDir(pluginDir)}`),
     );
     p.outro(pc.green("[dry-run] Preview complete - no files were written"));
     return;
   }
 
   // 4. Compile agents using local skills + fetched definitions
-  // Note: Full agent compilation is complex and requires the existing compiler infrastructure
-  // For now, we indicate that compilation would happen
-  p.log.info(
-    pc.dim("Agent compilation from plugin skills not yet fully implemented."),
-  );
-  p.log.info(
-    pc.dim(
-      "Current implementation requires running 'cc compile -s <stack>' in dev mode.",
-    ),
-  );
+  s.start("Recompiling agents...");
+  try {
+    const recompileResult = await recompileAgents({
+      pluginDir,
+      sourcePath: agentDefs.sourcePath,
+    });
 
-  p.outro(pc.green("Plugin compile check complete!"));
+    if (recompileResult.failed.length > 0) {
+      s.stop(
+        `Recompiled ${recompileResult.compiled.length} agents (${recompileResult.failed.length} failed)`,
+      );
+      for (const warning of recompileResult.warnings) {
+        p.log.warn(warning);
+      }
+    } else if (recompileResult.compiled.length > 0) {
+      s.stop(`Recompiled ${recompileResult.compiled.length} agents`);
+    } else {
+      s.stop("No agents to recompile");
+    }
+
+    // Show compiled agents
+    if (recompileResult.compiled.length > 0) {
+      verbose(`  Compiled: ${recompileResult.compiled.join(", ")}`);
+    }
+  } catch (error) {
+    s.stop("Failed to recompile agents");
+    p.log.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+
+  p.outro(pc.green("Plugin compile complete!"));
 }

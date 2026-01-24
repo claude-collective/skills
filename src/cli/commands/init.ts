@@ -2,16 +2,20 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
 import path from "path";
-import os from "os";
 import { Liquid } from "liquidjs";
 import {
-  CLAUDE_DIR,
-  PLUGINS_SUBDIR,
   PLUGIN_MANIFEST_DIR,
   PLUGIN_MANIFEST_FILE,
   DIRS,
+  getUserStacksDir,
 } from "../consts";
-import { ensureDir, writeFile } from "../utils/fs";
+import {
+  ensureDir,
+  writeFile,
+  directoryExists,
+  copy,
+  remove,
+} from "../utils/fs";
 import {
   runWizard,
   clearTerminal,
@@ -22,7 +26,7 @@ import {
   type SourceLoadResult,
 } from "../lib/source-loader";
 import { promptStackName } from "../lib/stack-creator";
-import { formatSourceOrigin } from "../lib/config";
+import { formatSourceOrigin, setActiveStack } from "../lib/config";
 import { copySkillsToStackFromSource } from "../lib/skill-copier";
 import {
   createStackConfig,
@@ -32,16 +36,12 @@ import { generateStackPluginManifest } from "../lib/plugin-manifest";
 import { loadAllAgents, loadPluginSkills, loadStack } from "../lib/loader";
 import { resolveAgents, stackToCompileConfig } from "../lib/resolver";
 import { compileAgentForPlugin } from "../lib/stack-plugin-compiler";
+import { getCollectivePluginDir } from "../lib/plugin-finder";
 import type {
   PluginManifest,
   CompileConfig,
   CompileAgentConfig,
 } from "../../types";
-
-/**
- * Scope for plugin output location
- */
-type PluginScope = "user" | "project" | "local";
 
 /**
  * Default version for new plugins
@@ -60,58 +60,51 @@ const DEFAULT_AGENTS = [
 ];
 
 /**
- * Get the output path for a plugin based on scope
+ * Get the output path for a stack (always user scope)
+ * Returns: ~/.claude-collective/stacks/{name}/
  */
-function getPluginOutputPath(name: string, scope: PluginScope): string {
-  switch (scope) {
-    case "user":
-      return path.join(os.homedir(), CLAUDE_DIR, PLUGINS_SUBDIR, name);
-    case "project":
-    case "local":
-      return path.join(process.cwd(), CLAUDE_DIR, PLUGINS_SUBDIR, name);
-  }
+function getStackOutputPath(name: string): string {
+  return path.join(getUserStacksDir(), name);
 }
 
 /**
- * Display summary for plugin output
+ * Display summary for stack creation
  */
-function displayPluginSummary(
-  pluginName: string,
+function displayStackSummary(
+  stackName: string,
+  stackDir: string,
   pluginDir: string,
   skillCount: number,
   agentCount: number,
-  scope: PluginScope,
+  isFirstStack: boolean,
 ): void {
   console.log("");
-  console.log(pc.green(`Plugin "${pluginName}" created successfully!`));
+  console.log(pc.green(`Stack "${stackName}" created successfully!`));
   console.log("");
-  console.log(pc.dim("Files created:"));
-  console.log(
-    `  ${pc.cyan(path.relative(process.cwd(), pluginDir) || pluginDir)}`,
-  );
-  console.log(
-    `    ${pc.dim(`${PLUGIN_MANIFEST_DIR}/${PLUGIN_MANIFEST_FILE}`)}`,
-  );
+  console.log(pc.dim("Stack created:"));
+  console.log(`  ${pc.cyan(stackDir)}`);
   console.log(`    ${pc.dim(`skills/ (${skillCount} skills)`)}`);
-  console.log(`    ${pc.dim(`agents/ (${agentCount} agents)`)}`);
   console.log("");
-  console.log(pc.dim(`Scope: ${scope}`));
-  console.log("");
+  if (isFirstStack) {
+    console.log(pc.dim("Plugin activated:"));
+    console.log(`  ${pc.cyan(pluginDir)}`);
+    console.log(
+      `    ${pc.dim(`${PLUGIN_MANIFEST_DIR}/${PLUGIN_MANIFEST_FILE}`)}`,
+    );
+    console.log(`    ${pc.dim(`skills/ (${skillCount} skills)`)}`);
+    console.log(`    ${pc.dim(`agents/ (${agentCount} agents)`)}`);
+    console.log("");
+  }
 }
 
 export const initCommand = new Command("init")
-  .description("Create a new Claude Collective plugin")
+  .description("Create a new Claude Collective stack")
   .option(
     "--source <url>",
     "Skills source URL (e.g., github:org/repo or local path)",
   )
   .option("--refresh", "Force refresh from remote source", false)
-  .option("--name <name>", "Plugin name")
-  .option(
-    "--scope <scope>",
-    "Output scope: user (~/.claude/plugins), project (.claude/plugins), local (.claude/plugins, gitignored)",
-    "user",
-  )
+  .option("--name <name>", "Stack name")
   .configureOutput({
     writeErr: (str) => console.error(pc.red(str)),
   })
@@ -123,18 +116,7 @@ export const initCommand = new Command("init")
     // Determine target directory (current working directory)
     const projectDir = process.cwd();
 
-    // Validate scope option
-    const validScopes: PluginScope[] = ["user", "project", "local"];
-    if (!validScopes.includes(options.scope as PluginScope)) {
-      p.log.error(
-        `Invalid scope: "${options.scope}". Must be one of: ${validScopes.join(", ")}`,
-      );
-      process.exit(1);
-    }
-
-    const scope = options.scope as PluginScope;
-
-    p.intro(pc.cyan("Claude Collective Plugin Setup"));
+    p.intro(pc.cyan("Claude Collective Stack Setup"));
 
     if (dryRun) {
       p.log.info(
@@ -201,189 +183,238 @@ export const initCommand = new Command("init")
       console.log("");
     }
 
-    // Prompt for plugin name
-    const pluginName =
-      options.name || ((await promptStackName([], "my-plugin")) as string);
+    // Prompt for stack name
+    const stackName =
+      options.name || ((await promptStackName([], "my-stack")) as string);
 
-    if (p.isCancel(pluginName)) {
+    if (p.isCancel(stackName)) {
       p.cancel("Setup cancelled");
       process.exit(0);
     }
 
-    // Plugin output mode (always - classic mode removed)
-    const pluginDir = getPluginOutputPath(pluginName, scope);
-    const skillsDir = path.join(pluginDir, "skills");
+    // Stack output paths (source of truth)
+    const stackDir = getStackOutputPath(stackName);
+    const stackSkillsDir = path.join(stackDir, "skills");
+
+    // Plugin paths (the single claude-collective plugin)
+    const pluginDir = getCollectivePluginDir();
+    const pluginSkillsDir = path.join(pluginDir, "skills");
+    const pluginAgentsDir = path.join(pluginDir, "agents");
     const manifestDir = path.join(pluginDir, PLUGIN_MANIFEST_DIR);
     const manifestPath = path.join(manifestDir, PLUGIN_MANIFEST_FILE);
 
+    // Check if plugin already exists (determines if this is first stack or subsequent)
+    const pluginExists = await directoryExists(pluginDir);
+
     if (dryRun) {
       p.log.info(
-        pc.yellow(`[dry-run] Would create plugin directory: ${pluginDir}`),
+        pc.yellow(`[dry-run] Would create stack directory: ${stackDir}`),
       );
       p.log.info(
         pc.yellow(
-          `[dry-run] Would copy ${result.selectedSkills.length} skills`,
+          `[dry-run] Would copy ${result.selectedSkills.length} skills to stack`,
         ),
       );
-      p.log.info(pc.yellow(`[dry-run] Would create ${PLUGIN_MANIFEST_FILE}`));
-      if (scope === "local") {
+      if (!pluginExists) {
+        p.log.info(pc.yellow(`[dry-run] Would create plugin at: ${pluginDir}`));
         p.log.info(
-          pc.yellow(`[dry-run] Would add .claude/plugins to .gitignore`),
+          pc.yellow(`[dry-run] Would compile agents and activate stack`),
+        );
+      } else {
+        p.log.info(
+          pc.yellow(`[dry-run] Plugin already exists, would prompt to switch`),
         );
       }
       p.outro(pc.green("[dry-run] Preview complete - no files were created"));
     } else {
-      s.start(`Creating plugin "${pluginName}"...`);
+      s.start(`Creating stack "${stackName}"...`);
       try {
-        // Create plugin directory structure
-        await ensureDir(pluginDir);
-        await ensureDir(skillsDir);
-        await ensureDir(manifestDir);
+        // Step 1: Create stack directory and copy skills to stack
+        await ensureDir(stackDir);
+        await ensureDir(stackSkillsDir);
 
-        // Copy skills to plugin
         const copiedSkills = await copySkillsToStackFromSource(
           result.selectedSkills,
-          pluginDir,
+          stackDir,
           matrix,
           sourceResult,
         );
 
-        // Compile agents
-        const agentsDir = path.join(pluginDir, "agents");
-        await ensureDir(agentsDir);
+        s.stop(`Stack created with ${copiedSkills.length} skills`);
 
-        // Load agents from source
-        const agents = await loadAllAgents(sourceResult.sourcePath);
+        // Step 2: Handle plugin creation/activation
+        let compiledAgentNames: string[] = [];
 
-        // Load skills from the plugin we just created
-        const pluginSkills = await loadPluginSkills(pluginDir);
+        if (!pluginExists) {
+          // First stack: create the plugin, compile agents, and activate
+          s.start("Creating plugin and activating stack...");
 
-        // Build compile config - use stack's agents if pre-built stack selected, otherwise defaults
-        let compileConfig: CompileConfig;
+          await ensureDir(pluginDir);
+          await ensureDir(pluginSkillsDir);
+          await ensureDir(pluginAgentsDir);
+          await ensureDir(manifestDir);
 
-        if (result.selectedStack) {
-          // Load full stack config to get agents and agent_skills
-          const stackConfig = await loadStack(
-            result.selectedStack.id,
+          // Copy skills from stack to plugin (switch logic)
+          await copy(stackSkillsDir, pluginSkillsDir);
+
+          // Compile agents
+          const agents = await loadAllAgents(sourceResult.sourcePath);
+          const loadedPluginSkills = await loadPluginSkills(pluginDir);
+
+          // Build compile config
+          let compileConfig: CompileConfig;
+
+          if (result.selectedStack) {
+            const loadedStackConfig = await loadStack(
+              result.selectedStack.id,
+              sourceResult.sourcePath,
+              "dev",
+            );
+            compileConfig = stackToCompileConfig(
+              result.selectedStack.id,
+              loadedStackConfig,
+            );
+            compileConfig.name = stackName;
+          } else {
+            const compileAgents: Record<string, CompileAgentConfig> = {};
+            for (const agentId of DEFAULT_AGENTS) {
+              if (agents[agentId]) {
+                compileAgents[agentId] = {
+                  core_prompts: [
+                    "core-principles",
+                    "investigation-requirement",
+                    "write-verification",
+                    "anti-over-engineering",
+                  ],
+                  ending_prompts: [
+                    "context-management",
+                    "improvement-protocol",
+                  ],
+                };
+              }
+            }
+            compileConfig = {
+              name: stackName,
+              description: `Stack with ${result.selectedSkills.length} skills`,
+              claude_md: "",
+              agents: compileAgents,
+            };
+          }
+
+          // Create Liquid engine
+          const engine = new Liquid({
+            root: [path.join(sourceResult.sourcePath, DIRS.templates)],
+            extname: ".liquid",
+            strictVariables: false,
+            strictFilters: true,
+          });
+
+          // Resolve and compile agents
+          const resolvedAgents = await resolveAgents(
+            agents,
+            loadedPluginSkills,
+            compileConfig,
             sourceResult.sourcePath,
-            "dev",
           );
-          compileConfig = stackToCompileConfig(
-            result.selectedStack.id,
-            stackConfig,
+
+          for (const [name, agent] of Object.entries(resolvedAgents)) {
+            const output = await compileAgentForPlugin(
+              name,
+              agent,
+              sourceResult.sourcePath,
+              engine,
+            );
+            await writeFile(path.join(pluginAgentsDir, `${name}.md`), output);
+            compiledAgentNames.push(name);
+          }
+
+          // Generate stack config for manifest
+          const stackConfig = result.selectedStack
+            ? createStackConfigFromSuggested(stackName, result.selectedStack)
+            : createStackConfig(
+                stackName,
+                `Stack with ${result.selectedSkills.length} skills`,
+                result.selectedSkills,
+              );
+
+          // Generate plugin manifest
+          const manifest: PluginManifest = generateStackPluginManifest({
+            stackName: "claude-collective",
+            description:
+              "Claude Collective plugin with switchable skill stacks",
+            version: DEFAULT_PLUGIN_VERSION,
+            keywords: stackConfig.tags,
+            hasSkills: true,
+            hasAgents: compiledAgentNames.length > 0,
+          });
+
+          await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+
+          // Set this stack as active
+          await setActiveStack(stackName);
+
+          s.stop(
+            `Plugin created with ${copiedSkills.length} skills and ${compiledAgentNames.length} agents`,
           );
-          compileConfig.name = pluginName; // Override name with user's choice
+
+          // Display summary
+          displayStackSummary(
+            stackName,
+            stackDir,
+            pluginDir,
+            copiedSkills.length,
+            compiledAgentNames.length,
+            true,
+          );
+
+          p.outro(pc.green(`Stack "${stackName}" created and activated!`));
         } else {
-          // Custom stack - use default agents
-          const compileAgents: Record<string, CompileAgentConfig> = {};
-          for (const agentId of DEFAULT_AGENTS) {
-            if (agents[agentId]) {
-              compileAgents[agentId] = {
-                core_prompts: [
-                  "core-principles",
-                  "investigation-requirement",
-                  "write-verification",
-                  "anti-over-engineering",
-                ],
-                ending_prompts: ["context-management", "improvement-protocol"],
-              };
-            }
-          }
-          compileConfig = {
-            name: pluginName,
-            description: `Plugin with ${result.selectedSkills.length} skills`,
-            claude_md: "",
-            agents: compileAgents,
-          };
-        }
-
-        // Create Liquid engine
-        const engine = new Liquid({
-          root: [path.join(sourceResult.sourcePath, DIRS.templates)],
-          extname: ".liquid",
-          strictVariables: false,
-          strictFilters: true,
-        });
-
-        // Resolve and compile agents
-        const resolvedAgents = await resolveAgents(
-          agents,
-          pluginSkills,
-          compileConfig,
-          sourceResult.sourcePath,
-        );
-
-        const compiledAgentNames: string[] = [];
-        for (const [name, agent] of Object.entries(resolvedAgents)) {
-          const output = await compileAgentForPlugin(
-            name,
-            agent,
-            sourceResult.sourcePath,
-            engine,
+          // Plugin already exists: just create stack, prompt to switch
+          console.log("");
+          console.log(pc.dim("Stack created:"));
+          console.log(`  ${pc.cyan(stackDir)}`);
+          console.log(
+            `    ${pc.dim(`skills/ (${copiedSkills.length} skills)`)}`,
           );
-          await writeFile(path.join(agentsDir, `${name}.md`), output);
-          compiledAgentNames.push(name);
-        }
+          console.log("");
 
-        // Generate stack config for reference
-        const stackConfig = result.selectedStack
-          ? createStackConfigFromSuggested(pluginName, result.selectedStack)
-          : createStackConfig(
-              pluginName,
-              `Plugin with ${result.selectedSkills.length} skills`,
-              result.selectedSkills,
-            );
+          // Ask if user wants to switch to the new stack
+          const shouldSwitch = await p.confirm({
+            message: `Switch to "${stackName}" now?`,
+            initialValue: true,
+          });
 
-        // Generate plugin manifest with agents
-        const manifest: PluginManifest = generateStackPluginManifest({
-          stackName: pluginName,
-          description: stackConfig.description,
-          version: DEFAULT_PLUGIN_VERSION,
-          keywords: stackConfig.tags,
-          hasSkills: true,
-          hasAgents: compiledAgentNames.length > 0,
-        });
+          if (p.isCancel(shouldSwitch)) {
+            p.cancel("Setup cancelled");
+            process.exit(0);
+          }
 
-        // Write plugin manifest
-        await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+          if (shouldSwitch) {
+            s.start("Switching to new stack...");
 
-        // For local scope, add to .gitignore
-        if (scope === "local") {
-          const gitignorePath = path.join(projectDir, ".gitignore");
-          const gitignoreEntry = `${CLAUDE_DIR}/${PLUGINS_SUBDIR}/`;
-          try {
-            const { readFile: readFileFs } = await import("../utils/fs");
-            const existingContent = await readFileFs(gitignorePath).catch(
-              () => "",
-            );
-            if (!existingContent.includes(gitignoreEntry)) {
-              const newContent = existingContent.endsWith("\n")
-                ? existingContent + gitignoreEntry + "\n"
-                : existingContent + "\n" + gitignoreEntry + "\n";
-              await writeFile(gitignorePath, newContent);
+            // Remove existing skills from plugin
+            if (await directoryExists(pluginSkillsDir)) {
+              await remove(pluginSkillsDir);
             }
-          } catch {
-            // .gitignore doesn't exist or can't be read, create new one
-            await writeFile(gitignorePath, gitignoreEntry + "\n");
+
+            // Copy skills from new stack to plugin
+            await copy(stackSkillsDir, pluginSkillsDir);
+
+            // Update active stack in config
+            await setActiveStack(stackName);
+
+            s.stop("Stack activated");
+
+            p.outro(pc.green(`Switched to "${stackName}"!`));
+          } else {
+            p.log.info(
+              `Run ${pc.cyan(`cc switch ${stackName}`)} later to activate this stack.`,
+            );
+            p.outro(pc.green(`Stack "${stackName}" created successfully!`));
           }
         }
-
-        s.stop(
-          `Plugin created with ${copiedSkills.length} skills and ${compiledAgentNames.length} agents`,
-        );
-
-        // Display summary
-        displayPluginSummary(
-          pluginName,
-          pluginDir,
-          copiedSkills.length,
-          compiledAgentNames.length,
-          scope,
-        );
-
-        p.outro(pc.green(`Plugin "${pluginName}" created successfully!`));
       } catch (error) {
-        s.stop("Failed to create plugin");
+        s.stop("Failed to create stack");
         p.log.error(`Error: ${error}`);
         process.exit(1);
       }

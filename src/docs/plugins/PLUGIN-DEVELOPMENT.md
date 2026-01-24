@@ -4,26 +4,38 @@ This guide explains how Claude Code plugins are created using the Claude Collect
 
 ## Overview
 
-The Claude Collective compiles skills from the marketplace into complete Claude Code plugins. Each plugin contains:
+The Claude Collective uses a stack-based architecture with a single shared plugin. Skills are organized into switchable stacks, and one plugin serves all stacks.
 
-- **Skills** - Copied from the marketplace
-- **Agents** - Compiled with skill content embedded
-- **Hooks** - Optional automation triggers
-- **CLAUDE.md** - Project conventions
+**Key concepts:**
 
-**Key principle:** Skills are embedded in the plugin and their content is compiled into agents. This allows skills to evolve together as a cohesive unit.
+- **Stacks** - Collections of skills stored in `~/.claude-collective/stacks/`
+- **Plugin** - Single shared plugin at `~/.claude/plugins/claude-collective/`
+- **Switch** - Copies skills from stack to plugin
+- **Agents** - Compiled from marketplace definitions
 
 ---
 
-## Plugin Structure
+## Directory Structure
 
-### Complete Plugin (Output of `cc init`)
+### User's Machine
 
 ```
-my-stack/
+~/.claude-collective/                    # SOURCE (our domain)
+├── config.yaml                          # source, active_stack
+└── stacks/
+    ├── work-stack/
+    │   └── skills/
+    │       ├── react/SKILL.md
+    │       └── hono/SKILL.md
+    └── home-stack/
+        └── skills/
+            ├── react/SKILL.md
+            └── zustand/SKILL.md
+
+~/.claude/plugins/claude-collective/     # OUTPUT (Claude's domain)
 ├── .claude-plugin/
 │   └── plugin.json           # REQUIRED - Plugin manifest
-├── skills/                   # Skills copied from marketplace
+├── skills/                   # Active stack's skills (copied on switch)
 │   ├── react/
 │   │   ├── SKILL.md
 │   │   └── examples/
@@ -44,33 +56,37 @@ my-stack/
 
 ---
 
-## Creating a Plugin
+## Creating Stacks
 
 ### Using the CLI (Recommended)
 
 ```bash
-# Create a new plugin with the wizard
+# Create a new stack with the wizard
 cc init --name my-stack
 
 # The wizard will:
 # 1. Show available skills from the marketplace
 # 2. Let you select a pre-built stack or custom skills
-# 3. Compile everything into a complete plugin
+# 3. Copy skills to your stack
+# 4. If first stack: create plugin and compile agents
+# 5. Activate the new stack
 ```
 
-### Plugin Output Location
-
-| Scope     | Location                   | Use Case                     |
-| --------- | -------------------------- | ---------------------------- |
-| `user`    | `~/.claude/plugins/<name>` | Personal, globally available |
-| `project` | `.claude/plugins/<name>`   | Team sharing via git         |
+### Multiple Stacks
 
 ```bash
-# User scope (default)
-cc init --name my-stack
+# Create first stack (also creates plugin)
+cc init --name work-stack
 
-# Project scope
-cc init --name my-stack --scope project
+# Create additional stack
+cc init --name home-stack
+
+# Switch between stacks
+cc switch work-stack
+cc switch home-stack
+
+# List all stacks
+cc list
 ```
 
 ---
@@ -238,35 +254,47 @@ Hooks allow automation triggers at specific events.
 
 ---
 
-## Managing Your Plugin
+## Managing Stacks
 
 ### Adding Skills
 
 ```bash
-# Add a skill from the marketplace
-cc add skill-jotai
+# Add a skill to the active stack
+cc add zustand
 
 # This will:
 # 1. Fetch the skill from marketplace
-# 2. Copy to your plugin's skills/ folder
-# 3. Recompile all agents
+# 2. Copy to your stack's skills/ folder
+# 3. Run switch to update plugin
+```
+
+### Switching Stacks
+
+```bash
+# Switch to a different stack
+cc switch work-stack
+
+# This will:
+# 1. Remove plugin's current skills/
+# 2. Copy skills from work-stack to plugin
+# 3. Update active_stack in config
 ```
 
 ### Updating Skills
 
 ```bash
 # Update a single skill
-cc update skill-react
+cc update react
 
 # Update all skills
 cc update --all
 
-# This fetches latest from marketplace and recompiles agents
+# This fetches latest from marketplace and updates stack
 ```
 
 ### Manual Recompilation
 
-After manually editing skills, recompile agents:
+After manually editing skills in the plugin, recompile agents:
 
 ```bash
 cc compile
@@ -275,7 +303,7 @@ cc compile
 ### Validation
 
 ```bash
-# Validate your plugin
+# Validate the plugin
 cc validate
 
 # Common issues:
@@ -283,15 +311,6 @@ cc validate
 # - Invalid JSON syntax
 # - Non-kebab-case name
 # - Invalid semver version
-```
-
-### Version Management
-
-```bash
-# Bump version
-cc version patch   # 1.0.0 -> 1.0.1
-cc version minor   # 1.0.0 -> 1.1.0
-cc version major   # 1.0.0 -> 2.0.0
 ```
 
 ---
@@ -305,19 +324,20 @@ cc version major   # 1.0.0 -> 2.0.0
 - Document anti-patterns
 - Keep skills focused on one technology
 
-### Version Bumping
+### Stack Naming
 
-| Change Type                      | Version Bump           |
-| -------------------------------- | ---------------------- |
-| Bug fixes, typos                 | Patch (1.0.0 -> 1.0.1) |
-| New content, examples            | Minor (1.0.0 -> 1.1.0) |
-| Breaking changes, major rewrites | Major (1.0.0 -> 2.0.0) |
-
-### Plugin Naming
-
-- Use kebab-case: `my-stack`, `team-frontend`
+- Use kebab-case: `work-stack`, `home-stack`
 - Be descriptive but concise
-- Avoid generic names like `plugin` or `stack`
+- Common patterns: `work-stack`, `home-stack`, `project-name-stack`
+
+### When to Use Multiple Stacks
+
+| Use Case              | Example                    |
+| --------------------- | -------------------------- |
+| Work vs personal      | `work-stack`, `home-stack` |
+| Different tech stacks | `react-stack`, `vue-stack` |
+| Project-specific      | `project-a-stack`          |
+| Experimenting         | `experimental-stack`       |
 
 ---
 
@@ -341,6 +361,18 @@ cc version major   # 1.0.0 -> 2.0.0
 1. Verify `agents` path in `plugin.json`
 2. Check agent files have valid frontmatter
 3. Run `cc compile` to regenerate
+
+### No Active Stack
+
+If `cc add` fails with "no active stack":
+
+```bash
+# Check which stack is active
+cc list
+
+# If none marked with *, switch to one
+cc switch work-stack
+```
 
 ### Validation Errors
 

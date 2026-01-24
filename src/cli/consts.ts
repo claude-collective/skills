@@ -13,24 +13,18 @@ export const OUTPUT_DIR = ".claude";
 export const GITHUB_REPO = "claude-collective/claude-collective";
 export const DEFAULT_MATRIX_PATH = "src/config/skills-matrix.yaml";
 
-/**
- * @deprecated - .claude-collective directory support removed in favor of plugins.
- * Use ~/.claude/plugins/ for user plugins or .claude/plugins/ for project plugins.
- * TODO: Remove in next major version.
- */
+export const PLUGIN_NAME = "claude-collective";
 export const COLLECTIVE_DIR = ".claude-collective";
-
-/**
- * @deprecated - See COLLECTIVE_DIR deprecation note.
- * TODO: Remove in next major version.
- */
 export const COLLECTIVE_STACKS_SUBDIR = "stacks";
 
-/**
- * @deprecated - See COLLECTIVE_DIR deprecation note.
- * TODO: Remove in next major version.
- */
-export const ACTIVE_STACK_FILE = "active-stack";
+// User directory helpers
+export const getUserCollectiveDir = (): string => {
+  return path.join(os.homedir(), COLLECTIVE_DIR);
+};
+
+export const getUserStacksDir = (): string => {
+  return path.join(getUserCollectiveDir(), COLLECTIVE_STACKS_SUBDIR);
+};
 
 // Plugin directories
 export const CLAUDE_DIR = ".claude";

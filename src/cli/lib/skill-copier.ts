@@ -159,33 +159,6 @@ export async function copySkill(
 }
 
 /**
- * Copy all selected skills to a stack directory
- *
- * @deprecated Use copySkillsToStackFromSource for new code
- */
-export async function copySkillsToStack(
-  selectedSkillIds: string[],
-  stackDir: string,
-  matrix: MergedSkillsMatrix,
-  registryRoot: string = PROJECT_ROOT,
-): Promise<CopiedSkill[]> {
-  const copiedSkills: CopiedSkill[] = [];
-
-  for (const skillId of selectedSkillIds) {
-    const skill = matrix.skills[skillId];
-    if (!skill) {
-      console.warn(`Warning: Skill not found in matrix: ${skillId}`);
-      continue;
-    }
-
-    const copied = await copySkill(skill, stackDir, registryRoot);
-    copiedSkills.push(copied);
-  }
-
-  return copiedSkills;
-}
-
-/**
  * Get the source path for a skill from a SourceLoadResult
  */
 function getSkillSourcePathFromSource(

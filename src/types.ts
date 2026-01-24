@@ -471,6 +471,21 @@ export interface Marketplace {
 }
 
 // =============================================================================
+// Config Types (for ~/.claude-collective/config.yaml)
+// =============================================================================
+
+/**
+ * User configuration stored in ~/.claude-collective/config.yaml
+ * Manages source settings and active stack state
+ */
+export interface Config {
+  /** Source URL for fetching skills/agents (e.g., "github:claude-collective/skills") */
+  source?: string;
+  /** Name of the currently active stack (e.g., "work-stack"). Used by cc add and cc switch. */
+  active_stack?: string;
+}
+
+// =============================================================================
 // Fetcher Types (for unified cc init flow)
 // =============================================================================
 
