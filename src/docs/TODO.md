@@ -1,8 +1,11 @@
 # Outstanding Tasks
 
 > **Generated**: 2026-01-21
-> **Updated**: 2026-01-23
+> **Updated**: 2026-01-24
 > **Purpose**: Single source of truth for all outstanding work
+>
+> **Architecture Status**: Implementation complete. See [plugins/INDEX.md](./plugins/INDEX.md) for complete documentation.
+> **Migration Status**: Agent Plugin Migration complete. See [AGENT-PLUGIN-MIGRATION.md](./plugins/AGENT-PLUGIN-MIGRATION.md).
 
 ---
 
@@ -10,19 +13,20 @@
 
 These files contain detailed research referenced by this document:
 
-| File                                            | Purpose                                                  | Location                        |
-| ----------------------------------------------- | -------------------------------------------------------- | ------------------------------- |
-| `CLI-REVIEW-FINDINGS.md`                        | **Active** - 12-agent code review findings               | Root                            |
-| `CLAUDE-COLLECTIVE-DIRECTORY-IMPLEMENTATION.md` | **Critical** - `.claude-collective/` separation research | `.claude/research/findings/v2/` |
-| `CONFIGURABLE-SOURCE-EDGE-CASES.md`             | Private repo support research, giget limits              | `.claude/research/`             |
-| `SKILLS-RESEARCH-TRACKING.md`                   | New skills backlog (42 skills identified)                | `.claude/research/`             |
-| `VERSIONING-PROPOSALS.md`                       | Versioning decision rationale                            | `.claude/research/`             |
-| `CLI-TEST-PROGRESS.md`                          | Wizard testing results, stack validation                 | Root                            |
-| `CLI-DATA-DRIVEN-ARCHITECTURE.md`               | Matrix schema, data flow, repository separation          | `.claude/research/findings/v2/` |
-| `CLI-AGENT-INVOCATION-RESEARCH.md`              | **Key** - Inline `--agents` JSON invocation              | `src/docs/cli/`                 |
-| `CLI-FRAMEWORK-RESEARCH.md`                     | @clack vs Ink vs Inquirer comparison                     | `src/docs/cli/`                 |
-| `CLI-SIMPLIFIED-ARCHITECTURE.md`                | While-loop wizard design                                 | `.claude/research/findings/v2/` |
-| `SKILLS-MATRIX-STRUCTURE-RESEARCH.md`           | Why relationship-centric beats skill-centric             | `.claude/research/findings/v2/` |
+| File                                            | Purpose                                                   | Location                        |
+| ----------------------------------------------- | --------------------------------------------------------- | ------------------------------- |
+| `CLI-REVIEW-FINDINGS.md`                        | **Active** - 12-agent code review findings                | Root                            |
+| `CLAUDE-COLLECTIVE-DIRECTORY-IMPLEMENTATION.md` | **Critical** - `.claude-collective/` separation research  | `.claude/research/findings/v2/` |
+| `CONFIGURABLE-SOURCE-EDGE-CASES.md`             | Private repo support research, giget limits               | `.claude/research/`             |
+| `SKILLS-RESEARCH-TRACKING.md`                   | New skills backlog (42 skills identified)                 | `.claude/research/`             |
+| `VERSIONING-PROPOSALS.md`                       | Versioning decision rationale                             | `.claude/research/`             |
+| `CLI-TEST-PROGRESS.md`                          | Wizard testing results, stack validation                  | Root                            |
+| `CLI-DATA-DRIVEN-ARCHITECTURE.md`               | Matrix schema, data flow, repository separation           | `.claude/research/findings/v2/` |
+| `CLI-AGENT-INVOCATION-RESEARCH.md`              | **Key** - Inline `--agents` JSON invocation               | `src/docs/cli/`                 |
+| `CLI-FRAMEWORK-RESEARCH.md`                     | @clack vs Ink vs Inquirer comparison                      | `src/docs/cli/`                 |
+| `CLI-SIMPLIFIED-ARCHITECTURE.md`                | While-loop wizard design                                  | `.claude/research/findings/v2/` |
+| `SKILLS-MATRIX-STRUCTURE-RESEARCH.md`           | Why relationship-centric beats skill-centric              | `.claude/research/findings/v2/` |
+| `RULES-TASKS-INTEGRATION-PLAN.md`               | **New** - Claude Rules, Tasks, v2.1.x feature integration | `.claude/research/findings/v2/` |
 
 ---
 
@@ -77,25 +81,59 @@ Test 4: Roundtrip (Manual)
 
 ### 1. CLI Implementation
 
-| Priority | Task                     | Description                                                                               | Status                      |
-| -------- | ------------------------ | ----------------------------------------------------------------------------------------- | --------------------------- |
-| Critical | Plugin Output Format     | CLI outputs plugins instead of .claude/ (see plugins/PLUGIN-DISTRIBUTION-ARCHITECTURE.md) | Complete                    |
-| Critical | CLI Repository Migration | Move CLI to `claude-collective-cli` repo (created 2026-01-22)                             | Blocked (awaiting refactor) |
-| Critical | Rename Repository        | Rename `claude-subagents` -> `claude-collective-skills`, update all git commit references | Not Started                 |
-| Critical | Phase 4: Versioning      | Integer version + content hash on compile                                                 | Not Started                 |
-| Critical | Phase 6: Schema Dist     | GitHub raw URLs, SchemaStore PR                                                           | Not Started                 |
-| Critical | Phase 7: Private Repos   | Configurable source, auth, pre-flight checks                                              | Partial (config done)       |
-| Critical | Phase 8: Multi-Source    | Community + private skills composition                                                    | Not Started                 |
-| Critical | Phase 9: Skill Reorg     | Separate PhotoRoom from community skills                                                  | Not Started                 |
-| High     | `cc create skill`        | Scaffold new skill + `--generate` flag for inline agent invocation                        | Not Started                 |
-| High     | `cc create agent`        | Scaffold new agent + `--generate` flag for inline agent invocation                        | Not Started                 |
-| High     | Inline agent invocation  | Test `--agents` JSON flag with model/tools (see cli/CLI-AGENT-INVOCATION-RESEARCH.md)     | Partial (basic test passed) |
-| High     | `cc doctor`              | Diagnose connectivity/auth issues                                                         | Not Started                 |
-| High     | `cc eject`               | Local export or GitHub fork for full independence (see CLI-DATA-DRIVEN-ARCHITECTURE.md)   | Not Started                 |
-| Medium   | CLI branding             | ASCII art logo + animated mascot on startup                                               | Not Started                 |
-| Medium   | Test all flows           | Manual testing (Phase 3 checklist)                                                        | Not Started                 |
-| High     | Investigate Claude tasks | Research Claude Code's task system - how it works, how to leverage it in agents/hooks     | Not Started                 |
-| High     | Claude simplifier hook   | Add hook that simplifies/improves Claude's responses or workflow                          | Not Started                 |
+#### Phase A: Before Repo Split (Do Now)
+
+> Complete these while skills and CLI live in same repo. Focus on making CLI work end-to-end.
+
+| Order | Task                          | Description                                                                                                    | Status      |
+| ----- | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
+| A1    | Complete stack plugin on init | `cc init` creates complete plugin with skills folder + compiled agents. See "Stack Plugin Architecture" below. | **DONE**    |
+| A2    | Implement recompileAgents     | `cc add` should automatically recompile agents after adding skill (TODO at add.ts:129)                         | **DONE**    |
+| A3    | Manual testing                | Test all flows end-to-end (Phase 3 checklist)                                                                  | Not Started |
+| A4    | Phase 4: Versioning           | Integer version + content hash on compile                                                                      | Not Started |
+| A5    | Hooks in agent frontmatter    | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml, generate hooks.json                                   | Not Started |
+| A6    | `cc create skill`             | Scaffold new skill + `--generate` flag for inline agent invocation                                             | Not Started |
+| A7    | `cc create agent`             | Scaffold new agent + `--generate` flag for inline agent invocation                                             | Not Started |
+| A8    | Inline agent invocation       | Test `--agents` JSON flag with model/tools (see cli/CLI-AGENT-INVOCATION-RESEARCH.md)                          | Partial     |
+
+#### Phase B: Repo Split (Milestone)
+
+> Split into two repos: `claude-collective-cli` and `claude-collective-skills`
+
+| Order | Task                     | Description                                                          | Status                      |
+| ----- | ------------------------ | -------------------------------------------------------------------- | --------------------------- |
+| B1    | CLI Repository Migration | Move CLI to `claude-collective-cli` repo (created 2026-01-22)        | Blocked (awaiting refactor) |
+| B2    | Rename Repository        | Rename `claude-subagents` -> `claude-collective-skills`              | Not Started                 |
+| B3    | Remote fetching refactor | Refactor compile scripts to use giget/source-fetcher for all content | Not Started                 |
+
+**Note on B3:** Currently compile scripts use direct filesystem paths. After split, they must fetch agents/principles/templates from remote marketplace via giget. This is a medium refactor - needs `ContentProvider` abstraction. Wait until split to avoid premature abstraction.
+
+#### Phase C: After Repo Split
+
+> These require the CLI to fetch from remote marketplace.
+
+| Order | Task                      | Description                                                             | Status                |
+| ----- | ------------------------- | ----------------------------------------------------------------------- | --------------------- |
+| C1    | Phase 6: Schema Dist      | GitHub raw URLs, SchemaStore PR                                         | Not Started           |
+| C2    | Phase 7: Private Repos    | Configurable source, auth, pre-flight checks                            | Partial (config done) |
+| C3    | Phase 8: Multi-Source     | Community + private skills composition                                  | Not Started           |
+| C4    | Phase 9: Skill Reorg      | Separate PhotoRoom from community skills                                | Not Started           |
+| C5    | Custom principles support | `cc customize --principles` for user-added principles merged on compile | Not Started           |
+| C6    | `cc doctor`               | Diagnose connectivity/auth issues                                       | Not Started           |
+| C7    | `cc eject`                | Local export or GitHub fork for full independence                       | Not Started           |
+
+#### Lower Priority (Any Phase)
+
+| Priority | Task                       | Description                                                                       | Status                                     |
+| -------- | -------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------ |
+| High     | Investigate Claude tasks   | Research Claude Code's task system                                                | **DONE** (RULES-TASKS-INTEGRATION-PLAN.md) |
+| High     | Claude simplifier hook     | Add hook that simplifies/improves Claude's responses or workflow                  | Not Started                                |
+| High     | Context forking for skills | Add `context: fork` + `agent:` frontmatter for isolated skill execution           | Not Started                                |
+| High     | Path-scoped rules          | Compile skills with `paths:` to `.claude/rules/` for intelligent context loading  | Not Started                                |
+| Medium   | Permission generation      | Generate permission rules from agent `tools:` definitions with wildcard support   | Not Started                                |
+| Medium   | Progressive disclosure     | Restructure skills into Tier 1/2/3 for token-efficient loading                    | Not Started                                |
+| Medium   | CLI branding               | ASCII art logo + animated mascot on startup                                       | Not Started                                |
+| Low      | Thinking budget per agent  | Add `recommended_thinking:` to agent.yaml, CLI sets MAX_THINKING_TOKENS on invoke | Not Started                                |
 
 ### 2. Testing & CI/CD
 
@@ -107,13 +145,15 @@ Test 4: Roundtrip (Manual)
 
 ### 3. Skills & Content
 
-| Priority | Task                           | Description                                                               | Status      |
-| -------- | ------------------------------ | ------------------------------------------------------------------------- | ----------- |
-| Medium   | `backend/ci-cd/github-actions` | Remove React Query, Zustand references (frontend libs in backend skill)   | Not Started |
-| Medium   | `backend/analytics/posthog`    | Review Better Auth, Email references (non-`+` skill with cross-tech refs) | Not Started |
-| Low      | New skills (Critical)          | nx, docker, kubernetes, vite, svelte, supabase, AI SDKs                   | Backlog     |
-| Low      | New skills (High)              | astro, firebase, clerk, cloudflare, terraform, etc.                       | Backlog     |
-| Low      | Roadmap Phase 3-5              | background-jobs, caching, i18n, payments, etc.                            | Backlog     |
+| Priority | Task                           | Description                                                                                       | Status      |
+| -------- | ------------------------------ | ------------------------------------------------------------------------------------------------- | ----------- |
+| HIGH     | Rename skills remove brackets  | Remove author suffix from skill folders: `react (@vince)` → `react`. Keep author in metadata.yaml | Not Started |
+| HIGH     | Move reviewing skill category  | Move `shared/reviewing` to `meta/reviewing` or standalone `reviewing` category                    | Not Started |
+| Medium   | `backend/ci-cd/github-actions` | Remove React Query, Zustand references (frontend libs in backend skill)                           | Not Started |
+| Medium   | `backend/analytics/posthog`    | Review Better Auth, Email references (non-`+` skill with cross-tech refs)                         | Not Started |
+| Low      | New skills (Critical)          | nx, docker, kubernetes, vite, svelte, supabase, AI SDKs                                           | Backlog     |
+| Low      | New skills (High)              | astro, firebase, clerk, cloudflare, terraform, etc.                                               | Backlog     |
+| Low      | Roadmap Phase 3-5              | background-jobs, caching, i18n, payments, etc.                                                    | Backlog     |
 
 **Note on `+` skills:** Skills with `+` in the name (e.g., `backend/observability+axiom+pino+sentry`) are intentionally integrated "bridge" skills. Cross-tech references between the named technologies are expected and correct. Only **frontend** library references (React, React Query, Zustand) in backend skills are problematic.
 
@@ -183,20 +223,31 @@ Test 4: Roundtrip (Manual)
 
 ## Decision Log
 
-| Date       | Decision                         | Rationale                                                                                                                                |
-| ---------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-01-23 | Plugin implementation complete   | 6 phases: Schema, Skill-as-Plugin, Marketplace, Stack, CLI, Testing, Docs                                                                |
-| 2026-01-23 | Plugin as output format          | CLI compiles to plugin (not .claude/); same flow, output is distributable, versioned, installable                                        |
-| 2026-01-23 | Eject for full independence      | `cc eject` (local) or `cc eject --fork` (GitHub) - (decided to implement, not yet built); no lock-in, fork preserves upstream connection |
-| 2026-01-22 | Pre-populate wizard for update   | `cc update` now starts with existing skills pre-selected, skips approach step                                                            |
-| 2026-01-22 | Project-level config commands    | Added `cc config set-project` and `unset-project` for per-project source config                                                          |
-| 2026-01-22 | Agent category organization      | Improved discoverability; 7 categories: developer, reviewer, researcher, planning, pattern, meta, tester                                 |
-| 2026-01-22 | No `cc cache` command            | giget handles caching internally; `--refresh` flag for edge cases                                                                        |
-| 2026-01-22 | Inline agent invocation via CLI  | `--agents` JSON flag verified working; no file writes needed                                                                             |
-| 2026-01-21 | Keep relationship-centric matrix | Authoring is easier; skill-centric view computed at runtime                                                                              |
-| 2026-01-21 | While-loop wizard                | Simpler than action/reducer; better for MVP                                                                                              |
-| 2026-01-21 | Integer versioning               | Zero friction; semver overkill for markdown skills                                                                                       |
-| 2026-01-21 | Document giget limitations       | Bitbucket private, Azure DevOps unsupported                                                                                              |
+| Date       | Decision                         | Rationale                                                                                                                                    |
+| ---------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-01-24 | Stack-based architecture         | Skills stored in `~/.claude-collective/stacks/`, single plugin at `~/.claude/plugins/claude-collective/`. `cc switch` for instant switching. |
+| 2026-01-24 | Dual marketplace model           | Public marketplace (community, latest) + private/company marketplaces (pinned versions). Enables reproducibility and guardrails.             |
+| 2026-01-24 | Agents as standalone plugins     | Agents don't embed skills; they reference them. One documentor for all stacks. `cc switch` recompiles with active stack's skills.            |
+| 2026-01-24 | Version pinning via marketplace  | No `plugin@version` install syntax. Marketplace controls versions via `ref`/`sha` in marketplace.json. Maintainer is gatekeeper.             |
+| 2026-01-24 | Skills/Agents/Stacks independent | Each versioned independently. No cascading bumps. Binding happens at switch/compile time, not publish time.                                  |
+| 2026-01-23 | Remote fetching after repo split | Compile scripts use local paths now; refactor to giget/source-fetcher AFTER repos split. Avoids premature abstraction.                       |
+| 2026-01-23 | Phased task ordering             | Phase A (before split), B (split milestone), C (after split). Clear sequencing prevents blocked work.                                        |
+| 2026-01-23 | Architecture finalized           | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents             |
+| 2026-01-23 | `.claude-collective/` deprecated | Removed - plugins output directly to `~/.claude/plugins/`; no intermediate source directory needed                                           |
+| 2026-01-23 | Lowest priority commands         | `cc remove`, `cc swap`, `cc outdated`, `cc customize` marked as lowest priority; focus on `cc init` and `cc add` first                       |
+| 2026-01-23 | Network-based compilation        | All compilation fetches agents/principles/templates from marketplace; no bundled content in CLI                                              |
+| 2026-01-23 | Plugin implementation complete   | 6 phases: Schema, Skill-as-Plugin, Marketplace, Stack, CLI, Testing, Docs                                                                    |
+| 2026-01-23 | Plugin as output format          | CLI compiles to plugin (not .claude/); same flow, output is distributable, versioned, installable                                            |
+| 2026-01-23 | Eject for full independence      | `cc eject` (local) or `cc eject --fork` (GitHub) - (decided to implement, not yet built); no lock-in, fork preserves upstream connection     |
+| 2026-01-22 | Pre-populate wizard for update   | `cc update` now starts with existing skills pre-selected, skips approach step                                                                |
+| 2026-01-22 | Project-level config commands    | Added `cc config set-project` and `unset-project` for per-project source config                                                              |
+| 2026-01-22 | Agent category organization      | Improved discoverability; 7 categories: developer, reviewer, researcher, planning, pattern, meta, tester                                     |
+| 2026-01-22 | No `cc cache` command            | giget handles caching internally; `--refresh` flag for edge cases                                                                            |
+| 2026-01-22 | Inline agent invocation via CLI  | `--agents` JSON flag verified working; no file writes needed                                                                                 |
+| 2026-01-21 | Keep relationship-centric matrix | Authoring is easier; skill-centric view computed at runtime                                                                                  |
+| 2026-01-21 | While-loop wizard                | Simpler than action/reducer; better for MVP                                                                                                  |
+| 2026-01-21 | Integer versioning               | Zero friction; semver overkill for markdown skills                                                                                           |
+| 2026-01-21 | Document giget limitations       | Bitbucket private, Azure DevOps unsupported                                                                                                  |
 
 ---
 
@@ -596,6 +647,169 @@ sources:
 
 - MobX - General patterns (remove PhotoRoom conventions)
 - Tailwind - General patterns (remove PhotoRoom conventions)
+
+---
+
+## Stack Plugin Architecture (NEW)
+
+> **Goal:** `cc init` creates a complete stack plugin with skills embedded and agents compiled
+
+### Target Structure
+
+When user runs `cc init` and selects skills/stack:
+
+```
+~/.claude/plugins/my-fullstack-stack/
+├── .claude-plugin/
+│   └── plugin.json               # Stack manifest
+├── agents/                       # Compiled agents
+│   ├── frontend-developer.md
+│   ├── backend-developer.md
+│   └── ...
+└── skills/                       # Skills embedded in stack
+    ├── react/
+    │   ├── SKILL.md
+    │   ├── metadata.yaml         # Contains version
+    │   └── examples/
+    ├── zustand/
+    └── ...
+```
+
+### Key Points
+
+1. **Skills live inside the stack** - copied to `skills/` folder, not external references
+2. **Skills can evolve together** - become cohesive, reference each other within the stack
+3. **Versioning** - follows Claude Code's plugin versioning system
+4. **Independent updates** - `cc update skill-react` updates that skill within the stack
+
+### `cc init` Flow
+
+1. User selects skills or pre-built stack
+2. Create stack plugin folder at `~/.claude/plugins/{stack-name}/`
+3. Copy selected skills to `skills/` folder
+4. Compile agents to `agents/` folder
+5. Generate `.claude-plugin/plugin.json` manifest
+
+### New Commands
+
+| Command                   | Description                                           |
+| ------------------------- | ----------------------------------------------------- |
+| `cc init`                 | Creates complete stack plugin (skills + agents)       |
+| `cc add skill-react`      | Adds skill to stack, recompiles agents                |
+| `cc remove skill-zustand` | Removes skill from stack, recompiles agents           |
+| `cc swap skill-A skill-B` | Swaps skills, recompiles agents                       |
+| `cc update skill-react`   | Updates single skill from upstream, recompiles agents |
+| `cc update --all`         | Updates all skills, recompiles agents                 |
+| `cc outdated`             | Shows which skills have newer versions available      |
+
+### Skill Changes Require Recompilation
+
+Because skills are embedded in compiled agents, **any skill change triggers recompilation**:
+
+- `cc add` → updates config, copies skill, **recompiles agents**
+- `cc remove` → updates config, removes skill, **recompiles agents**
+- `cc swap` → updates config, swaps skills, **recompiles agents**
+- `cc update` → fetches latest, replaces skill, **recompiles agents**
+
+### Benefits
+
+- Complete plugin created in one step
+- Skills can be customized per-stack
+- Skills evolve together as cohesive unit
+- Agents always have latest embedded skill content
+
+---
+
+## Custom Principles (NEW)
+
+> **Goal:** Allow users to add custom principles without exposing full templating system
+
+### Why Not Full Eject?
+
+Full eject would expose LiquidJS templates and agent configs, making users responsible for:
+
+- Maintaining template syntax
+- Merging upstream template changes
+- Understanding compilation internals
+
+**Custom principles** gives 80% of the benefit with 20% of the complexity.
+
+### Structure
+
+```
+~/.claude/plugins/my-stack/
+├── .claude-plugin/plugin.json
+├── agents/                       # Compiled agents (output)
+├── skills/                       # Skills (editable)
+├── _principles/                  # CUSTOM: User's principles
+│   └── custom/                   # Only this folder is user-editable
+│       ├── company-guidelines.md
+│       ├── security-rules.md
+│       └── code-standards.md
+├── CLAUDE.md
+└── README.md
+```
+
+### Command
+
+```bash
+# Enable custom principles for a stack
+cc customize --principles
+
+# This creates _principles/custom/ folder
+# User adds .md files with their principles
+# Next compile merges custom + built-in principles
+```
+
+### How It Works
+
+1. **`cc customize --principles`**
+   - Creates `_principles/custom/` folder in stack
+   - Copies a template `README.md` explaining how to add principles
+
+2. **`cc compile`** (with custom principles)
+   - Loads built-in principles (core.md, code-quality.md, etc.)
+   - Loads ALL `.md` files from `_principles/custom/`
+   - Merges into compiled agents (custom principles injected after built-in)
+
+3. **Principle file format**
+
+   ```markdown
+   # Company Security Guidelines
+
+   <critical_requirements>
+
+   - All API calls must use the internal auth wrapper
+   - Never expose internal service URLs in client code
+   - Use environment variables for all secrets
+     </critical_requirements>
+
+   ## Approved Libraries
+
+   - Authentication: @company/auth-sdk
+   - HTTP client: @company/fetch-wrapper
+   ```
+
+### What Users CAN'T Do (Intentionally)
+
+- Modify built-in principles (they get updated with `cc update`)
+- Access or modify LiquidJS templates
+- Change agent compilation structure
+- Modify agent configs directly
+
+### What Users CAN Do
+
+- Add unlimited custom principle files
+- Inject company-specific guidelines
+- Add project-specific rules
+- Override behavior with `<critical_requirements>` tags
+
+### Benefits
+
+- Simple: just add markdown files
+- Safe: can't break compilation
+- Updatable: built-in principles still update normally
+- Powerful: principles are injected into ALL agents
 
 ---
 

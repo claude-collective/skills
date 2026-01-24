@@ -2,12 +2,7 @@ import path from "path";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
 import { ensureDir } from "../utils/fs";
-import { PROJECT_ROOT } from "../consts";
-import {
-  copySkillsToStack,
-  copySkillsToStackFromSource,
-  getStackDir,
-} from "./skill-copier";
+import { copySkillsToStackFromSource, getStackDir } from "./skill-copier";
 import {
   createStackConfig,
   createStackConfigFromSuggested,
@@ -30,54 +25,6 @@ export interface CreateStackResult {
   stackDir: string;
   copiedSkills: CopiedSkill[];
   skillCount: number;
-}
-
-/**
- * Create a stack from wizard result
- * Handles copying skills and generating config
- *
- * @deprecated Use createStackFromSource for new code
- */
-export async function createStack(
-  stackName: string,
-  selectedSkillIds: string[],
-  matrix: MergedSkillsMatrix,
-  projectDir: string,
-  selectedStack: ResolvedStack | null,
-  registryRoot: string = PROJECT_ROOT,
-): Promise<CreateStackResult> {
-  const stackDir = getStackDir(projectDir, stackName);
-
-  // Ensure stack directory exists
-  await ensureDir(stackDir);
-
-  // Copy skills to stack
-  const copiedSkills = await copySkillsToStack(
-    selectedSkillIds,
-    stackDir,
-    matrix,
-    registryRoot,
-  );
-
-  // Generate and write stack config
-  let stackConfig;
-  if (selectedStack) {
-    stackConfig = createStackConfigFromSuggested(stackName, selectedStack);
-  } else {
-    stackConfig = createStackConfig(
-      stackName,
-      `Custom stack with ${selectedSkillIds.length} skills`,
-      selectedSkillIds,
-    );
-  }
-  await writeStackConfig(stackDir, stackConfig);
-
-  return {
-    stackName,
-    stackDir,
-    copiedSkills,
-    skillCount: copiedSkills.length,
-  };
 }
 
 /**

@@ -38,6 +38,8 @@ export interface GlobalConfig {
   source?: string;
   /** Default author name for created skills */
   author?: string;
+  /** Currently active stack name */
+  active_stack?: string;
 }
 
 /**
@@ -67,6 +69,11 @@ function isValidGlobalConfig(obj: unknown): obj is GlobalConfig {
   if (config.source !== undefined && typeof config.source !== "string")
     return false;
   if (config.author !== undefined && typeof config.author !== "string")
+    return false;
+  if (
+    config.active_stack !== undefined &&
+    typeof config.active_stack !== "string"
+  )
     return false;
   return true;
 }
@@ -161,6 +168,31 @@ export async function saveGlobalConfig(config: GlobalConfig): Promise<void> {
   const content = stringifyYaml(config, { lineWidth: 0 });
   await writeFile(configPath, content);
   verbose(`Saved global config to ${configPath}`);
+}
+
+/**
+ * Get the currently active stack name from global config
+ * Returns null if config doesn't exist or active_stack is not set
+ */
+export async function getActiveStack(): Promise<string | null> {
+  const config = await loadGlobalConfig();
+  if (!config?.active_stack) {
+    verbose("No active stack configured");
+    return null;
+  }
+  verbose(`Active stack: ${config.active_stack}`);
+  return config.active_stack;
+}
+
+/**
+ * Set the active stack name in global config
+ * Creates the config file if it doesn't exist
+ */
+export async function setActiveStack(stackName: string): Promise<void> {
+  const config = (await loadGlobalConfig()) ?? {};
+  config.active_stack = stackName;
+  await saveGlobalConfig(config);
+  verbose(`Set active stack to: ${stackName}`);
 }
 
 /**
