@@ -50,12 +50,30 @@ const DEFAULT_PLUGIN_VERSION = "1.0.0";
 
 /**
  * Default agents to compile when no stack specifies agents
+ * All available agents are included by default
  */
 const DEFAULT_AGENTS = [
+  // Developer agents
   "frontend-developer",
   "backend-developer",
+  "architecture",
+  // Reviewer agents
+  "frontend-reviewer",
+  "backend-reviewer",
+  // Researcher agents
+  "frontend-researcher",
+  "backend-researcher",
+  // Planning agents
   "pm",
   "orchestrator",
+  // Pattern agents
+  "pattern-scout",
+  "pattern-critique",
+  // Meta agents
+  "agent-summoner",
+  "skill-summoner",
+  "documentor",
+  // Tester agents
   "tester",
 ];
 

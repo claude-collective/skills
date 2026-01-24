@@ -5,16 +5,62 @@ import pc from "picocolors";
 import { directoryExists, remove, copy } from "../utils/fs";
 import { getUserStacksDir } from "../consts";
 import { getCollectivePluginDir } from "../lib/plugin-finder";
-import { setActiveStack, getActiveStack } from "../lib/config";
+import { setActiveStack } from "../lib/config";
+import { getStacksInfo, formatStackOption } from "../lib/stack-list";
 
 export const switchCommand = new Command("switch")
   .description("Switch to a different skill stack")
-  .argument("<stack>", "Stack name to switch to")
+  .argument(
+    "[stack]",
+    "Stack name to switch to (optional - shows selector if omitted)",
+  )
   .configureOutput({
     writeErr: (str) => console.error(pc.red(str)),
   })
   .showHelpAfterError(true)
-  .action(async (stackName: string) => {
+  .action(async (stackNameArg?: string) => {
+    let stackName = stackNameArg;
+
+    // If no stack name provided, show interactive selector
+    if (!stackName) {
+      const stacks = await getStacksInfo();
+
+      if (stacks.length === 0) {
+        p.log.warn("No stacks found.");
+        p.log.info(`Run ${pc.cyan("cc init --name <name>")} to create one.`);
+        process.exit(1);
+      }
+
+      if (stacks.length === 1) {
+        stackName = stacks[0].name;
+        if (stacks[0].isActive) {
+          p.log.info(`Already on the only stack: ${pc.bold(stackName)}`);
+          return;
+        }
+      } else {
+        const selected = await p.select({
+          message: "Select a stack to switch to:",
+          options: stacks.map(formatStackOption),
+        });
+
+        if (p.isCancel(selected)) {
+          p.cancel("Switch cancelled");
+          process.exit(0);
+        }
+
+        stackName = selected as string;
+      }
+    }
+
+    // Check if already on this stack
+    const stacks = await getStacksInfo();
+    const targetStack = stacks.find((s) => s.name === stackName);
+
+    if (targetStack?.isActive) {
+      p.log.info(`Already on stack: ${pc.bold(stackName)}`);
+      return;
+    }
+
     p.intro(pc.cyan(`Switch Stack: ${stackName}`));
 
     const s = p.spinner();
@@ -50,7 +96,6 @@ export const switchCommand = new Command("switch")
     s.stop("Configuration updated");
 
     // 5. Show success
-    const previousStack = await getActiveStack();
     console.log("");
     p.outro(pc.green(`Switched to ${pc.bold(stackName)}!`));
   });

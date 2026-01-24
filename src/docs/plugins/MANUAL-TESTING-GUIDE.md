@@ -32,13 +32,13 @@ bun run build
 | 9   | List shows both        | `cc list`                                         | Both stacks, one with `*`      | [ ]  |
 | 10  | Switch stacks          | `cc switch work-stack`                            | Success message                | [ ]  |
 | 11  | Verify skills replaced | `ls .claude/plugins/claude-collective/skills/`    | Different skills               | [ ]  |
-| 12  | Add skill              | `cc add <skill>`                                  | Added to active stack          | [ ]  |
-| 13  | Verify skill in stack  | `ls .claude-collective/stacks/work-stack/skills/` | New skill present              | [ ]  |
-| 14  | Verify skill in plugin | `ls .claude/plugins/claude-collective/skills/`    | New skill synced               | [ ]  |
+| 12  | Edit skills            | `cc edit`                                         | Opens wizard, saves changes    | [ ]  |
+| 13  | Verify skill in stack  | `ls .claude-collective/stacks/work-stack/skills/` | Skills updated                 | [ ]  |
+| 14  | Verify skill in plugin | `ls .claude/plugins/claude-collective/skills/`    | Skills synced                  | [ ]  |
 | 15  | Compile agents         | `cc compile --source .`                           | Agents recompiled              | [ ]  |
 | 16  | Switch back            | `cc switch dev-stack`                             | Skills change back             | [ ]  |
 | 17  | Error: bad stack       | `cc switch nonexistent`                           | Helpful error message          | [ ]  |
-| 18  | Error: no active       | (clear config) `cc add foo`                       | "No active stack" error        | [ ]  |
+| 18  | Error: no active       | (clear config) `cc edit`                          | "No active stack" error        | [ ]  |
 
 ---
 
@@ -332,50 +332,57 @@ diff <(ls .claude-collective/stacks/dev-stack/skills/) <(ls .claude/plugins/clau
 
 ---
 
-### Test 12: Add Skill to Active Stack
+### Test 12: Edit Skills in Active Stack
 
-**Purpose**: Verify `cc add` adds skill to active stack and syncs.
+**Purpose**: Verify `cc edit` opens wizard with current skills and saves changes.
 
 ```bash
 # Ensure on a stack
 cc switch work-stack
 
-# Add a skill (use an available skill name)
-cc add react  # or another skill from your source
+# Edit skills (opens interactive wizard)
+cc edit
 ```
+
+**Interactive Steps**:
+
+1. Wizard opens with current skills pre-selected
+2. Navigate categories and add/remove skills
+3. Confirm changes
 
 **Expected Behavior**:
 
-- Skill fetched from source
-- Skill added to `.claude-collective/stacks/work-stack/skills/`
-- Skill synced to `.claude/plugins/claude-collective/skills/`
+- Shows current skills as selected
+- Allows adding/removing skills
+- Updates stack and plugin on confirm
 - Agents recompiled
 
 **Verify**: See Tests 13-14.
 
 ---
 
-### Test 13: Verify Skill Added to Stack
+### Test 13: Verify Skills Updated in Stack
 
-**Purpose**: Confirm skill exists in stack source directory.
+**Purpose**: Confirm skills in stack match your selection.
 
 ```bash
 ls .claude-collective/stacks/work-stack/skills/
 ```
 
-**Expected**: New skill directory present.
+**Expected**: Skills match what you selected in the wizard.
 
 **Verify**:
 
 ```bash
-[ -d .claude-collective/stacks/work-stack/skills/react ] && echo "PASS" || echo "FAIL"
+# Count should match your selection
+ls .claude-collective/stacks/work-stack/skills/ | wc -l
 ```
 
 ---
 
-### Test 14: Verify Skill Synced to Plugin
+### Test 14: Verify Skills Synced to Plugin
 
-**Purpose**: Confirm skill was copied to plugin.
+**Purpose**: Confirm skills were synced to plugin.
 
 ```bash
 ls .claude/plugins/claude-collective/skills/
@@ -386,7 +393,7 @@ ls .claude/plugins/claude-collective/skills/
 **Verify**:
 
 ```bash
-[ -d .claude/plugins/claude-collective/skills/react ] && echo "PASS" || echo "FAIL"
+diff <(ls .claude-collective/stacks/work-stack/skills/) <(ls .claude/plugins/claude-collective/skills/) && echo "PASS: Skills match" || echo "FAIL"
 ```
 
 ---
@@ -461,14 +468,14 @@ cc switch nonexistent-stack
 
 ### Test 18: Error Handling - No Active Stack
 
-**Purpose**: Verify `cc add` errors when no active stack.
+**Purpose**: Verify `cc edit` errors when no active stack.
 
 ```bash
 # Clear the active stack
 echo "" > .claude-collective/config.yaml
 
-# Try to add
-cc add react
+# Try to edit
+cc edit
 ```
 
 **Expected Output**:

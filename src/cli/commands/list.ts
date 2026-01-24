@@ -1,10 +1,7 @@
-import path from "path";
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
-import { listDirectories } from "../utils/fs";
-import { getUserStacksDir } from "../consts";
-import { getActiveStack } from "../lib/config";
+import { getStacksInfo, formatStackDisplay } from "../lib/stack-list";
 
 export const listCommand = new Command("list")
   .alias("ls")
@@ -14,8 +11,7 @@ export const listCommand = new Command("list")
   })
   .showHelpAfterError(true)
   .action(async () => {
-    const stacksDir = getUserStacksDir();
-    const stacks = await listDirectories(stacksDir);
+    const stacks = await getStacksInfo();
 
     if (stacks.length === 0) {
       p.log.warn("No stacks found.");
@@ -23,24 +19,11 @@ export const listCommand = new Command("list")
       return;
     }
 
-    const activeStack = await getActiveStack();
-
     console.log("");
     console.log(pc.bold("Stacks:"));
 
-    for (const stackName of stacks) {
-      const skillsDir = path.join(stacksDir, stackName, "skills");
-      const skills = await listDirectories(skillsDir);
-      const skillCount = skills.length;
-
-      const isActive = stackName === activeStack;
-      const marker = isActive ? pc.green("*") : " ";
-      const name = isActive ? pc.bold(stackName) : stackName;
-      const count = pc.dim(
-        `(${skillCount} skill${skillCount === 1 ? "" : "s"})`,
-      );
-
-      console.log(`  ${marker} ${name} ${count}`);
+    for (const stack of stacks) {
+      console.log(`  ${formatStackDisplay(stack)}`);
     }
 
     console.log("");
