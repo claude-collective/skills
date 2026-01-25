@@ -684,96 +684,133 @@ Provide your research findings in this structure:
 
 <research_summary>
 **Research Topic:** [What was researched]
-**Research Type:** [Pattern Discovery | Design System | Theme/Styling | Implementation Research]
+**Confidence:** [High | Medium | Low]
 **Files Examined:** [count]
-**All Paths Verified:** [Yes/No]
 </research_summary>
 
-<component_inventory>
-**Only include if cataloging components:**
+<route_patterns>
 
-| Component | Location            | Purpose        | Key Props         |
-| --------- | ------------------- | -------------- | ----------------- |
-| [Name]    | [/path/to/file.tsx] | [What it does] | [Important props] |
+## API Route Patterns
 
-</component_inventory>
+### Route: [METHOD /path]
 
-<patterns_found>
+**Handler:** `/path/to/route.ts:lines`
+**Middleware Chain:** `[middleware1] → [middleware2] → handler`
 
-## Existing Patterns
-
-### Pattern 1: [Name]
-
-**File:** [/path/to/file.tsx:line-range]
-
-**Description:**
-[Brief explanation of the pattern]
-
-**Code Example:**
+**Request Validation:**
 
 ```typescript
-// From file:lines
-[Actual code from the codebase]
+// From /path/to/route.ts:lines
+const schema = z.object({...})
 ```
 
-**Usage Count:** [X instances found]
+**Response Format:**
 
-**Why This Pattern:**
-[Rationale for why the codebase uses this approach]
+```typescript
+// Successful response structure
+{ data: T, meta?: {...} }
+```
 
-</patterns_found>
+**Error Handling:**
 
-<styling_approach>
-**Only include if researching theming/styling:**
+```typescript
+// From /path/to/route.ts:lines
+// How errors are thrown/caught
+```
 
-**Token Architecture:**
+</route_patterns>
 
-- Base tokens: [location]
-- Semantic tokens: [location]
-- Component tokens: [location]
+<database_patterns>
 
-**Styling Method:** [SCSS Modules | cva | Tailwind | etc.]
+## Database Patterns
 
-**Theme Implementation:**
-[How light/dark mode works, where theme files are]
+### Schema: [TableName]
 
-</styling_approach>
+**Location:** `/path/to/schema.ts:lines`
 
-<recommended_approach>
+```typescript
+// Actual schema definition
+export const users = pgTable('users', {...})
+```
 
-## Recommended Implementation Approach
+**Relationships:**
 
-Based on patterns found in [file references]:
+- `users` → `posts` (one-to-many)
+- `users` → `organizations` (many-to-many via `user_orgs`)
 
-1. [Step 1 with specific file to reference]
-2. [Step 2 with specific file to reference]
-3. [Step 3 with specific file to reference]
+### Query Patterns
 
-</recommended_approach>
+| Operation         | Location      | Pattern                               |
+| ----------------- | ------------- | ------------------------------------- |
+| Select with joins | `/path:lines` | `db.select().from(x).leftJoin(y)`     |
+| Transaction       | `/path:lines` | `db.transaction(async (tx) => {...})` |
+| Soft delete       | `/path:lines` | `update().set({ deletedAt })`         |
 
-<files_to_reference>
+</database_patterns>
 
-## Files to Reference
+<auth_patterns>
 
-| Priority | File                        | Lines   | Why Reference             |
-| -------- | --------------------------- | ------- | ------------------------- |
-| 1        | [/path/to/best-example.tsx] | [12-45] | [Best example of pattern] |
-| 2        | [/path/to/secondary.tsx]    | [8-30]  | [Shows variant handling]  |
-| 3        | [/path/to/utility.ts]       | [all]   | [Utility to reuse]        |
+## Authentication Patterns
 
-</files_to_reference>
+**Session Handling:** `/path/to/auth.ts`
+**Permission Check Pattern:**
 
-<verification_checklist>
+```typescript
+// From /path:lines
+const requireRole = (role: Role) => {...}
+```
 
-## Research Verification
+**Protected Route Pattern:**
 
-| Finding   | Verification Method | Status          |
-| --------- | ------------------- | --------------- |
-| [Claim 1] | [How verified]      | Verified/Failed |
-| [Claim 2] | [How verified]      | Verified/Failed |
+```typescript
+// From /path:lines
+```
 
-</verification_checklist>
+</auth_patterns>
 
+<middleware_patterns>
+
+## Middleware Patterns
+
+| Middleware | Location      | Purpose        | Applies To     |
+| ---------- | ------------- | -------------- | -------------- |
+| [name]     | [/path:lines] | [what it does] | [which routes] |
+
+**Error Middleware:**
+
+```typescript
+// From /path:lines
+// How errors are transformed to responses
+```
+
+**Logging Pattern:**
+
+```typescript
+// From /path:lines
+logger.info({ ... }, 'message')
+```
+
+</middleware_patterns>
+
+<implementation_guidance>
+
+## For Backend Developer
+
+**Must Follow:**
+
+1. [Pattern] - see `/path:lines`
+2. [Pattern] - see `/path:lines`
+
+**Must Avoid:**
+
+1. [Anti-pattern] - why
+
+**Files to Read First:**
+| Priority | File | Why |
+|----------|------|-----|
+| 1 | [/path] | Best example of [pattern] |
+| 2 | [/path] | Shows [specific thing] |
+</implementation_guidance>
 </output_format>
 
 

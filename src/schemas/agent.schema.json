@@ -93,12 +93,6 @@
           "$ref": "#/$defs/HookDefinition"
         }
       }
-    },
-    "output_format": {
-      "type": "string",
-      "description": "Output format template (references _principles/{value}.md)",
-      "minLength": 1,
-      "examples": ["output-formats-developer", "output-formats-reviewer"]
     }
   },
   "$defs": {

@@ -194,12 +194,12 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 
 ### 5. Agent Output Formats
 
-| Priority | Task                           | Description                                                                   | Status      |
-| -------- | ------------------------------ | ----------------------------------------------------------------------------- | ----------- |
-| High     | Agent-specific output formats  | Create tailored output formats for each agent instead of sharing generic ones | In Progress |
-| High     | Claude rules                   | Add Claude rules configuration for agents                                     | Not Started |
-| Medium   | Standardize output format tags | Ensure all output formats use consistent `<output_format>` XML tags           | Not Started |
-| Medium   | Document output format system  | Document the cascading resolution (agent-level -> category-level)             | Not Started |
+| Priority   | Task                               | Description                                                                       | Status      |
+| ---------- | ---------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| ~~High~~   | ~~Agent-specific output formats~~  | ~~Create tailored output formats for each agent instead of sharing generic ones~~ | **DONE**    |
+| High       | Claude rules                       | Add Claude rules configuration for agents                                         | Not Started |
+| ~~Medium~~ | ~~Standardize output format tags~~ | ~~Ensure all output formats use consistent `<output_format>` XML tags~~           | **DONE**    |
+| ~~Medium~~ | ~~Document output format system~~  | ~~Document the cascading resolution (agent-level -> category-level)~~             | **DONE**    |
 
 ### 6. Documentation
 
@@ -220,21 +220,22 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 
 ## Deferred / Won't Do
 
-| Category      | Task                       | Description                                                         | Status     |
-| ------------- | -------------------------- | ------------------------------------------------------------------- | ---------- |
-| CLI           | `cc cache`                 | Cache management commands                                           | Won't Do   |
-| CLI           | Config redundancy          | `frontend/react` appears 9x (CLI-generated, not user-facing)        | Won't Fix  |
-| CLI           | Template refactoring       | Split agent.liquid into partials (moved to src/agents/\_templates/) | Deferred   |
-| CLI           | Marketplace foundation     | Stack Marketplace Phase 1-2                                         | Deferred   |
-| CLI           | Community submission       | `cc submit` flow                                                    | Deferred   |
-| Testing       | Directory check bug        | False positive - CLI uses `fs-extra` correctly                      | Not a Bug  |
-| Testing       | Path sanitization          | `.replace("/", "-")` works for current 1-slash IDs                  | Won't Fix  |
-| Testing       | Verification scripts       | Superseded by `output-validator.ts`                                 | Superseded |
-| Testing       | Content linting            | Skills can omit sections                                            | Deferred   |
-| Testing       | Skill structure validation | Missing required sections undetected                                | Deferred   |
-| Skills        | Skill ID inconsistency     | `frontend/react` vs `frontend-react`                                | Deferred   |
-| Skills        | Skill bundles              | Issue #7 - not implemented                                          | Deferred   |
-| Documentation | Voting system              | GitHub Discussions integration                                      | Deferred   |
+| Category      | Task                       | Description                                                                                                                                                 | Status     |
+| ------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| CLI           | `cc cache`                 | Cache management commands                                                                                                                                   | Won't Do   |
+| CLI           | Config redundancy          | `frontend/react` appears 9x (CLI-generated, not user-facing)                                                                                                | Won't Fix  |
+| CLI           | Template refactoring       | Split agent.liquid into partials (moved to src/agents/\_templates/)                                                                                         | Deferred   |
+| CLI           | Marketplace foundation     | Stack Marketplace Phase 1-2                                                                                                                                 | Deferred   |
+| CLI           | Community submission       | `cc submit` flow                                                                                                                                            | Deferred   |
+| CLI           | External skill sources     | `cc add skill-id --source github:user/repo` fetches external skills to local src/skills/, enabling custom methodology skills without restructuring resolver | Future     |
+| Testing       | Directory check bug        | False positive - CLI uses `fs-extra` correctly                                                                                                              | Not a Bug  |
+| Testing       | Path sanitization          | `.replace("/", "-")` works for current 1-slash IDs                                                                                                          | Won't Fix  |
+| Testing       | Verification scripts       | Superseded by `output-validator.ts`                                                                                                                         | Superseded |
+| Testing       | Content linting            | Skills can omit sections                                                                                                                                    | Deferred   |
+| Testing       | Skill structure validation | Missing required sections undetected                                                                                                                        | Deferred   |
+| Skills        | Skill ID inconsistency     | `frontend/react` vs `frontend-react`                                                                                                                        | Deferred   |
+| Skills        | Skill bundles              | Issue #7 - not implemented                                                                                                                                  | Deferred   |
+| Documentation | Voting system              | GitHub Discussions integration                                                                                                                              | Deferred   |
 
 ---
 
@@ -250,33 +251,34 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 
 ## Decision Log
 
-| Date       | Decision                         | Rationale                                                                                                                                                                |
-| ---------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-01-24 | Agents as individual plugins     | **Future**: Agents will be standalone installable plugins. Stacks install ~9-10 essential agents; users can add others via `cc add agent-name`.                          |
-| 2026-01-24 | Plugin-based versioning          | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                               |
-| 2026-01-24 | Stack-based architecture         | Skills stored in `.claude-collective/stacks/` (project-local), single plugin at `.claude/plugins/claude-collective/` (project-local). `cc switch` for instant switching. |
-| 2026-01-24 | Dual marketplace model           | Public marketplace (community, latest) + private/company marketplaces (pinned versions). Enables reproducibility and guardrails.                                         |
-| 2026-01-24 | Agents as standalone plugins     | Agents don't embed skills; they reference them. One documentor for all stacks. `cc switch` recompiles with active stack's skills.                                        |
-| 2026-01-24 | Version pinning via marketplace  | No `plugin@version` install syntax. Marketplace controls versions via `ref`/`sha` in marketplace.json. Maintainer is gatekeeper.                                         |
-| 2026-01-24 | Skills/Agents/Stacks independent | Each versioned independently. No cascading bumps. Binding happens at switch/compile time, not publish time.                                                              |
-| 2026-01-23 | Remote fetching after repo split | Compile scripts use local paths now; refactor to giget/source-fetcher AFTER repos split. Avoids premature abstraction.                                                   |
-| 2026-01-23 | Phased task ordering             | Phase A (before split), B (split milestone), C (after split). Clear sequencing prevents blocked work.                                                                    |
-| 2026-01-23 | Architecture finalized           | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                         |
-| 2026-01-23 | `.claude-collective/` deprecated | Removed - plugins output directly to `.claude/plugins/` (project-local); no intermediate source directory needed                                                         |
-| 2026-01-23 | Lowest priority commands         | `cc outdated`, `cc customize` marked as lowest priority; `cc edit` replaces `cc add`, `cc remove`, `cc swap`                                                             |
-| 2026-01-23 | Network-based compilation        | All compilation fetches agents/principles/templates from marketplace; no bundled content in CLI                                                                          |
-| 2026-01-23 | Plugin implementation complete   | 6 phases: Schema, Skill-as-Plugin, Marketplace, Stack, CLI, Testing, Docs                                                                                                |
-| 2026-01-23 | Plugin as output format          | CLI compiles to plugin (not .claude/); same flow, output is distributable, versioned, installable                                                                        |
-| 2026-01-23 | Eject for full independence      | `cc eject` (local) or `cc eject --fork` (GitHub) - (decided to implement, not yet built); no lock-in, fork preserves upstream connection                                 |
-| 2026-01-22 | Pre-populate wizard for update   | `cc update` now starts with existing skills pre-selected, skips approach step                                                                                            |
-| 2026-01-22 | Project-level config commands    | Added `cc config set-project` and `unset-project` for per-project source config                                                                                          |
-| 2026-01-22 | Agent category organization      | Improved discoverability; 7 categories: developer, reviewer, researcher, planning, pattern, meta, tester                                                                 |
-| 2026-01-22 | No `cc cache` command            | giget handles caching internally; `--refresh` flag for edge cases                                                                                                        |
-| 2026-01-22 | Inline agent invocation via CLI  | `--agents` JSON flag verified working; no file writes needed                                                                                                             |
-| 2026-01-21 | Keep relationship-centric matrix | Authoring is easier; skill-centric view computed at runtime                                                                                                              |
-| 2026-01-21 | While-loop wizard                | Simpler than action/reducer; better for MVP                                                                                                                              |
-| 2026-01-21 | Integer versioning               | Zero friction; semver overkill for markdown skills                                                                                                                       |
-| 2026-01-21 | Document giget limitations       | Bitbucket private, Azure DevOps unsupported                                                                                                                              |
+| Date       | Decision                         | Rationale                                                                                                                                                                    |
+| ---------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-01-25 | Core principles in template      | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local. |
+| 2026-01-24 | Agents as individual plugins     | **Future**: Agents will be standalone installable plugins. Stacks install ~9-10 essential agents; users can add others via `cc add agent-name`.                              |
+| 2026-01-24 | Plugin-based versioning          | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                                   |
+| 2026-01-24 | Stack-based architecture         | Skills stored in `.claude-collective/stacks/` (project-local), single plugin at `.claude/plugins/claude-collective/` (project-local). `cc switch` for instant switching.     |
+| 2026-01-24 | Dual marketplace model           | Public marketplace (community, latest) + private/company marketplaces (pinned versions). Enables reproducibility and guardrails.                                             |
+| 2026-01-24 | Agents as standalone plugins     | Agents don't embed skills; they reference them. One documentor for all stacks. `cc switch` recompiles with active stack's skills.                                            |
+| 2026-01-24 | Version pinning via marketplace  | No `plugin@version` install syntax. Marketplace controls versions via `ref`/`sha` in marketplace.json. Maintainer is gatekeeper.                                             |
+| 2026-01-24 | Skills/Agents/Stacks independent | Each versioned independently. No cascading bumps. Binding happens at switch/compile time, not publish time.                                                                  |
+| 2026-01-23 | Remote fetching after repo split | Compile scripts use local paths now; refactor to giget/source-fetcher AFTER repos split. Avoids premature abstraction.                                                       |
+| 2026-01-23 | Phased task ordering             | Phase A (before split), B (split milestone), C (after split). Clear sequencing prevents blocked work.                                                                        |
+| 2026-01-23 | Architecture finalized           | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                             |
+| 2026-01-23 | `.claude-collective/` deprecated | Removed - plugins output directly to `.claude/plugins/` (project-local); no intermediate source directory needed                                                             |
+| 2026-01-23 | Lowest priority commands         | `cc outdated`, `cc customize` marked as lowest priority; `cc edit` replaces `cc add`, `cc remove`, `cc swap`                                                                 |
+| 2026-01-23 | Network-based compilation        | All compilation fetches agents/principles/templates from marketplace; no bundled content in CLI                                                                              |
+| 2026-01-23 | Plugin implementation complete   | 6 phases: Schema, Skill-as-Plugin, Marketplace, Stack, CLI, Testing, Docs                                                                                                    |
+| 2026-01-23 | Plugin as output format          | CLI compiles to plugin (not .claude/); same flow, output is distributable, versioned, installable                                                                            |
+| 2026-01-23 | Eject for full independence      | `cc eject` (local) or `cc eject --fork` (GitHub) - (decided to implement, not yet built); no lock-in, fork preserves upstream connection                                     |
+| 2026-01-22 | Pre-populate wizard for update   | `cc update` now starts with existing skills pre-selected, skips approach step                                                                                                |
+| 2026-01-22 | Project-level config commands    | Added `cc config set-project` and `unset-project` for per-project source config                                                                                              |
+| 2026-01-22 | Agent category organization      | Improved discoverability; 7 categories: developer, reviewer, researcher, planning, pattern, meta, tester                                                                     |
+| 2026-01-22 | No `cc cache` command            | giget handles caching internally; `--refresh` flag for edge cases                                                                                                            |
+| 2026-01-22 | Inline agent invocation via CLI  | `--agents` JSON flag verified working; no file writes needed                                                                                                                 |
+| 2026-01-21 | Keep relationship-centric matrix | Authoring is easier; skill-centric view computed at runtime                                                                                                                  |
+| 2026-01-21 | While-loop wizard                | Simpler than action/reducer; better for MVP                                                                                                                                  |
+| 2026-01-21 | Integer versioning               | Zero friction; semver overkill for markdown skills                                                                                                                           |
+| 2026-01-21 | Document giget limitations       | Bitbucket private, Azure DevOps unsupported                                                                                                                                  |
 
 ---
 
@@ -461,8 +463,7 @@ src/agents/
 
 ```
 src/agents/
-├── _principles/           # Shared principles (formerly core-prompts)
-├── _templates/            # LiquidJS templates
+├── _templates/            # LiquidJS templates (includes embedded core principles)
 ├── developer/
 │   ├── frontend-developer/
 │   └── backend-developer/
@@ -490,11 +491,12 @@ src/agents/
 **Changes made:**
 
 - Moved all 15 agents into 7 category directories
-- Moved `core-prompts/` to `agents/_principles/`
 - Moved `templates/` to `agents/_templates/`
 - Updated compiler to handle nested category structure
 - Updated all documentation references
 - Validated compilation still works
+
+**Update (2026-01-25):** Core principles are now embedded directly in `agent.liquid` template. The `_principles/` directory has been removed. Methodology content (investigation requirements, write verification, etc.) is available via methodology skills.
 
 ## Versioning & Provenance (2026-01-22)
 
@@ -787,96 +789,17 @@ Because skills are embedded in compiled agents, **any skill change triggers reco
 
 ---
 
-## Custom Principles (NEW)
+## Custom Principles (OUTDATED)
 
-> **Goal:** Allow users to add custom principles without exposing full templating system
+> **Status:** This feature needs redesign. Core principles are now embedded directly in the template.
 
-### Why Not Full Eject?
+**Update (2026-01-25):** With the move to embedded core principles in `agent.liquid`, the custom principles feature as originally designed is no longer viable. The `_principles/` directory no longer exists.
 
-Full eject would expose LiquidJS templates and agent configs, making users responsible for:
+**Alternative approaches for customization:**
 
-- Maintaining template syntax
-- Merging upstream template changes
-- Understanding compilation internals
-
-**Custom principles** gives 80% of the benefit with 20% of the complexity.
-
-### Structure
-
-```
-.claude/plugins/claude-collective/    # Project-local
-├── .claude-plugin/plugin.json
-├── agents/                       # Compiled agents (output)
-├── skills/                       # Skills from active stack
-├── _principles/                  # CUSTOM: User's principles
-│   └── custom/                   # Only this folder is user-editable
-│       ├── company-guidelines.md
-│       ├── security-rules.md
-│       └── code-standards.md
-├── CLAUDE.md
-└── README.md
-```
-
-### Command
-
-```bash
-# Enable custom principles for a stack
-cc customize --principles
-
-# This creates _principles/custom/ folder
-# User adds .md files with their principles
-# Next compile merges custom + built-in principles
-```
-
-### How It Works
-
-1. **`cc customize --principles`**
-   - Creates `_principles/custom/` folder in stack
-   - Copies a template `README.md` explaining how to add principles
-
-2. **`cc compile`** (with custom principles)
-   - Loads built-in principles (core.md, code-quality.md, etc.)
-   - Loads ALL `.md` files from `_principles/custom/`
-   - Merges into compiled agents (custom principles injected after built-in)
-
-3. **Principle file format**
-
-   ```markdown
-   # Company Security Guidelines
-
-   <critical_requirements>
-
-   - All API calls must use the internal auth wrapper
-   - Never expose internal service URLs in client code
-   - Use environment variables for all secrets
-     </critical_requirements>
-
-   ## Approved Libraries
-
-   - Authentication: @company/auth-sdk
-   - HTTP client: @company/fetch-wrapper
-   ```
-
-### What Users CAN'T Do (Intentionally)
-
-- Modify built-in principles (they get updated with `cc update`)
-- Access or modify LiquidJS templates
-- Change agent compilation structure
-- Modify agent configs directly
-
-### What Users CAN Do
-
-- Add unlimited custom principle files
-- Inject company-specific guidelines
-- Add project-specific rules
-- Override behavior with `<critical_requirements>` tags
-
-### Benefits
-
-- Simple: just add markdown files
-- Safe: can't break compilation
-- Updatable: built-in principles still update normally
-- Powerful: principles are injected into ALL agents
+1. **Agent-specific files:** Use `critical-requirements.md` and `critical-reminders.md` in each agent's source directory
+2. **Methodology skills:** Create custom methodology skills that can be preloaded
+3. **CLAUDE.md:** Add project-specific instructions to the stack's CLAUDE.md file
 
 ---
 

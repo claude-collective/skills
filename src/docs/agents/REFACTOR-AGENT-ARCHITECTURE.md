@@ -69,9 +69,7 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
-    output_format: output-formats-developer
+    # Output format: determined by file system (agent-level output-format.md → category fallback)
 
   backend-developer:
     title: Backend Developer Agent
@@ -84,9 +82,7 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
-    output_format: output-formats-developer
+    # Output format: determined by file system (agent-level output-format.md → category fallback)
 
   # ... all other agents
 ```

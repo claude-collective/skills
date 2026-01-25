@@ -782,96 +782,110 @@ Provide your research findings in this structure:
 
 <research_summary>
 **Research Topic:** [What was researched]
-**Research Type:** [Pattern Discovery | Design System | Theme/Styling | Implementation Research]
+**Confidence:** [High | Medium | Low] - based on pattern consistency
 **Files Examined:** [count]
-**All Paths Verified:** [Yes/No]
 </research_summary>
 
-<component_inventory>
-**Only include if cataloging components:**
+<component_patterns>
 
-| Component | Location            | Purpose        | Key Props         |
-| --------- | ------------------- | -------------- | ----------------- |
-| [Name]    | [/path/to/file.tsx] | [What it does] | [Important props] |
+## Component Patterns Found
 
-</component_inventory>
+### [ComponentName]
 
-<patterns_found>
+**Location:** `/path/to/component.tsx:12-85`
+**Usage Count:** [X instances]
 
-## Existing Patterns
-
-### Pattern 1: [Name]
-
-**File:** [/path/to/file.tsx:line-range]
-
-**Description:**
-[Brief explanation of the pattern]
-
-**Code Example:**
+**Props Interface:**
 
 ```typescript
-// From file:lines
-[Actual code from the codebase]
+// From /path/to/types.ts:15-28
+interface ComponentNameProps {
+  // actual interface from codebase
+}
 ```
 
-**Usage Count:** [X instances found]
+**Composition Pattern:**
 
-**Why This Pattern:**
-[Rationale for why the codebase uses this approach]
+```tsx
+// From /path/to/component.tsx:45-60
+// How this component composes with others
+```
 
-</patterns_found>
+**Variants:** [cva variants if applicable]
+</component_patterns>
 
-<styling_approach>
-**Only include if researching theming/styling:**
+<state_patterns>
 
-**Token Architecture:**
+## State Management Patterns
 
-- Base tokens: [location]
-- Semantic tokens: [location]
-- Component tokens: [location]
+### Zustand Stores Found
 
-**Styling Method:** [SCSS Modules | cva | Tailwind | etc.]
+| Store  | Location      | Purpose           | Selectors       |
+| ------ | ------------- | ----------------- | --------------- |
+| [name] | [/path:lines] | [what it manages] | [key selectors] |
 
-**Theme Implementation:**
-[How light/dark mode works, where theme files are]
+### React Query Patterns
 
-</styling_approach>
+| Hook   | Location      | Query Key     | Stale Time |
+| ------ | ------------- | ------------- | ---------- |
+| [useX] | [/path:lines] | [key pattern] | [time]     |
 
-<recommended_approach>
+**Query Key Convention:** `[pattern observed]`
+</state_patterns>
 
-## Recommended Implementation Approach
+<styling_patterns>
 
-Based on patterns found in [file references]:
+## Styling Architecture
 
-1. [Step 1 with specific file to reference]
-2. [Step 2 with specific file to reference]
-3. [Step 3 with specific file to reference]
+**Method:** [SCSS Modules + cva | Tailwind | etc.]
 
-</recommended_approach>
+**Token Locations:**
 
-<files_to_reference>
+- Design tokens: `/path/to/tokens.scss`
+- Component tokens: `/path/to/component.module.scss`
 
-## Files to Reference
+**cva Pattern Example:**
 
-| Priority | File                        | Lines   | Why Reference             |
-| -------- | --------------------------- | ------- | ------------------------- |
-| 1        | [/path/to/best-example.tsx] | [12-45] | [Best example of pattern] |
-| 2        | [/path/to/secondary.tsx]    | [8-30]  | [Shows variant handling]  |
-| 3        | [/path/to/utility.ts]       | [all]   | [Utility to reuse]        |
+```typescript
+// From /path/to/component.tsx:8-25
+const variants = cva(...)
+```
 
-</files_to_reference>
+**Class Naming Convention:** `[pattern]`
+</styling_patterns>
 
-<verification_checklist>
+<form_patterns>
 
-## Research Verification
+## Form Handling Patterns (if applicable)
 
-| Finding   | Verification Method | Status          |
-| --------- | ------------------- | --------------- |
-| [Claim 1] | [How verified]      | Verified/Failed |
-| [Claim 2] | [How verified]      | Verified/Failed |
+**Validation Schema Location:** `/path/to/schema.ts`
+**Form Hook Pattern:**
 
-</verification_checklist>
+```typescript
+// From /path/to/form.tsx:lines
+```
 
+</form_patterns>
+
+<implementation_guidance>
+
+## For Frontend Developer
+
+**Must Follow:**
+
+1. [Pattern] - see `/path:lines`
+2. [Pattern] - see `/path:lines`
+
+**Must Avoid:**
+
+1. [Anti-pattern observed] - inconsistent with `/path`
+
+**Files to Read First:**
+| Priority | File | Why |
+|----------|------|-----|
+| 1 | [/path] | Best example of [pattern] |
+| 2 | [/path] | Shows [specific thing] |
+</implementation_guidance>
 </output_format>
 
 

@@ -6,18 +6,18 @@
 
 ## Quick Navigation
 
-| Need to...                                  | Read This                                                    |
-| ------------------------------------------- | ------------------------------------------------------------ |
-| Understand how agents/skills compile        | [CLAUDE_ARCHITECTURE_BIBLE.md](#1-claude-architecture-bible) |
-| Write effective prompts                     | [PROMPT_BIBLE.md](#2-prompt-bible)                           |
-| Create AI-optimized documentation           | [DOCUMENTATION_BIBLE.md](#3-documentation-bible)             |
-| Design atomic, portable skills              | [SKILL-ATOMICITY-BIBLE.md](#4-skill-atomicity-bible)         |
-| **Build or extend the CLI**                 | [CLI Documentation](#cli-documentation)                      |
-| Create or distribute plugins                | [PLUGIN-DEVELOPMENT.md](#5-plugin-development)               |
-| See all CLI commands                        | [CLI-REFERENCE.md](#cli-reference)                           |
-| Find core instructions loaded in all agents | [Principles](#principles-loaded-in-all-agents)               |
-| See compiled agent prompts                  | [Agent Definitions](#agent-definitions)                      |
-| Review architecture research & decisions    | [Research & Findings](#research--findings)                   |
+| Need to...                               | Read This                                                    |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| Understand how agents/skills compile     | [CLAUDE_ARCHITECTURE_BIBLE.md](#1-claude-architecture-bible) |
+| Write effective prompts                  | [PROMPT_BIBLE.md](#2-prompt-bible)                           |
+| Create AI-optimized documentation        | [DOCUMENTATION_BIBLE.md](#3-documentation-bible)             |
+| Design atomic, portable skills           | [SKILL-ATOMICITY-BIBLE.md](#4-skill-atomicity-bible)         |
+| **Build or extend the CLI**              | [CLI Documentation](#cli-documentation)                      |
+| Create or distribute plugins             | [PLUGIN-DEVELOPMENT.md](#5-plugin-development)               |
+| See all CLI commands                     | [CLI-REFERENCE.md](#cli-reference)                           |
+| Find core principles used by all agents  | [Core Principles](#core-principles-embedded-in-all-agents)   |
+| See compiled agent prompts               | [Agent Definitions](#agent-definitions)                      |
+| Review architecture research & decisions | [Research & Findings](#research--findings)                   |
 
 ---
 
@@ -199,19 +199,19 @@ The CLI (`cc`) is the user-facing tool for managing skills, stacks, and agents.
 
 ---
 
-## Principles (Loaded in All Agents)
+## Core Principles (Embedded in All Agents)
 
-These foundational instructions are compiled into every agent's context:
+The 5 core principles are **hardcoded directly in the agent template** (`src/agents/_templates/agent.liquid`). This ensures every agent has consistent foundational instructions:
 
-| File                                                  | Purpose                                                                                                                                         |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/agents/_principles/core-principles.md`           | The 5 core principles (Investigation First, Follow Patterns, Minimal Changes, Anti-Over-Engineering, Verify Everything) with self-reminder loop |
-| `src/agents/_principles/investigation-requirement.md` | Never speculate about unread code; read first, then claim                                                                                       |
-| `src/agents/_principles/write-verification.md`        | Re-read files after editing; never report success without verification                                                                          |
-| `src/agents/_principles/anti-over-engineering.md`     | Explicit constraints on what NOT to do (no new abstractions, no unrequested features)                                                           |
-| `src/agents/_principles/context-management.md`        | How to manage long-term context across sessions (`progress.md`, `decisions.md`, `insights.md`)                                                  |
-| `src/agents/_principles/improvement-protocol.md`      | How to improve agent prompts based on evidence                                                                                                  |
-| `src/agents/_principles/success-criteria-template.md` | Template for defining and verifying success criteria                                                                                            |
+| Principle                        | Purpose                                                      |
+| -------------------------------- | ------------------------------------------------------------ |
+| **1. Investigation First**       | Never speculate about unread code; read first, then claim    |
+| **2. Follow Existing Patterns**  | Use what's already there; match codebase conventions         |
+| **3. Minimal Necessary Changes** | Surgical edits only; change only what's required             |
+| **4. Anti-Over-Engineering**     | Simple solutions; use existing utilities; avoid abstractions |
+| **5. Verify Everything**         | Test work; check success criteria; provide evidence          |
+
+Additional methodology guidance (context management, improvement protocols, etc.) is available via **methodology skills** in `src/skills/methodology/`.
 
 ---
 
