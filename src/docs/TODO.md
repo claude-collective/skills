@@ -125,25 +125,24 @@ Test 4: Roundtrip (Manual)
 
 **Agent Plugins Architecture (C8-C10):**
 
-- **Essential agents** (~9-10): frontend-developer, backend-developer, frontend-reviewer, backend-reviewer, frontend-researcher, backend-researcher, pm, orchestrator, tester
+- **Essential agents** (~8-9): frontend-developer, backend-developer, frontend-reviewer, backend-reviewer, frontend-researcher, backend-researcher, pm, tester
 - **Optional agents** (~6): architecture, pattern-scout, pattern-critique, agent-summoner, skill-summoner, documentor
 - Stacks install essential agents by default; users add optional agents via `cc add <agent-name>`
 
 #### Lower Priority (Any Phase)
 
-| Priority | Task                         | Description                                                                                                                                     | Status                                     |
-| -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| High     | Investigate Claude tasks     | Research Claude Code's task system                                                                                                              | **DONE** (RULES-TASKS-INTEGRATION-PLAN.md) |
-| High     | Claude simplifier hook       | Add hook that simplifies/improves Claude's responses or workflow                                                                                | Not Started                                |
-| High     | Path-scoped rules            | Compile skills with `paths:` to `.claude/rules/` for intelligent context loading                                                                | Not Started                                |
-| Medium   | Stack-specific CLAUDE.md     | Handle per-stack CLAUDE.md files. Options: embed in config.yaml, use rules instead, or copy from stack folder during compile                    | Not Started                                |
-| Medium   | Permission generation        | Generate permission rules from agent `tools:` definitions with wildcard support                                                                 | Not Started                                |
-| Medium   | Progressive disclosure       | Restructure skills into Tier 1/2/3 for token-efficient loading                                                                                  | Not Started                                |
-| Medium   | CLI branding                 | ASCII art logo + animated mascot on startup                                                                                                     | Not Started                                |
-| Low      | Thinking budget per agent    | Add `recommended_thinking:` to agent.yaml, CLI sets MAX_THINKING_TOKENS on invoke                                                               | Not Started                                |
-| Medium   | Agent partials refactor      | Review agent partials (workflow.md, intro.md, examples.md) - improve naming, modularity, and structure                                          | Not Started                                |
-| ~~High~~ | ~~Agent frontmatter skills~~ | ~~Compiled agents have `skills:` in frontmatter that don't match actual skill names - fix skill ID resolution~~                                 | **DONE** (2026-01-25)                      |
-| Medium   | Edit wizard deselection bug  | `cc edit` with pre-selected skills: cannot deselect skills that have dependents (e.g., framework). Need to cascade deselection or show warning. | Not Started                                |
+| Priority   | Task                            | Description                                                                                                                                                                                                | Status                                       |
+| ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| High       | Investigate Claude tasks        | Research Claude Code's task system                                                                                                                                                                         | **DONE** (RULES-TASKS-INTEGRATION-PLAN.md)   |
+| High       | Claude simplifier hook          | Add hook that simplifies/improves Claude's responses or workflow                                                                                                                                           | Not Started                                  |
+| ~~Medium~~ | ~~Stack-specific CLAUDE.md~~    | ~~Handle per-stack CLAUDE.md files~~ - **Won't Do**: CLAUDE.md is for universal conventions (naming, imports, TS rules).                                                                                   | Won't Do                                     |
+| ~~Medium~~ | ~~Permission generation~~       | ~~Generate permission rules from agent `tools:` definitions~~                                                                                                                                              | **DONE** (informational only)                |
+| ~~Medium~~ | ~~Progressive disclosure~~      | ~~Restructure skills into Tier 1/2/3 for token-efficient loading~~                                                                                                                                         | **DONE** (Claude Code handles this natively) |
+| Medium     | CLI branding                    | ASCII art logo + animated mascot on startup                                                                                                                                                                | Not Started                                  |
+| ~~Low~~    | ~~Thinking budget per agent~~   | ~~Add `recommended_thinking:` to agent.yaml, CLI sets MAX_THINKING_TOKENS on invoke~~ - **Won't Do**: Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. | **DONE** (default is max)                    |
+| Medium     | Agent partials refactor         | Review agent partials (workflow.md, intro.md, examples.md) - improve naming, modularity, and structure                                                                                                     | Not Started                                  |
+| ~~High~~   | ~~Agent frontmatter skills~~    | ~~Compiled agents have `skills:` in frontmatter that don't match actual skill names - fix skill ID resolution~~                                                                                            | **DONE** (2026-01-25)                        |
+| ~~Medium~~ | ~~Edit wizard deselection bug~~ | ~~`cc edit` with pre-selected skills: cannot deselect skills that have dependents (e.g., framework).~~                                                                                                     | **DONE** (cascade with confirmation)         |
 
 ### 2. Testing & CI/CD
 
@@ -155,17 +154,17 @@ Test 4: Roundtrip (Manual)
 
 ### 3. Skills & Content
 
-| Priority   | Task                               | Description                                                                                                                                                            | Status                |
-| ---------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| ~~HIGH~~   | ~~Rename skills remove brackets~~  | ~~Remove parentheses from skill folder names~~ - **Won't Do**: `(@author)` format is intentionally unique and unambiguous, avoids conflicts with npm scopes/decorators | Won't Do              |
-| HIGH       | Move reviewing skill category      | Move `shared/reviewing` to `meta/reviewing` or standalone `reviewing` category                                                                                         | **DONE**              |
-| LOW        | Remove shared category             | Remove `shared` category from skills-matrix.yaml once reviewing is moved. Added as workaround.                                                                         | **DONE**              |
-| ~~Medium~~ | ~~Skill ID: use frontmatter name~~ | ~~Currently using directory path as skill ID (workaround). Refactor to use `frontmatter.name` as canonical ID, update stack configs and skill_aliases to match.~~      | **DONE** (2026-01-25) |
-| Medium     | `backend/ci-cd/github-actions`     | Remove React Query, Zustand references (frontend libs in backend skill)                                                                                                | Not Started           |
-| Medium     | `backend/analytics/posthog`        | Review Better Auth, Email references (non-`+` skill with cross-tech refs)                                                                                              | Not Started           |
-| Low        | New skills (Critical)              | nx, docker, kubernetes, vite, svelte, supabase, AI SDKs                                                                                                                | Backlog               |
-| Low        | New skills (High)                  | astro, firebase, clerk, cloudflare, terraform, etc.                                                                                                                    | Backlog               |
-| Low        | Roadmap Phase 3-5                  | background-jobs, caching, i18n, payments, etc.                                                                                                                         | Backlog               |
+| Priority   | Task                               | Description                                                                                                        | Status                                                              |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| ~~HIGH~~   | ~~Rename skills remove brackets~~  | ~~Remove parentheses from skill folder names~~ - **Won't Do**: `(@author)` conflicts with npm scopes/decorators    | Won't Do                                                            |
+| HIGH       | Move reviewing skill category      | Move `shared/reviewing` to `meta/reviewing` or standalone `reviewing` category                                     | **DONE**                                                            |
+| LOW        | Remove shared category             | Remove `shared` category from skills-matrix.yaml once reviewing is moved. Added as workaround.                     | **DONE**                                                            |
+| ~~Medium~~ | ~~Skill ID: use frontmatter name~~ | ~~Currently using directory path as skill ID (workaround). Refactor to use `frontmatter.name` as canonical ID, .~~ | **DONE** (2026-01-25)                                               |
+| ~~Medium~~ | ~~`backend/ci-cd/github-actions`~~ | ~~Remove React Query, Zustand references (frontend libs in backend skill)~~                                        | **DONE** (verified clean)                                           |
+| ~~Medium~~ | ~~`backend/analytics/posthog`~~    | ~~Review Better Auth, Email references (non-`+` skill with cross-tech refs)~~                                      | **DONE** (integration points, not taught content - properly scoped) |
+| Low        | New skills (Critical)              | nx, docker, kubernetes, vite, svelte, supabase, AI SDKs                                                            | Backlog                                                             |
+| Low        | New skills (High)                  | astro, firebase, clerk, cloudflare, terraform, etc.                                                                | Backlog                                                             |
+| Low        | Roadmap Phase 3-5                  | background-jobs, caching, i18n, payments, etc.                                                                     | Backlog                                                             |
 
 **Note on `+` skills:** Skills with `+` in the name (e.g., `backend/observability+axiom+pino+sentry`) are intentionally integrated "bridge" skills. Cross-tech references between the named technologies are expected and correct. Only **frontend** library references (React, React Query, Zustand) in backend skills are problematic.
 
@@ -236,6 +235,7 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 | Skills        | Skill ID inconsistency     | `frontend/react` vs `frontend-react`                                                                                                                        | Deferred   |
 | Skills        | Skill bundles              | Issue #7 - not implemented                                                                                                                                  | Deferred   |
 | Documentation | Voting system              | GitHub Discussions integration                                                                                                                              | Deferred   |
+| CLI           | Configurable thinking      | CLI flags `--thinking <tokens>` and `--agent-thinking <agent>:<tokens>` to override default max thinking per agent/globally                                 | Deferred   |
 
 ---
 
@@ -243,9 +243,9 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 
 | Status          | Count |
 | --------------- | ----- |
-| **Outstanding** | 33    |
-| **Deferred**    | 13    |
-| **Completed**   | 44    |
+| **Outstanding** | 32    |
+| **Deferred**    | 14    |
+| **Completed**   | 45    |
 
 ---
 
@@ -253,6 +253,7 @@ This preserves category prefixes (frontend/, backend/) for disambiguation and au
 
 | Date       | Decision                         | Rationale                                                                                                                                                                    |
 | ---------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-01-25 | Thinking budget: use defaults    | Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. No need to configure per-agent - defer CLI configurability to later.    |
 | 2026-01-25 | Core principles in template      | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local. |
 | 2026-01-24 | Agents as individual plugins     | **Future**: Agents will be standalone installable plugins. Stacks install ~9-10 essential agents; users can add others via `cc add agent-name`.                              |
 | 2026-01-24 | Plugin-based versioning          | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                                   |
@@ -475,8 +476,7 @@ src/agents/
 │   └── backend-researcher/
 ├── planning/
 │   ├── pm/
-│   ├── architecture/
-│   └── orchestrator/
+│   └── architecture/
 ├── pattern/
 │   ├── pattern-scout/
 │   └── pattern-critique/

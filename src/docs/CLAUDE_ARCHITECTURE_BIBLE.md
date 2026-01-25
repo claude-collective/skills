@@ -268,11 +268,7 @@ Think about the implications before proceeding.
 Consider the implications before proceeding.
 ```
 
-**Exception - Claude Code Triggers:** When making requests TO Claude Code (not in agent prompts), you CAN use these trigger words to allocate thinking budget:
-
-- `think` (~4K tokens) - routine tasks
-- `megathink` (~10K tokens) - intermediate problems
-- `ultrathink` (~32K tokens) - major architectural challenges
+**Note (January 2026):** The trigger keywords (`think`, `megathink`, `ultrathink`) have been **deprecated**. Claude Code now enables extended thinking by default (31,999 tokens max). Use `MAX_THINKING_TOKENS` environment variable to adjust.
 
 ### Positive Framing (PROMPT_BIBLE Technique #10)
 
@@ -606,7 +602,7 @@ grep -q "ALWAYS RE-READ FILES AFTER EDITING" .claude/agents/$AGENT.md && echo "�
 AGENT="{agent}"
 CATEGORY=$(find src/agents -type d -name "$AGENT" -printf "%P\n" | head -1 | cut -d/ -f1)
 echo "=== 'Think' Usage Check for $AGENT ==="
-grep -n -w "think" src/agents/$CATEGORY/$AGENT/*.md | grep -v "ultrathink\|megathink" | wc -l
+grep -n -w "think" src/agents/$CATEGORY/$AGENT/*.md | wc -l
 # If count > 0, review matches and replace with consider/evaluate/analyze
 ```
 
@@ -668,7 +664,7 @@ grep -q "comprehensive\|thorough" src/agents/$CATEGORY/$AGENT/intro.md 2>/dev/nu
 
 # Think usage
 echo -e "\n--- 'Think' Usage (should be 0) ---"
-THINK_COUNT=$(grep -rw "think" src/agents/$CATEGORY/$AGENT/*.md 2>/dev/null | grep -v "ultrathink\|megathink" | wc -l)
+THINK_COUNT=$(grep -rw "think" src/agents/$CATEGORY/$AGENT/*.md 2>/dev/null | wc -l)
 echo "Count: $THINK_COUNT"
 
 # Compiled agent checks (only if compiled file exists)
@@ -782,29 +778,21 @@ Read these 3 files and compare their patterns: file1.ts, file2.ts, file3.ts
 Read file1.ts. Then read file2.ts. Then read file3.ts.
 ```
 
-### Extended Thinking Triggers (Claude Code Only)
+### Extended Thinking (January 2026 Update)
 
-When making requests TO Claude Code (not in agent prompts), use these trigger words to allocate thinking budget:
+As of January 2026, Claude Code **enables extended thinking by default** with a maximum budget of 31,999 tokens. The trigger keywords (`think`, `megathink`, `ultrathink`) have been **deprecated** and no longer have any effect.
 
-| Trigger      | Token Budget | When to Use                                                |
-| ------------ | ------------ | ---------------------------------------------------------- |
-| `think`      | ~4K tokens   | Routine debugging, simple features                         |
-| `megathink`  | ~10K tokens  | API integration, performance optimization, refactoring     |
-| `ultrathink` | ~32K tokens  | Major architecture, critical migrations, complex debugging |
+**Current system:**
 
-**Ultrathink trigger phrases:** "think harder", "think intensely", "think longer", "think really hard", "think super hard", "think very hard", "ultrathink"
+| Configuration    | Method                                 |
+| ---------------- | -------------------------------------- |
+| Limit budget     | `export MAX_THINKING_TOKENS=10000`     |
+| Disable thinking | `export MAX_THINKING_TOKENS=0`         |
+| Toggle (session) | `Alt+T`                                |
+| Toggle (global)  | `/config` or `~/.claude/settings.json` |
+| View thinking    | `Ctrl+O` (verbose mode)                |
 
-**Key distinction:**
-
-- **In agent prompts** (static text): Avoid "think" → use consider/evaluate/analyze
-- **In user requests to Claude Code**: Use "think"/"megathink"/"ultrathink" to explicitly allocate thinking budget
-
-**When to escalate to ultrathink:**
-
-- Claude gets stuck in repetitive loops
-- Complex architectural decisions needed
-- Critical migration or systemic problem resolution
-- New pattern design requiring deep analysis
+**In agent prompts:** Still avoid the word "think" → use consider/evaluate/analyze (prevents confusion with Opus 4.5's thinking system).
 
 ---
 

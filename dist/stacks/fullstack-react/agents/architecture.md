@@ -1088,8 +1088,8 @@ Provide your scaffolding output in this structure:
 <investigation>
 **Reference Applications Examined:**
 
-| App | What Was Learned |
-|-----|------------------|
+| App                 | What Was Learned                                 |
+| ------------------- | ------------------------------------------------ |
 | [apps/existing-app] | [Patterns extracted - structure, auth, db, etc.] |
 
 **Patterns Identified:**
@@ -1105,7 +1105,7 @@ Provide your scaffolding output in this structure:
 - `@repo/ui` - [UI components]
 - `@repo/typescript-config` - [TS config base]
 - [Other @repo/* packages]
-</investigation>
+  </investigation>
 
 <structure_created>
 
@@ -1137,18 +1137,18 @@ apps/{app-name}/
 
 ## Setup Phases Completed
 
-| Phase | Component | Status | Notes |
-|-------|-----------|--------|-------|
-| 1 | Directory structure | PASS | [Brief note] |
-| 2 | Package.json + dependencies | PASS | [Dependencies installed] |
-| 3 | TypeScript config | PASS | [Extends shared base] |
-| 4 | Database schema | PASS | [Tables created] |
-| 5 | Auth setup | PASS | [Provider configured] |
-| 6 | API infrastructure | PASS | [Routes ready] |
-| 7 | Analytics | PASS | [Provider integrated] |
-| 8 | Observability | PASS | [Logging/errors ready] |
-| 9 | Testing setup | PASS | [Test framework ready] |
-| 10 | Environment | PASS | [.env.example complete] |
+| Phase | Component                   | Status | Notes                    |
+| ----- | --------------------------- | ------ | ------------------------ |
+| 1     | Directory structure         | PASS   | [Brief note]             |
+| 2     | Package.json + dependencies | PASS   | [Dependencies installed] |
+| 3     | TypeScript config           | PASS   | [Extends shared base]    |
+| 4     | Database schema             | PASS   | [Tables created]         |
+| 5     | Auth setup                  | PASS   | [Provider configured]    |
+| 6     | API infrastructure          | PASS   | [Routes ready]           |
+| 7     | Analytics                   | PASS   | [Provider integrated]    |
+| 8     | Observability               | PASS   | [Logging/errors ready]   |
+| 9     | Testing setup               | PASS   | [Test framework ready]   |
+| 10    | Environment                 | PASS   | [.env.example complete]  |
 
 </configuration_summary>
 
@@ -1157,11 +1157,13 @@ apps/{app-name}/
 ## Build Verification
 
 **Dependency Installation:**
+
 ```bash
 bun install  # Result: [PASS/FAIL]
 ```
 
 **Type Checking:**
+
 ```bash
 bun tsc --noEmit  # Result: [PASS/FAIL]
 # Errors if any: [list or "None"]
@@ -1169,13 +1171,13 @@ bun tsc --noEmit  # Result: [PASS/FAIL]
 
 **Pattern Compliance:**
 
-| Convention | Status | Evidence |
-|------------|--------|----------|
-| kebab-case file names | PASS | All [X] files checked |
-| Named exports only | PASS | No default exports found |
-| Zod env validation | PASS | `/src/lib/env.ts` validates all vars |
-| Correlation ID middleware | PASS | `/src/lib/api/middleware.ts:X` |
-| Error boundaries | PASS | `/src/components/error-boundary.tsx` |
+| Convention                | Status | Evidence                             |
+| ------------------------- | ------ | ------------------------------------ |
+| kebab-case file names     | PASS   | All [X] files checked                |
+| Named exports only        | PASS   | No default exports found             |
+| Zod env validation        | PASS   | `/src/lib/env.ts` validates all vars |
+| Correlation ID middleware | PASS   | `/src/lib/api/middleware.ts:X`       |
+| Error boundaries          | PASS   | `/src/components/error-boundary.tsx` |
 
 </verification_results>
 
@@ -1185,14 +1187,15 @@ bun tsc --noEmit  # Result: [PASS/FAIL]
 
 All variables documented in `.env.example`:
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Yes | Database connection string |
-| `AUTH_SECRET` | Yes | Auth encryption key |
-| `POSTHOG_KEY` | No | Analytics API key |
-| [Other vars] | [Yes/No] | [Description] |
+| Variable       | Required | Description                |
+| -------------- | -------- | -------------------------- |
+| `DATABASE_URL` | Yes      | Database connection string |
+| `AUTH_SECRET`  | Yes      | Auth encryption key        |
+| `POSTHOG_KEY`  | No       | Analytics API key          |
+| [Other vars]   | [Yes/No] | [Description]              |
 
 **Generation commands:**
+
 ```bash
 # Generate AUTH_SECRET
 openssl rand -base64 32
@@ -1205,6 +1208,7 @@ openssl rand -base64 32
 ## Getting Started
 
 **1. Environment Setup:**
+
 ```bash
 cd apps/{app-name}
 cp .env.example .env.local
@@ -1212,17 +1216,20 @@ cp .env.example .env.local
 ```
 
 **2. Database Setup:**
+
 ```bash
 bun db:push    # Push schema to database
 bun db:studio  # (Optional) Open Drizzle Studio
 ```
 
 **3. Development:**
+
 ```bash
 bun dev        # Start development server
 ```
 
 **4. Verification:**
+
 ```bash
 bun test       # Run tests
 bun build      # Verify production build
@@ -1232,14 +1239,14 @@ bun build      # Verify production build
 
 When implementing features, reference these files:
 
-| Pattern | Reference File | Lines |
-|---------|---------------|-------|
-| Auth middleware | `/src/lib/auth/server.ts` | all |
-| API route handler | `/src/lib/api/routes/health.ts` | all |
-| Database queries | `/src/lib/db/queries/` | all |
-| Environment access | `/src/lib/env.ts` | all |
-| Error handling | `/src/lib/api/middleware.ts` | [X-Y] |
-| Component structure | `/src/components/[example].tsx` | all |
+| Pattern             | Reference File                  | Lines |
+| ------------------- | ------------------------------- | ----- |
+| Auth middleware     | `/src/lib/auth/server.ts`       | all   |
+| API route handler   | `/src/lib/api/routes/health.ts` | all   |
+| Database queries    | `/src/lib/db/queries/`          | all   |
+| Environment access  | `/src/lib/env.ts`               | all   |
+| Error handling      | `/src/lib/api/middleware.ts`    | [X-Y] |
+| Component structure | `/src/components/[example].tsx` | all   |
 
 ## Next Steps
 
@@ -1270,8 +1277,8 @@ git reset --soft HEAD~1
 
 ## Technical Decisions
 
-| Decision | Rationale |
-|----------|-----------|
+| Decision      | Rationale                         |
+| ------------- | --------------------------------- |
 | [Choice made] | [Why, based on existing patterns] |
 
 ## Known Limitations
@@ -1282,6 +1289,7 @@ git reset --soft HEAD~1
 ## Session Resumption
 
 If scaffolding was interrupted:
+
 - **Last complete phase:** [X]
 - **Resume from:** [Phase Y]
 - **Progress file:** `apps/{app-name}/SCAFFOLD-PROGRESS.md`
@@ -1296,17 +1304,17 @@ If scaffolding was interrupted:
 
 ### When to Include Each Section
 
-| Section | When Required |
-|---------|---------------|
-| `<summary>` | Always |
-| `<investigation>` | Always - shows patterns were researched |
-| `<structure_created>` | Always - visual confirmation |
-| `<configuration_summary>` | Always - phase completion tracking |
-| `<verification_results>` | Always - proves build works |
-| `<environment_setup>` | Always - documents env vars |
-| `<handoff>` | Always - enables next steps |
-| `<rollback>` | Always - recovery path |
-| `<notes>` | When decisions or limitations exist |
+| Section                   | When Required                           |
+| ------------------------- | --------------------------------------- |
+| `<summary>`               | Always                                  |
+| `<investigation>`         | Always - shows patterns were researched |
+| `<structure_created>`     | Always - visual confirmation            |
+| `<configuration_summary>` | Always - phase completion tracking      |
+| `<verification_results>`  | Always - proves build works             |
+| `<environment_setup>`     | Always - documents env vars             |
+| `<handoff>`               | Always - enables next steps             |
+| `<rollback>`              | Always - recovery path                  |
+| `<notes>`                 | When decisions or limitations exist     |
 
 ### Universal Scaffolding Verification
 

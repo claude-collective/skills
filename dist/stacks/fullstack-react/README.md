@@ -33,7 +33,6 @@ This stack includes the following agents:
 - `pattern-critique`
 - `documentor`
 - `architecture`
-- `orchestrator`
 - `frontend-researcher`
 - `backend-researcher`
 
@@ -60,7 +59,6 @@ This stack includes the following skills:
 - `frontend/styling-scss-modules (@vince)`
 - `frontend/testing-vitest (@vince)`
 - `methodology/anti-over-engineering (@vince)`
-- `methodology/context-management (@vince)`
 - `methodology/improvement-protocol (@vince)`
 - `methodology/investigation-requirements (@vince)`
 - `methodology/success-criteria (@vince)`

@@ -734,8 +734,8 @@ Provide your implementation in this structure:
 <investigation>
 **Files Examined:**
 
-| File | Lines | What Was Learned |
-|------|-------|------------------|
+| File            | Lines | What Was Learned             |
+| --------------- | ----- | ---------------------------- |
 | [/path/to/file] | [X-Y] | [Pattern/utility discovered] |
 
 **Patterns Identified:**
@@ -748,21 +748,21 @@ Provide your implementation in this structure:
 **Existing Code Reused:**
 
 - [Utility/middleware] from [/path] - [Why reused instead of creating new]
-</investigation>
+  </investigation>
 
 <approach>
 **Summary:** [1-2 sentences describing the implementation approach]
 
 **Files:**
 
-| File | Action | Purpose |
-|------|--------|---------|
+| File            | Action             | Purpose               |
+| --------------- | ------------------ | --------------------- |
 | [/path/to/file] | [created/modified] | [What change and why] |
 
 **Key Decisions:**
 
 - [Decision]: [Rationale based on existing patterns from /path:lines]
-</approach>
+  </approach>
 
 <implementation>
 
@@ -815,13 +815,13 @@ Provide your implementation in this structure:
 
 **Error Responses:**
 
-| Status | Condition | Response Shape |
-|--------|-----------|----------------|
-| 400 | Validation failed | `{ error: string, details?: [...] }` |
-| 401 | Not authenticated | `{ error: string }` |
-| 403 | Not authorized | `{ error: string }` |
-| 404 | Resource not found | `{ error: string }` |
-| 500 | Server error | `{ error: string }` |
+| Status | Condition          | Response Shape                       |
+| ------ | ------------------ | ------------------------------------ |
+| 400    | Validation failed  | `{ error: string, details?: [...] }` |
+| 401    | Not authenticated  | `{ error: string }`                  |
+| 403    | Not authorized     | `{ error: string }`                  |
+| 404    | Resource not found | `{ error: string }`                  |
+| 500    | Server error       | `{ error: string }`                  |
 
 </api_changes>
 
@@ -835,8 +835,8 @@ Provide your implementation in this structure:
 
 **Columns Added/Modified:**
 
-| Column | Type | Constraints | Purpose |
-|--------|------|-------------|---------|
+| Column | Type   | Constraints                       | Purpose      |
+| ------ | ------ | --------------------------------- | ------------ |
 | [name] | [type] | [nullable, default, unique, etc.] | [Why needed] |
 
 **Relationships:**
@@ -901,14 +901,14 @@ Provide your implementation in this structure:
 
 **Errors Handled:**
 
-| Error Type | HTTP Status | Handling | Logged? |
-|------------|-------------|----------|---------|
-| Validation | 400 | Return validation details | No |
-| Auth | 401/403 | Return generic message | Yes |
-| Not Found | 404 | Return not found message | No |
-| Business Logic | 400/422 | Return specific error | Depends |
-| Database | 500 | Log + generic message | Yes |
-| Unknown | 500 | Log + generic message | Yes |
+| Error Type     | HTTP Status | Handling                  | Logged? |
+| -------------- | ----------- | ------------------------- | ------- |
+| Validation     | 400         | Return validation details | No      |
+| Auth           | 401/403     | Return generic message    | Yes     |
+| Not Found      | 404         | Return not found message  | No      |
+| Business Logic | 400/422     | Return specific error     | Depends |
+| Database       | 500         | Log + generic message     | Yes     |
+| Unknown        | 500         | Log + generic message     | Yes     |
 
 **Logging:**
 
@@ -929,10 +929,10 @@ Provide your implementation in this structure:
 
 **Coverage:**
 
-- [X] Happy path: [scenario]
-- [X] Validation errors: [scenarios]
-- [X] Auth errors: [scenarios]
-- [X] Edge cases: [scenarios]
+- [x] Happy path: [scenario]
+- [x] Validation errors: [scenarios]
+- [x] Auth errors: [scenarios]
+- [x] Edge cases: [scenarios]
 
 **Test Commands:**
 
@@ -947,8 +947,8 @@ Provide your implementation in this structure:
 
 ## Success Criteria
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
+| Criterion            | Status    | Evidence                                       |
+| -------------------- | --------- | ---------------------------------------------- |
 | [From specification] | PASS/FAIL | [How verified - test name, curl command, etc.] |
 
 ## Universal Quality Checks
@@ -1032,19 +1032,19 @@ Provide your implementation in this structure:
 
 ### When to Include Each Section
 
-| Section | When Required |
-|---------|---------------|
-| `<summary>` | Always |
-| `<investigation>` | Always - proves research was done |
-| `<approach>` | Always - shows planning |
-| `<implementation>` | Always - the actual code |
-| `<api_changes>` | When API endpoints added/modified |
-| `<database_changes>` | When schema/migrations added |
-| `<security>` | Always for backend work |
-| `<error_handling>` | Always - shows error strategy |
-| `<tests>` | When tests are part of the task |
-| `<verification>` | Always - proves completion |
-| `<notes>` | When there's context for reviewer |
+| Section              | When Required                     |
+| -------------------- | --------------------------------- |
+| `<summary>`          | Always                            |
+| `<investigation>`    | Always - proves research was done |
+| `<approach>`         | Always - shows planning           |
+| `<implementation>`   | Always - the actual code          |
+| `<api_changes>`      | When API endpoints added/modified |
+| `<database_changes>` | When schema/migrations added      |
+| `<security>`         | Always for backend work           |
+| `<error_handling>`   | Always - shows error strategy     |
+| `<tests>`            | When tests are part of the task   |
+| `<verification>`     | Always - proves completion        |
+| `<notes>`            | When there's context for reviewer |
 
 ### Security Checks (Framework-Agnostic)
 

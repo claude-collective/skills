@@ -1780,14 +1780,14 @@ agents:
 
 Core prompts are embedded in the template and apply to all agents.
 
-| Prompt                       | Purpose                | Included For       |
-| ---------------------------- | ---------------------- | ------------------ |
-| core-principles.md           | Self-reminder loop     | All agents         |
-| investigation-requirement.md | Prevents hallucination | All agents         |
-| write-verification.md        | Prevents false success | All agents         |
-| anti-over-engineering.md     | Prevents scope creep   | developer, scout   |
-| context-management.md        | Session continuity     | All agents         |
-| improvement-protocol.md      | Self-improvement       | All agents         |
+| Prompt                       | Purpose                | Included For     |
+| ---------------------------- | ---------------------- | ---------------- |
+| core-principles.md           | Self-reminder loop     | All agents       |
+| investigation-requirement.md | Prevents hallucination | All agents       |
+| write-verification.md        | Prevents false success | All agents       |
+| anti-over-engineering.md     | Prevents scope creep   | developer, scout |
+| context-management.md        | Session continuity     | All agents       |
+| improvement-protocol.md      | Self-improvement       | All agents       |
 
 ## Reference: Output Format System
 
@@ -1798,15 +1798,15 @@ Output formats are now determined by the file system with cascading resolution:
 
 Each agent category has a default format, and individual agents can override with their own:
 
-| Category   | Agents with custom formats |
-| ---------- | -------------------------- |
+| Category   | Agents with custom formats                          |
+| ---------- | --------------------------------------------------- |
 | developer  | frontend-developer, backend-developer, architecture |
-| reviewer   | frontend-reviewer, backend-reviewer |
-| researcher | frontend-researcher, backend-researcher |
-| planning   | pm |
-| tester     | tester-agent |
-| pattern    | pattern-scout, pattern-critique |
-| meta       | documentor, agent-summoner, skill-summoner |
+| reviewer   | frontend-reviewer, backend-reviewer                 |
+| researcher | frontend-researcher, backend-researcher             |
+| planning   | pm                                                  |
+| tester     | tester-agent                                        |
+| pattern    | pattern-scout, pattern-critique                     |
+| meta       | documentor, agent-summoner, skill-summoner          |
 
 ---
 

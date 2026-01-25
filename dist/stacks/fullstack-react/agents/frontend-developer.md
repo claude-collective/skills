@@ -760,8 +760,8 @@ Provide your implementation in this structure:
 <investigation>
 **Files Examined:**
 
-| File | Lines | What Was Learned |
-|------|-------|------------------|
+| File            | Lines | What Was Learned             |
+| --------------- | ----- | ---------------------------- |
 | [/path/to/file] | [X-Y] | [Pattern/utility discovered] |
 
 **Patterns Identified:**
@@ -773,21 +773,21 @@ Provide your implementation in this structure:
 **Existing Code Reused:**
 
 - [Utility/component] from [/path] - [Why reused instead of creating new]
-</investigation>
+  </investigation>
 
 <approach>
 **Summary:** [1-2 sentences describing the implementation approach]
 
 **Files:**
 
-| File | Action | Purpose |
-|------|--------|---------|
+| File            | Action             | Purpose               |
+| --------------- | ------------------ | --------------------- |
 | [/path/to/file] | [created/modified] | [What change and why] |
 
 **Key Decisions:**
 
 - [Decision]: [Rationale based on existing patterns from /path:lines]
-</approach>
+  </approach>
 
 <implementation>
 
@@ -824,9 +824,9 @@ Provide your implementation in this structure:
 
 **Coverage:**
 
-- [X] Happy path: [scenario]
-- [X] Edge cases: [scenarios]
-- [X] Error handling: [scenarios]
+- [x] Happy path: [scenario]
+- [x] Edge cases: [scenarios]
+- [x] Error handling: [scenarios]
 
 </tests>
 
@@ -834,8 +834,8 @@ Provide your implementation in this structure:
 
 ## Success Criteria
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
+| Criterion            | Status    | Evidence                                       |
+| -------------------- | --------- | ---------------------------------------------- |
 | [From specification] | PASS/FAIL | [How verified - test name, manual check, etc.] |
 
 ## Universal Quality Checks
@@ -918,15 +918,15 @@ Provide your implementation in this structure:
 
 ### When to Include Each Section
 
-| Section | When Required |
-|---------|---------------|
-| `<summary>` | Always |
-| `<investigation>` | Always - proves research was done |
-| `<approach>` | Always - shows planning |
-| `<implementation>` | Always - the actual code |
-| `<tests>` | When tests are part of the task |
-| `<verification>` | Always - proves completion |
-| `<notes>` | When there's context for reviewer |
+| Section            | When Required                     |
+| ------------------ | --------------------------------- |
+| `<summary>`        | Always                            |
+| `<investigation>`  | Always - proves research was done |
+| `<approach>`       | Always - shows planning           |
+| `<implementation>` | Always - the actual code          |
+| `<tests>`          | When tests are part of the task   |
+| `<verification>`   | Always - proves completion        |
+| `<notes>`          | When there's context for reviewer |
 
 ### Accessibility Checks (Framework-Agnostic)
 

@@ -220,5 +220,5 @@ The goal is to create a single source of truth for agent definitions:
 3. Update compile.ts to load agents from agents.yaml and merge with stack-specific skill assignments
 4. Simplify both stack config.yaml files to only contain use_agents and agent_skills
 
-Read the REFACTOR-AGENT-ARCHITECTURE.md file first to understand the current state and target state, then implement the remaining checklist items. Use ultrathink for this task.
+Read the REFACTOR-AGENT-ARCHITECTURE.md file first to understand the current state and target state, then implement the remaining checklist items.
 ```
