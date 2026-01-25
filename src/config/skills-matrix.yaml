@@ -406,7 +406,7 @@ relationships:
     # Mobile recommendations
     - when: react-native
       suggest: [zustand, react-query, react-hook-form, zod-validation]
-      reason: "React Native shares React ecosystem"
+      reason: "React Native shares React ecosystem. Note: Use Jest for testing (Vitest doesn't support RN)."
 
     # Observability recommendations
     - when: axiom-pino-sentry
@@ -457,7 +457,7 @@ relationships:
 
     - skill: mobx
       needs: [react]
-      reason: "MobX skill is configured for React"
+      reason: "Our MobX skill teaches React patterns. Note: MobX core has official Vue (mobx-vue) and Angular (mobx-angular) bindings."
 
     - skill: react-query
       needs: [react, react-native]
@@ -467,7 +467,7 @@ relationships:
     - skill: swr
       needs: [react, react-native]
       needs_any: true
-      reason: "SWR is a React Hooks library (also works with React Native)"
+      reason: "SWR is a React Hooks library. For React Native, requires @nandorojo/swr-react-native wrapper."
 
     - skill: react-hook-form
       needs: [react, react-native]
@@ -521,9 +521,9 @@ relationships:
 
     # GraphQL clients need a framework
     - skill: graphql-apollo
-      needs: [react, vue, angular, svelte, solidjs]
+      needs: [react, vue, angular]
       needs_any: true
-      reason: "Apollo Client - first-party React support, community-maintained integrations for Vue, Angular, Svelte, Solid"
+      reason: "Apollo Client - first-party React support, community-maintained Vue/Angular integrations. Note: Svelte/Solid bindings exist but are stale (2020-2022)."
 
     - skill: graphql-urql
       needs: [react, vue, svelte, solidjs]
@@ -544,7 +544,7 @@ relationships:
       skills: [scss-modules, tailwind]
 
     - purpose: "Client State (React)"
-      skills: [zustand, redux-toolkit, mobx]
+      skills: [zustand, redux-toolkit, mobx, jotai]
 
     - purpose: "Client State (Vue)"
       skills: [pinia]
