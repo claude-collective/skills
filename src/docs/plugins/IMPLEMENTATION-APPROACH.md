@@ -271,12 +271,13 @@ export async function fetchAgentDefinitions(
 
   return {
     agentsDir: result.path,
-    principlesDir: path.join(result.path, "_principles"),
     templatesDir: path.join(result.path, "_templates"),
     sourcePath: result.path,
   };
 }
 ```
+
+**Note:** Core principles are embedded directly in the template - no separate `principlesDir` needed.
 
 **2.4 Update `init.ts` command**
 
@@ -544,12 +545,11 @@ export interface MarketplaceFetchResult {
 /**
  * Paths to fetched agent definition sources.
  * Contains directory paths, not agent data itself.
+ * Note: Core principles are embedded directly in the template.
  */
 export interface AgentSourcePaths {
   /** Path to agents directory (contains agent subdirs) */
   agentsDir: string;
-  /** Path to _principles directory */
-  principlesDir: string;
   /** Path to _templates directory */
   templatesDir: string;
   /** Original source path */

@@ -54,20 +54,11 @@ cc switch home-stack && cc compile
 ```
 src/
 ├── agents.yaml                # Single source of truth for ALL agent definitions
-│                              # Contains: title, description, model, tools, core_prompts, output_format
+│                              # Contains: title, description, model, tools, output_format
 │
 ├── agents/                    # Agent source files (GENERIC - shared across stacks)
-│   ├── _principles/           # Shared principles included in all agents
-│   │   ├── core-principles.md     # 5 core principles with self-reminder loop
-│   │   ├── investigation-requirement.md
-│   │   ├── write-verification.md
-│   │   ├── anti-over-engineering.md
-│   │   ├── context-management.md
-│   │   ├── improvement-protocol.md
-│   │   └── output-formats-{type}.md  # Role-specific output formats
-│   │
 │   ├── _templates/            # LiquidJS templates
-│   │   └── agent.liquid       # Main agent template
+│   │   └── agent.liquid       # Main agent template (includes core principles inline)
 │   │
 │   ├── developer/             # Developer category
 │   │   ├── frontend-developer/
@@ -320,64 +311,58 @@ Use these formatting patterns for emphasis:
 The template assembles agents in this order:
 
 ```
-1. Frontmatter (name, description, model, tools)
+1. Frontmatter (name, description, model, tools, preloaded skills)
 2. Title
 3. <role>{{ intro }}</role>
-4. <preloaded_content>...</preloaded_content>
+4. <core_principles>...</core_principles>  (hardcoded in template - 5 principles + self-reminder)
 5. <critical_requirements>{{ criticalRequirementsTop }}</critical_requirements>
 6. <skill_activation_protocol>...</skill_activation_protocol>  (three-step activation with emphatic warnings)
-7. {{ corePromptsContent }}  (core-principles, investigation, write-verification, anti-over-engineering)
-8. {{ workflow }}
-9. ## Standards and Conventions
-10. {{ examples }}
-11. {{ outputFormat }}
-12. {{ endingPromptsContent }}  (context-management, improvement-protocol)
-13. <critical_reminders>{{ criticalReminders }}</critical_reminders>
-14. Final reminder lines
+7. {{ workflow }}
+8. ## Standards and Conventions
+9. {{ examples }}
+10. {{ outputFormat }}
+11. <critical_reminders>{{ criticalReminders }}</critical_reminders>
+12. Final reminder lines (self-reminder + write verification)
 ```
 
-## The Preloaded Content Pattern
+## Core Principles (Embedded in Template)
 
-Every compiled agent includes a `<preloaded_content>` section (added by template at position 4). This pattern prevents wasteful re-reading of content already in the agent's context.
+The 5 core principles are **hardcoded directly in the agent.liquid template**. This ensures every agent has consistent foundational instructions without requiring external files or skill loading.
 
-### Purpose
-
-Without this section, agents may:
-
-- Attempt to read files already bundled into their context (wastes tokens)
-- Get confused about what's available vs. what needs loading
-
-### Structure
-
-The template generates this section automatically based on `config.yaml`:
+### The 5 Core Principles
 
 ```markdown
-<preloaded_content>
-**IMPORTANT: The following content is already in your context. DO NOT read these files from the filesystem:**
+<core_principles>
+**1. Investigation First**
+Never speculate. Read the actual code before making claims. Base all work strictly on what you find in the files.
 
-**Core Prompts (loaded at beginning):**
+**2. Follow Existing Patterns**
+Use what's already there. Match the style, structure, and conventions of similar code. Don't introduce new patterns.
 
-- Core Principles
-- Investigation Requirement
-- Write Verification
-- Anti-Over-Engineering
+**3. Minimal Necessary Changes**
+Make surgical edits. Change only what's required to meet the specification. Leave everything else untouched.
 
-**Ending Prompts (loaded at end):**
+**4. Anti-Over-Engineering**
+Simple solutions. Use existing utilities. Avoid abstractions. If it's not explicitly required, don't add it.
 
-- Context Management
-- Improvement Protocol
-  </preloaded_content>
+**5. Verify Everything**
+Test your work. Run the tests. Check the success criteria. Provide evidence that requirements are met.
+
+**DISPLAY ALL 5 CORE PRINCIPLES AT THE START OF EVERY RESPONSE TO MAINTAIN INSTRUCTION CONTINUITY.**
+</core_principles>
 ```
 
-### How It Works
+### Why Embedded vs. Skill
 
-1. **Core prompts** are listed - already embedded in agent
-2. **Ending prompts** are listed - already embedded in agent
-3. **Skills** are NOT listed here - they are documented in the separate `<skill_activation_protocol>` section
+Core principles are fundamental to every agent - they define the base behavioral contract. Unlike technology-specific skills (which vary by stack), these principles are universal and must appear in every agent prompt. Embedding them in the template ensures:
+
+1. **Consistency** - Every agent gets identical principles
+2. **Reliability** - No risk of skill loading failures
+3. **Simplicity** - No extraction or compilation complexity
 
 ### Skills Are Loaded Dynamically
 
-All skills are now unified and loaded via the Skill tool. See the **Skill Activation Protocol** section below for details.
+Technology-specific patterns (React, Zustand, testing, etc.) are loaded via the Skill tool. See the **Skill Activation Protocol** section below for details.
 
 ---
 
@@ -455,22 +440,78 @@ agents:
 
 These tags MUST appear in compiled agents:
 
-| Tag                             | Source                                    | Purpose                                            |
-| ------------------------------- | ----------------------------------------- | -------------------------------------------------- |
-| `<role>`                        | Template wraps intro.md                   | Agent identity                                     |
-| `<preloaded_content>`           | Template                                  | Lists what's already loaded                        |
-| `<critical_requirements>`       | Template wraps critical-requirements.md   | Top MUST rules                                     |
-| `<skill_activation_protocol>`   | Template                                  | Three-step skill activation with emphatic warnings |
-| `<critical_reminders>`          | Template wraps critical-reminders.md      | Bottom MUST reminders                              |
-| `<core_principles>`             | \_principles/core-principles.md           | 5 principles + self-reminder                       |
-| `<investigation_requirement>`   | \_principles/investigation-requirement.md | Investigation-first                                |
-| `<write_verification_protocol>` | \_principles/write-verification.md        | Verify writes                                      |
-| `<anti_over_engineering>`       | \_principles/anti-over-engineering.md     | Minimal changes                                    |
-| `<self_correction_triggers>`    | workflow.md                               | Mid-task corrections                               |
-| `<post_action_reflection>`      | workflow.md                               | After-step evaluation                              |
-| `<output_format>`               | \_principles/output-formats-\*.md         | Response structure                                 |
-| `<context_management>`          | \_principles/context-management.md        | Token management                                   |
-| `<improvement_protocol>`        | \_principles/improvement-protocol.md      | Self-improvement                                   |
+| Tag                           | Source                                  | Purpose                                            |
+| ----------------------------- | --------------------------------------- | -------------------------------------------------- |
+| `<role>`                      | Template wraps intro.md                 | Agent identity                                     |
+| `<core_principles>`           | Template (hardcoded)                    | 5 principles + self-reminder                       |
+| `<critical_requirements>`     | Template wraps critical-requirements.md | Top MUST rules                                     |
+| `<skill_activation_protocol>` | Template                                | Three-step skill activation with emphatic warnings |
+| `<critical_reminders>`        | Template wraps critical-reminders.md    | Bottom MUST reminders                              |
+| `<self_correction_triggers>`  | workflow.md                             | Mid-task corrections                               |
+| `<post_action_reflection>`    | workflow.md                             | After-step evaluation                              |
+| `<output_format>`             | Template variable                       | Response structure                                 |
+
+**Note:** Additional methodology content (investigation requirements, write verification, anti-over-engineering, context management, improvement protocol) can be loaded via methodology skills when needed.
+
+## Output Format System
+
+Output formats define the structure of agent responses. They are **contracts between agents** - designed for the consumer's needs, not the producer's convenience.
+
+### Cascading Resolution
+
+The compiler resolves output formats using cascading resolution:
+
+1. **Agent-level**: `src/agents/{category}/{agent-name}/output-format.md` (preferred)
+2. **Category fallback**: `src/agents/{category}/output-format.md` (if agent-level doesn't exist)
+
+Each agent should have its own `output-format.md` tailored to its specific output needs and consumers.
+
+### Design Principle: Consumer-First
+
+When designing output formats, ask: **"Who consumes this output and what do they need to act?"**
+
+| Agent               | Consumer              | Key Needs                                             |
+| ------------------- | --------------------- | ----------------------------------------------------- |
+| frontend-developer  | frontend-reviewer     | Files changed, patterns followed, a11y/perf checks    |
+| backend-developer   | backend-reviewer      | API docs, security checks, DB changes, error handling |
+| frontend-reviewer   | developer             | Issues with severity, code fixes, checklist results   |
+| backend-reviewer    | developer             | Security audit, issues with fixes, convention check   |
+| frontend-researcher | frontend-developer    | Component props, state patterns, styling tokens       |
+| backend-researcher  | backend-developer     | Route handlers, DB schemas, middleware chains         |
+| architecture        | developer/user        | Scaffolding complete, pattern refs, setup guide       |
+| pm                  | developer/tester      | Spec with patterns, success criteria, constraints     |
+| tester              | developer             | Failing tests, expected behaviors, mocking setup      |
+| pattern-scout       | pattern-critique/docs | Exhaustive catalog, not recommendations               |
+| pattern-critique    | developer/user        | Issues by severity, refactoring strategies            |
+| documentor          | other agents          | File paths, patterns, relationships for navigation    |
+| agent-summoner      | user/system           | Complete agent definition structure                   |
+| skill-summoner      | user/system           | Complete skill definition structure                   |
+
+### Creating an Output Format
+
+Create `output-format.md` in the agent directory with this structure:
+
+```markdown
+## Output Format
+
+<output_format>
+Provide your [type] in this structure:
+
+<section_name>
+[Content description and template]
+</section_name>
+
+<!-- More sections as needed -->
+
+</output_format>
+```
+
+**Guidelines:**
+
+- Use semantic XML tags for each section
+- Include tables for structured data (files changed, issues found, etc.)
+- Add checklists where verification is needed
+- Keep sections focused on what the consumer needs to act
 
 ## Technique Compliance Mapping
 
@@ -480,21 +521,21 @@ This section maps the 13 Essential Techniques from `PROMPT_BIBLE.md` to their im
 
 ### Technique-to-Implementation Mapping
 
-| #   | Technique                       | Impact                  | Implemented In                                             | How                                                              |
-| --- | ------------------------------- | ----------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
-| 1   | **Self-Reminder Loop**          | 60-70% ↓ off-task       | `_principles/core-principles.md` + template final lines    | Core principles displayed every response + dual closing reminder |
-| 2   | **Investigation-First**         | 80% ↓ hallucination     | `_principles/investigation-requirement.md` + `workflow.md` | Investigation requirement + agent-specific investigation steps   |
-| 3   | **Emphatic Repetition**         | 70% ↓ scope creep       | `critical-requirements.md` + `critical-reminders.md`       | Template wraps both with XML tags, rules repeated top AND bottom |
-| 4   | **XML Semantic Tags**           | 30% ↑ accuracy          | All files                                                  | Template adds semantic tags; source files use semantic XML       |
-| 5   | **Documents First, Query Last** | 30% ↑ performance       | Template ordering                                          | Template places content before instructions (for 20K+ agents)    |
-| 6   | **Expansion Modifiers**         | Unlocks capability      | `intro.md`                                                 | MUST include "comprehensive and thorough" (see intro.md section) |
-| 7   | **Self-Correction Triggers**    | 74.4% SWE-bench         | `workflow.md`                                              | `<self_correction_triggers>` with "If you notice yourself..."    |
-| 8   | **Post-Action Reflection**      | ↑ long-horizon          | `workflow.md`                                              | `<post_action_reflection>` after major workflow steps            |
-| 9   | **Progress Tracking**           | 30+ hour focus          | `workflow.md`                                              | `<progress_tracking>` section for extended sessions              |
-| 10  | **Positive Framing**            | Better adherence        | All files                                                  | Writing Style Guidelines: "Use X" not "Don't do Y"               |
-| 11  | **"Think" Alternatives**        | Prevents Opus confusion | All files                                                  | Writing Style Guidelines: consider/evaluate/analyze              |
-| 12  | **Just-in-Time Loading**        | Preserves context       | `workflow.md`                                              | `<retrieval_strategy>` with Glob → Grep → Read pattern           |
-| 13  | **Write Verification**          | Prevents false-success  | `_principles/write-verification.md` + template             | Write verification protocol + second closing reminder            |
+| #   | Technique                       | Impact                  | Implemented In                                       | How                                                                   |
+| --- | ------------------------------- | ----------------------- | ---------------------------------------------------- | --------------------------------------------------------------------- |
+| 1   | **Self-Reminder Loop**          | 60-70% ↓ off-task       | Template (hardcoded core principles + final lines)   | Core principles displayed every response + dual closing reminder      |
+| 2   | **Investigation-First**         | 80% ↓ hallucination     | Core principles (#1) + `workflow.md`                 | Principle enforces investigation + agent-specific investigation steps |
+| 3   | **Emphatic Repetition**         | 70% ↓ scope creep       | `critical-requirements.md` + `critical-reminders.md` | Template wraps both with XML tags, rules repeated top AND bottom      |
+| 4   | **XML Semantic Tags**           | 30% ↑ accuracy          | All files                                            | Template adds semantic tags; source files use semantic XML            |
+| 5   | **Documents First, Query Last** | 30% ↑ performance       | Template ordering                                    | Template places content before instructions (for 20K+ agents)         |
+| 6   | **Expansion Modifiers**         | Unlocks capability      | `intro.md`                                           | MUST include "comprehensive and thorough" (see intro.md section)      |
+| 7   | **Self-Correction Triggers**    | 74.4% SWE-bench         | `workflow.md`                                        | `<self_correction_triggers>` with "If you notice yourself..."         |
+| 8   | **Post-Action Reflection**      | ↑ long-horizon          | `workflow.md`                                        | `<post_action_reflection>` after major workflow steps                 |
+| 9   | **Progress Tracking**           | 30+ hour focus          | `workflow.md`                                        | `<progress_tracking>` section for extended sessions                   |
+| 10  | **Positive Framing**            | Better adherence        | All files                                            | Writing Style Guidelines: "Use X" not "Don't do Y"                    |
+| 11  | **"Think" Alternatives**        | Prevents Opus confusion | All files                                            | Writing Style Guidelines: consider/evaluate/analyze                   |
+| 12  | **Just-in-Time Loading**        | Preserves context       | `workflow.md`                                        | `<retrieval_strategy>` with Glob → Grep → Read pattern                |
+| 13  | **Write Verification**          | Prevents false-success  | Template (hardcoded final line)                      | Write verification instruction + second closing reminder              |
 
 ### Validation Checklist
 
@@ -786,18 +827,14 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer # References core_prompt_sets in stack config
-    ending_prompts: developer # References ending_prompt_sets in stack config
-    output_format: output-formats-developer
+    # Output format is determined by file system (agent-level output-format.md → category fallback)
 
   backend-developer:
     title: Backend Developer Agent
     description: Implements backend features from detailed specs - API routes, database operations, server utilities
     model: opus
     tools: [Read, Write, Edit, Grep, Glob, Bash]
-    core_prompts: developer
-    ending_prompts: developer
-    output_format: output-formats-developer
+    # Output format is determined by file system (agent-level output-format.md → category fallback)
 
   # ... more agent definitions
 ```
@@ -807,17 +844,20 @@ agents:
 - Agent definitions do NOT include skills - skills are stack-specific
 - All agents available across all stacks are defined here
 - Stack configs reference these agents by name
+- Core principles are embedded directly in the template (not configurable per agent)
 
 ## Config.yaml Structure (Unified Skills)
 
 Each stack's `config.yaml` specifies:
 
 1. **Stack metadata** (name, description, CLAUDE.md path)
-2. **Agent configurations** (core_prompts, ending_prompts, skills)
+2. **Agent configurations** (skills only - core principles are embedded in template)
 
 **Important:** There is no `use_agents` list. Which agents to compile is derived automatically from the `agents` key. If an agent is listed there, it gets compiled for that stack.
 
 **Unified Skills**: All skills are listed in a single `skills` array per agent. There is no distinction between precompiled and dynamic skills - all skills are loaded via the Skill tool when the agent evaluates them as relevant.
+
+**Core Principles**: The 5 core principles are embedded directly in the template and apply to all agents. No configuration needed.
 
 ```yaml
 # src/stacks/home-stack/config.yaml
@@ -830,14 +870,6 @@ claude_md: ./CLAUDE.md
 # Agent configurations (keys determine which agents are compiled!)
 agents:
   frontend-developer: # This agent WILL be compiled
-    core_prompts:
-      - core-principles
-      - investigation-requirement
-      - write-verification
-      - anti-over-engineering
-    ending_prompts:
-      - context-management
-      - improvement-protocol
     skills: # Unified skills array - all loaded via Skill tool
       - id: frontend/react
         usage: when implementing React components
@@ -849,13 +881,6 @@ agents:
         usage: when implementing accessible components or ARIA patterns
 
   frontend-reviewer: # This agent WILL be compiled
-    core_prompts:
-      - core-principles
-      - investigation-requirement
-      - write-verification
-    ending_prompts:
-      - context-management
-      - improvement-protocol
     skills:
       - id: reviewing/reviewing
         usage: when reviewing code
@@ -1022,10 +1047,10 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer # References core_prompt_sets in stack config
-    ending_prompts: developer # References ending_prompt_sets in stack config
-    output_format: output-formats-developer
+    # Output format: create output-format.md in agent directory
 ```
+
+**Note:** Core principles are embedded directly in the template. Output format is determined by file system - create `output-format.md` in the agent directory, or it falls back to category-level format.
 
 ### Step 3: Enable Agent in Stack Config(s)
 
@@ -1040,15 +1065,12 @@ agents:
   # ... existing agents ...
 
   my-new-agent: # Adding this key enables the agent
-    core_prompts:
-      - core-principles
-      - investigation-requirement
-    ending_prompts:
-      - context-management
     skills:
       - id: frontend/react
         usage: when implementing components # Uses WORK stack's skill
 ```
+
+**Note:** Core principles are automatically included via the template - no `core_prompts` or `ending_prompts` configuration needed.
 
 ### Step 4: Compile and Verify
 

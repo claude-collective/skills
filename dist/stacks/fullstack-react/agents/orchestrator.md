@@ -5,8 +5,8 @@ tools: Read, Write, Edit, Grep, Glob, Bash, Task, TaskOutput
 model: opus
 permissionMode: default
 skills:
-  - methodology/anti-over-engineering (@vince)
   - methodology/investigation-requirements (@vince)
+  - methodology/anti-over-engineering (@vince)
   - methodology/success-criteria (@vince)
   - methodology/context-management (@vince)
   - research/research-methodology (@vince)

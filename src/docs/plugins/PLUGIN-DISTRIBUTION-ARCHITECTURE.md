@@ -90,10 +90,7 @@ marketplace-repo/
 │   │   │   │   ├── workflow.md
 │   │   │   │   └── examples.md
 │   │   │   └── backend-developer/
-│   │   ├── _principles/             # Shared principles
-│   │   │   ├── core.md
-│   │   │   └── ...
-│   │   └── _templates/              # LiquidJS templates
+│   │   └── _templates/              # LiquidJS templates (core principles embedded)
 │   │       └── agent.liquid
 │   │
 │   └── stacks/                      # Pre-built stack configs

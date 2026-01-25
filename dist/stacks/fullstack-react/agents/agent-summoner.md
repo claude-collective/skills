@@ -839,9 +839,7 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer # References core_prompt_sets (developer, reviewer, pm, etc.)
-    ending_prompts: developer # References ending_prompt_sets
-    output_format: output-formats-developer # File in _principles/
+    # Output format: determined by file system (see below)
     skills:
       precompiled: # Skills bundled into agent (always in context)
         - id: frontend/react
@@ -859,12 +857,9 @@ agents:
 
 **Key configuration points:**
 
-- **core_prompts**: Selects which core prompts appear at BEGINNING (from `core_prompt_sets`)
-  - `developer`: includes core-principles, investigation, write-verification, **anti-over-engineering**
-  - `reviewer`: includes core-principles, investigation, write-verification (no anti-over-engineering)
-  - `pm`: includes core-principles, investigation, write-verification (no anti-over-engineering)
-- **ending_prompts**: Selects which prompts appear at END (from `ending_prompt_sets`)
-- **output_format**: Which output format file to include
+- **Output format**: Determined by file system with cascading resolution:
+  1. Agent-level: `src/agents/{category}/{agent-name}/output-format.md`
+  2. Category fallback: `src/agents/{category}/output-format.md`
 - **skills.precompiled**: Skills bundled into agent (for 80%+ of tasks)
 - **skills.dynamic**: Skills agent invokes on demand (<20% of tasks)
 
@@ -1348,8 +1343,6 @@ For each improvement, provide:
 </agent_analysis>
 
 <configuration_plan>
-**Core Prompts Set:** [developer/reviewer/pm/etc. - from core_prompt_sets]
-
 **Precompiled Skills:**
 
 - [List with rationale - for 80%+ of tasks]
@@ -1358,11 +1351,11 @@ For each improvement, provide:
 
 - [List with rationale - for <20% of tasks]
 
-**Output Format:** [Which output-formats-*.md file]
+**Output Format:** Create `output-format.md` in agent directory, or use category-level fallback
 </configuration_plan>
 
 <directory_structure>
-**Create directory:** `src/agents/{agent-name}/`
+**Create directory:** `src/agents/{category}/{agent-name}/`
 
 **Create files:**
 
@@ -1371,6 +1364,7 @@ For each improvement, provide:
 - `critical-requirements.md` - MUST rules (no XML wrappers)
 - `critical-reminders.md` - Repeated rules (no XML wrappers)
 - `examples.md` - Example output (optional)
+- `output-format.md` - Agent-specific output format (optional - falls back to category level)
   </directory_structure>
 
 <config_entry>
@@ -1384,9 +1378,7 @@ agents:
     description: One-line description
     model: opus
     tools: [...]
-    core_prompts: [set name]
-    ending_prompts: [set name]
-    output_format: output-formats-[role]
+    # Output format: create output-format.md in agent directory
     skills:
       precompiled: [...]
       dynamic: [...]
@@ -1774,9 +1766,7 @@ agents:
     description: One-line description
     model: opus
     tools: [Read, Write, Edit, Grep, Glob, Bash]
-    core_prompts: developer
-    ending_prompts: developer
-    output_format: output-formats-developer
+    # Output format: create output-format.md in agent directory
     skills:
       precompiled: []
       dynamic: []
@@ -1788,7 +1778,7 @@ agents:
 
 ## Reference: Core Prompts Available
 
-Core prompts are configured via `core_prompt_sets` in config.yaml. The template automatically includes them based on the agent's `core_prompts` setting.
+Core prompts are embedded in the template and apply to all agents.
 
 | Prompt                       | Purpose                | Included For       |
 | ---------------------------- | ---------------------- | ------------------ |
@@ -1796,27 +1786,27 @@ Core prompts are configured via `core_prompt_sets` in config.yaml. The template 
 | investigation-requirement.md | Prevents hallucination | All agents         |
 | write-verification.md        | Prevents false success | All agents         |
 | anti-over-engineering.md     | Prevents scope creep   | developer, scout   |
-| context-management.md        | Session continuity     | Via ending_prompts |
-| improvement-protocol.md      | Self-improvement       | Via ending_prompts |
-| output-formats-developer.md  | Implementation output  | Developers         |
-| output-formats-pm.md         | Specification output   | PMs                |
-| output-formats-reviewer.md   | Review output          | Reviewers          |
-| output-formats-tester.md     | Test output            | Testers            |
+| context-management.md        | Session continuity     | All agents         |
+| improvement-protocol.md      | Self-improvement       | All agents         |
 
-**Core Prompt Sets in config.yaml:**
+## Reference: Output Format System
 
-```yaml
-core_prompt_sets:
-  developer:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-    - anti-over-engineering
-  reviewer:
-    - core-principles
-    - investigation-requirement
-    - write-verification
-```
+Output formats are now determined by the file system with cascading resolution:
+
+1. **Agent-level**: `src/agents/{category}/{agent-name}/output-format.md`
+2. **Category fallback**: `src/agents/{category}/output-format.md`
+
+Each agent category has a default format, and individual agents can override with their own:
+
+| Category   | Agents with custom formats |
+| ---------- | -------------------------- |
+| developer  | frontend-developer, backend-developer, architecture |
+| reviewer   | frontend-reviewer, backend-reviewer |
+| researcher | frontend-researcher, backend-researcher |
+| planning   | pm |
+| tester     | tester-agent |
+| pattern    | pattern-scout, pattern-critique |
+| meta       | documentor, agent-summoner, skill-summoner |
 
 ---
 
@@ -2002,9 +1992,7 @@ agents:
       - Grep
       - Glob
       - Bash
-    core_prompts: developer
-    ending_prompts: developer
-    output_format: output-formats-developer
+    # Output format: create output-format.md in agent directory (or use category fallback)
     skills:
       precompiled: []
       dynamic: []
@@ -2226,70 +2214,120 @@ This example demonstrates:
 ## Output Format
 
 <output_format>
-Provide your response in this structure:
+Provide your agent definition in this structure:
 
-<investigation_notes>
-**Files Examined:**
+<agent_definition>
 
-- [List files you read]
+## Agent: [name]
 
-**Patterns Found:**
+**Category:** [developer | reviewer | researcher | planning | pattern | meta | tester]
+**Purpose:** [one sentence]
 
-- [Key patterns and conventions discovered]
-- [Relevant utilities or components to reuse]
-  </investigation_notes>
+### agent.yaml
 
-<implementation_plan>
-**Approach:**
-[Brief description of how you'll solve this following existing patterns]
-
-**Files to Modify:**
-
-- [File 1]: [What changes]
-- [File 2]: [What changes]
-
-**Existing Code to Reuse:**
-
-- [Utility/component to use and why]
-  </implementation_plan>
-
-<implementation>
-**[filename.ts]**
-```typescript
-[Your code here]
+```yaml
+title: [Title]
+description: [Description for Task tool]
+model: [opus | sonnet | haiku]
+tools:
+  - [Tool1]
+  - [Tool2]
+core_prompts:
+  - [principle-name]
+ending_prompts:
+  - [principle-name]
 ```
 
-**[filename2.tsx]**
+### intro.md
 
-```tsx
-[Your code here]
+```markdown
+[Full intro content - define the agent's identity and expertise]
 ```
 
-[Additional files as needed]
-</implementation>
+### workflow.md
 
-<tests>
-**[filename.test.ts]**
-```typescript
-[Test code covering the implementation]
+```markdown
+[Full workflow content - step-by-step process the agent follows]
 ```
-</tests>
 
-<verification>
-✅ Criteria met:
-- [Criterion 1]: Verified
-- [Criterion 2]: Verified
+### output-format.md
 
-📊 Test results:
+```markdown
+[Full output format content - structure of the agent's responses]
+```
 
-- [Test suite]: All passing
-- Coverage: [X%]
+### critical-requirements.md (optional)
 
-⚠️ Notes:
+```markdown
+[If needed - non-negotiable constraints]
+```
 
-- [Any important notes or considerations]
-  </verification>
-  </output_format>
+### critical-reminders.md (optional)
+
+```markdown
+[If needed - reminders placed at end of prompt]
+```
+
+### examples.md (optional)
+
+```markdown
+[If needed - concrete examples of good agent behavior]
+```
+
+</agent_definition>
+
+<design_rationale>
+
+## Design Decisions
+
+**Why this category:** [reasoning for placement]
+
+**Why this model:**
+
+- [opus] - Complex reasoning, nuanced judgment, creative tasks
+- [sonnet] - Balanced capability and speed (default)
+- [haiku] - Simple, fast, high-volume tasks
+
+**Why these tools:**
+| Tool | Reason |
+|------|--------|
+| [Tool] | [Why this agent needs it] |
+
+**Why these principles:**
+| Principle | Reason |
+|-----------|--------|
+| [principle-name] | [What behavior it enforces] |
+
+**Output format design:**
+
+- Consumer: [Who uses this agent's output]
+- Key sections: [What the consumer needs]
+  </design_rationale>
+
+<considered_alternatives>
+
+## Alternatives Considered
+
+**Alternative 1:** [description]
+
+- Rejected because: [reason]
+
+**Alternative 2:** [description]
+
+- Rejected because: [reason]
+  </considered_alternatives>
+
+<validation>
+## Pre-Flight Checks
+
+- [ ] Tools match agent capabilities (no extra tools, no missing tools)
+- [ ] Model appropriate for task complexity
+- [ ] Output format matches consumer needs
+- [ ] No overlap with existing agents (checked against: [list])
+- [ ] Workflow is complete and unambiguous
+- [ ] Core prompts align with agent purpose
+      </validation>
+      </output_format>
 
 
 ---

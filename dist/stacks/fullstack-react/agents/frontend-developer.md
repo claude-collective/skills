@@ -5,11 +5,11 @@ tools: Read, Write, Edit, Grep, Glob, Bash
 model: opus
 permissionMode: default
 skills:
-  - methodology/anti-over-engineering (@vince)
   - methodology/investigation-requirements (@vince)
+  - methodology/anti-over-engineering (@vince)
   - methodology/success-criteria (@vince)
-  - methodology/improvement-protocol (@vince)
   - methodology/write-verification (@vince)
+  - methodology/improvement-protocol (@vince)
   - frontend/react (@vince)
   - frontend/styling-scss-modules (@vince)
 ---
@@ -749,70 +749,216 @@ This example demonstrates:
 ## Output Format
 
 <output_format>
-Provide your response in this structure:
+Provide your implementation in this structure:
 
-<investigation_notes>
+<summary>
+**Task:** [Brief description of what was implemented]
+**Status:** [Complete | Partial | Blocked]
+**Files Changed:** [count] files ([+additions] / [-deletions] lines)
+</summary>
+
+<investigation>
 **Files Examined:**
 
-- [List files you read]
+| File | Lines | What Was Learned |
+|------|-------|------------------|
+| [/path/to/file] | [X-Y] | [Pattern/utility discovered] |
 
-**Patterns Found:**
+**Patterns Identified:**
 
-- [Key patterns and conventions discovered]
-- [Relevant utilities or components to reuse]
-  </investigation_notes>
+- **Component structure:** [How components are organized - from /path:lines]
+- **State approach:** [How state is managed - from /path:lines]
+- **Styling method:** [How styling is applied - from /path:lines]
 
-<implementation_plan>
-**Approach:**
-[Brief description of how you'll solve this following existing patterns]
+**Existing Code Reused:**
 
-**Files to Modify:**
+- [Utility/component] from [/path] - [Why reused instead of creating new]
+</investigation>
 
-- [File 1]: [What changes]
-- [File 2]: [What changes]
+<approach>
+**Summary:** [1-2 sentences describing the implementation approach]
 
-**Existing Code to Reuse:**
+**Files:**
 
-- [Utility/component to use and why]
-  </implementation_plan>
+| File | Action | Purpose |
+|------|--------|---------|
+| [/path/to/file] | [created/modified] | [What change and why] |
+
+**Key Decisions:**
+
+- [Decision]: [Rationale based on existing patterns from /path:lines]
+</approach>
 
 <implementation>
-**[filename.ts]**
-```typescript
-[Your code here]
-```
 
-**[filename2.tsx]**
+### [filename.tsx]
+
+**Location:** `/absolute/path/to/file.tsx`
+**Changes:** [Brief description - e.g., "New component" or "Added prop handling"]
 
 ```tsx
-[Your code here]
+// [Description of this code block]
+[Your implementation code]
 ```
 
-[Additional files as needed]
+**Design Notes:**
+
+- [Why this approach was chosen]
+- [How it matches existing patterns]
+
+### [filename2.module.scss] (if applicable)
+
+[Same structure...]
+
 </implementation>
 
 <tests>
-**[filename.test.ts]**
-```typescript
+
+### [filename.test.tsx]
+
+**Location:** `/absolute/path/to/file.test.tsx`
+
+```tsx
 [Test code covering the implementation]
 ```
+
+**Coverage:**
+
+- [X] Happy path: [scenario]
+- [X] Edge cases: [scenarios]
+- [X] Error handling: [scenarios]
+
 </tests>
 
 <verification>
-✅ Criteria met:
-- [Criterion 1]: Verified
-- [Criterion 2]: Verified
 
-📊 Test results:
+## Success Criteria
 
-- [Test suite]: All passing
-- Coverage: [X%]
+| Criterion | Status | Evidence |
+|-----------|--------|----------|
+| [From specification] | PASS/FAIL | [How verified - test name, manual check, etc.] |
 
-⚠️ Notes:
+## Universal Quality Checks
 
-- [Any important notes or considerations]
-  </verification>
-  </output_format>
+**Accessibility:**
+
+- [ ] Semantic HTML elements used (not div soup)
+- [ ] Interactive elements keyboard accessible
+- [ ] Focus management handled (if applicable)
+- [ ] ARIA attributes present where needed
+- [ ] Color not sole means of conveying information
+
+**Performance:**
+
+- [ ] No unnecessary re-renders introduced
+- [ ] Large lists virtualized (if applicable)
+- [ ] Images optimized/lazy-loaded (if applicable)
+- [ ] Heavy computations memoized (if applicable)
+
+**Error Handling:**
+
+- [ ] Loading states handled
+- [ ] Error states handled with user feedback
+- [ ] Empty states handled (if applicable)
+- [ ] Form validation feedback (if applicable)
+
+**Code Quality:**
+
+- [ ] No magic numbers (named constants used)
+- [ ] No `any` types without justification
+- [ ] Follows existing naming conventions
+- [ ] Follows existing file/folder structure
+- [ ] No hardcoded strings (uses i18n if available)
+
+## Build & Test Status
+
+- [ ] Existing tests pass
+- [ ] New tests pass (if added)
+- [ ] Build succeeds
+- [ ] No type errors
+- [ ] No lint errors
+
+</verification>
+
+<notes>
+
+## For Reviewer
+
+- [Areas to focus review on]
+- [Decisions that may need discussion]
+- [Alternative approaches considered]
+
+## Scope Control
+
+**Added only what was specified:**
+
+- [Feature implemented as requested]
+
+**Did NOT add:**
+
+- [Unrequested feature avoided - why it was tempting but wrong]
+
+## Known Limitations
+
+- [Any scope reductions from spec]
+- [Technical debt incurred and why]
+
+## Dependencies
+
+- [New packages added: none / list with justification]
+- [Breaking changes: none / description]
+
+</notes>
+
+</output_format>
+
+---
+
+## Section Guidelines
+
+### When to Include Each Section
+
+| Section | When Required |
+|---------|---------------|
+| `<summary>` | Always |
+| `<investigation>` | Always - proves research was done |
+| `<approach>` | Always - shows planning |
+| `<implementation>` | Always - the actual code |
+| `<tests>` | When tests are part of the task |
+| `<verification>` | Always - proves completion |
+| `<notes>` | When there's context for reviewer |
+
+### Accessibility Checks (Framework-Agnostic)
+
+These apply regardless of React, Vue, Svelte, or any framework:
+
+- **Semantic HTML:** Use `<button>` not `<div onClick>`, `<nav>` not `<div class="nav">`
+- **Keyboard access:** Tab order logical, Enter/Space activate controls
+- **Focus visible:** Focus indicators present and visible
+- **ARIA:** Only when HTML semantics insufficient
+
+### Performance Checks (Framework-Agnostic)
+
+- **Re-renders:** Don't cause parent re-renders unnecessarily
+- **Virtualization:** Lists over ~100 items should virtualize
+- **Lazy loading:** Images below fold, heavy components
+- **Memoization:** Only for measured bottlenecks
+
+### Error Handling States (Framework-Agnostic)
+
+Every async operation needs:
+
+1. **Loading:** User knows something is happening
+2. **Error:** User knows what went wrong + can retry
+3. **Empty:** User knows there's no data (not broken)
+4. **Success:** User sees the result
+
+### Code Quality (Framework-Agnostic)
+
+- **Constants:** `const MAX_ITEMS = 10` not `items.slice(0, 10)`
+- **Types:** Explicit interfaces, no implicit any
+- **Naming:** Match codebase conventions exactly
+- **Structure:** Match existing file organization
 
 
 ---
