@@ -643,8 +643,8 @@ Provide your review in this structure:
 
 <files_reviewed>
 
-| File | Lines | Review Focus |
-|------|-------|--------------|
+| File                | Lines | Review Focus        |
+| ------------------- | ----- | ------------------- |
 | [/path/to/route.ts] | [X-Y] | [What was examined] |
 
 </files_reviewed>
@@ -654,37 +654,42 @@ Provide your review in this structure:
 ## Security Review
 
 ### Input Validation
+
 - [ ] All user inputs validated before use
 - [ ] Request body validated with schema
 - [ ] Query/path params validated
 - [ ] File uploads restricted (type, size) if applicable
 
 ### Injection Prevention
+
 - [ ] SQL injection: Parameterized queries / ORM used
 - [ ] Command injection: No shell exec with user input
 - [ ] Path traversal: File paths validated
 - [ ] XSS: Output encoded where needed
 
 ### Authentication / Authorization
+
 - [ ] Auth middleware on protected routes
 - [ ] Permission checks implemented
 - [ ] Resource ownership verified (users access only their data)
 - [ ] Tokens handled securely
 
 ### Sensitive Data
+
 - [ ] No secrets hardcoded (using env vars)
 - [ ] No PII in logs or error responses
 - [ ] Passwords properly hashed
 - [ ] Sensitive fields excluded from API responses
 
 ### Rate Limiting
+
 - [ ] Rate limiting on public/auth endpoints
 - [ ] Brute force protection where needed
 
 **Security Issues Found:**
 
-| Finding | Location | Severity | Impact |
-|---------|----------|----------|--------|
+| Finding | Location    | Severity               | Impact |
+| ------- | ----------- | ---------------------- | ------ |
 | [Issue] | [file:line] | [Critical/High/Medium] | [Risk] |
 
 </security_audit>
@@ -701,11 +706,13 @@ Provide your review in this structure:
 **Problem:** [What's wrong - one sentence]
 
 **Current code:**
+
 ```typescript
 // The problematic code
 ```
 
 **Recommended fix:**
+
 ```typescript
 // The corrected code
 ```
@@ -728,6 +735,7 @@ Provide your review in this structure:
 **Issue:** [What could be better]
 
 **Suggestion:**
+
 ```typescript
 // How to improve
 ```
@@ -749,24 +757,28 @@ Provide your review in this structure:
 ## API Design Review
 
 ### REST Conventions
+
 - [ ] Appropriate HTTP methods (GET/POST/PUT/DELETE)
 - [ ] Correct status codes (2xx/4xx/5xx)
 - [ ] Consistent response format
 - [ ] Proper resource naming
 
 ### Error Handling
+
 - [ ] Validation errors return 400 with details
 - [ ] Auth errors return 401/403 appropriately
 - [ ] Not found returns 404
 - [ ] Server errors logged, generic response to client
 
 ### Performance
+
 - [ ] No N+1 queries
 - [ ] Proper pagination on list endpoints
 - [ ] Indexes used for frequent queries
 - [ ] Transactions for multi-step operations
 
 ### Documentation
+
 - [ ] OpenAPI/schema annotations present (if applicable)
 - [ ] Request/response types documented
 
@@ -779,18 +791,21 @@ Provide your review in this structure:
 ## Database Review
 
 ### Query Quality
+
 - [ ] Parameterized queries (no string concatenation)
 - [ ] Proper JOINs (no N+1 patterns)
 - [ ] Soft delete checks where applicable
 - [ ] Transactions used for atomicity
 
 ### Schema
+
 - [ ] Appropriate column types
 - [ ] Indexes on frequently queried columns
 - [ ] Foreign keys for relationships
 - [ ] Nullable fields intentional
 
 ### Connection Handling
+
 - [ ] Connection pooling respected
 - [ ] No connection leaks
 - [ ] Proper error handling on DB operations
@@ -803,13 +818,13 @@ Provide your review in this structure:
 
 ## Convention Adherence
 
-| Dimension | Status | Notes |
-|-----------|--------|-------|
-| Naming conventions | PASS/WARN/FAIL | [Details if not PASS] |
-| File structure | PASS/WARN/FAIL | [Details if not PASS] |
-| Error handling pattern | PASS/WARN/FAIL | [Details if not PASS] |
-| Logging pattern | PASS/WARN/FAIL | [Details if not PASS] |
-| TypeScript strictness | PASS/WARN/FAIL | [Details if not PASS] |
+| Dimension                    | Status         | Notes                 |
+| ---------------------------- | -------------- | --------------------- |
+| Naming conventions           | PASS/WARN/FAIL | [Details if not PASS] |
+| File structure               | PASS/WARN/FAIL | [Details if not PASS] |
+| Error handling pattern       | PASS/WARN/FAIL | [Details if not PASS] |
+| Logging pattern              | PASS/WARN/FAIL | [Details if not PASS] |
+| TypeScript strictness        | PASS/WARN/FAIL | [Details if not PASS] |
 | Constants (no magic numbers) | PASS/WARN/FAIL | [Details if not PASS] |
 
 </convention_check>
@@ -829,12 +844,15 @@ Provide your review in this structure:
 ## Deferred to Specialists
 
 **Frontend Reviewer:**
+
 - [React component X needs review]
 
 **Tester Agent:**
+
 - [Need test coverage for edge case Y]
 
 **Security Specialist:**
+
 - [Complex auth flow needs deeper review]
 
 </deferred>
@@ -850,6 +868,7 @@ Provide your review in this structure:
 **Suggestions:** [count]
 
 **Next Steps:**
+
 1. [Action item - e.g., "Add input validation at line 45"]
 2. [Action item]
 
@@ -863,27 +882,28 @@ Provide your review in this structure:
 
 ### Severity Levels
 
-| Level | Label | Criteria | Blocks Approval? |
-|-------|-------|----------|------------------|
-| Critical | `Must Fix` | Security issues, data integrity, correctness | Yes |
-| Important | `Should Fix` | Performance, conventions, maintainability | No (recommended) |
-| Minor | `Nice to Have` | Style, documentation, minor optimizations | No |
+| Level     | Label          | Criteria                                     | Blocks Approval? |
+| --------- | -------------- | -------------------------------------------- | ---------------- |
+| Critical  | `Must Fix`     | Security issues, data integrity, correctness | Yes              |
+| Important | `Should Fix`   | Performance, conventions, maintainability    | No (recommended) |
+| Minor     | `Nice to Have` | Style, documentation, minor optimizations    | No               |
 
 ### Issue Categories (Backend-Specific)
 
-| Category | Examples |
-|----------|----------|
-| **Security** | Injection, auth bypass, exposed secrets, missing validation |
-| **Correctness** | Logic errors, race conditions, edge cases |
-| **Validation** | Missing input checks, improper schemas |
-| **Error Handling** | Unhandled exceptions, poor error messages |
-| **Performance** | N+1 queries, missing indexes, blocking operations |
-| **Convention** | Naming, structure, patterns, typing |
-| **Database** | Query quality, transaction handling, schema design |
+| Category           | Examples                                                    |
+| ------------------ | ----------------------------------------------------------- |
+| **Security**       | Injection, auth bypass, exposed secrets, missing validation |
+| **Correctness**    | Logic errors, race conditions, edge cases                   |
+| **Validation**     | Missing input checks, improper schemas                      |
+| **Error Handling** | Unhandled exceptions, poor error messages                   |
+| **Performance**    | N+1 queries, missing indexes, blocking operations           |
+| **Convention**     | Naming, structure, patterns, typing                         |
+| **Database**       | Query quality, transaction handling, schema design          |
 
 ### Security Review Priority
 
 Security issues are ALWAYS reviewed first. The security audit section:
+
 1. Uses a checklist format for systematic coverage
 2. Documents findings in a table with severity
 3. Provides specific file:line references
@@ -892,6 +912,7 @@ Security issues are ALWAYS reviewed first. The security audit section:
 ### Issue Format Requirements
 
 Every issue must include:
+
 1. **Specific file:line location**
 2. **Current code snippet** (what's wrong)
 3. **Fixed code snippet** (how to fix)

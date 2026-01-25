@@ -246,23 +246,18 @@ relationships:
   conflicts:
     # Framework conflicts (only one core framework)
     - skills: [react, vue, angular, solidjs]
-      reason: "Core frameworks are mutually exclusive - choose one"
+      reason: "Core frameworks are mutually exclusive within a single application. Exception: micro-frontend architectures (Single-SPA, Module Federation) can combine frameworks in isolation."
 
     # Meta-framework conflicts
     - skills: [nextjs-app-router, remix, nuxt]
       reason: "Meta-frameworks are mutually exclusive - choose one"
 
-    # Styling conflicts
-    - skills: [scss-modules, tailwind]
-      reason: "Different CSS paradigms - SCSS Modules vs Tailwind utility-first"
-
-    # Client state management conflicts (React ecosystem)
-    - skills: [zustand, redux-toolkit, mobx]
-      reason: "React state libraries - choose one approach"
+    # NOTE: scss-modules/tailwind moved to discourages - they're technically compatible
 
     # Client state management (Vue ecosystem)
+    # NOTE: zustand/redux-toolkit/mobx moved to discourages - can coexist for migrations
     - skills: [pinia, zustand, redux-toolkit, mobx]
-      reason: "Pinia is Vue-only, others are React-only"
+      reason: "Pinia is Vue-only. Our zustand/redux-toolkit/mobx skills teach React patterns (though these libraries technically support other frameworks)."
 
     # Client state management (Angular ecosystem)
     - skills: [ngrx-signalstore, zustand, pinia, redux-toolkit, mobx]
@@ -290,19 +285,23 @@ relationships:
 
     # Backend API framework conflicts
     - skills: [hono, express, fastify]
-      reason: "API frameworks are mutually exclusive"
+      reason: "API frameworks are mutually exclusive within a single service. Multiple frameworks can coexist in monorepo architectures."
 
     # Database ORM conflicts
     - skills: [drizzle, prisma]
-      reason: "Both are ORMs - choose one"
+      reason: "Both are ORMs serving similar purposes. Choose one per service; migration scenarios and multi-service architectures may involve both."
 
   # ─────────────────────────────────────────────────────────────────
   # DISCOURAGES (Soft warnings - selecting A shows warning for B but doesn't disable)
   # ─────────────────────────────────────────────────────────────────
   discourages:
-    # Styling paradigm mixing is unusual
+    # Styling paradigm mixing is unusual but technically compatible
     - skills: [scss-modules, tailwind]
-      reason: "Mixing CSS paradigms (SCSS Modules + Tailwind) is unusual - most projects pick one approach"
+      reason: "Mixing CSS paradigms causes slower builds (Tailwind runs per-module) and inconsistent patterns - pick one approach for new projects. Valid for gradual migrations."
+
+    # React state libraries - can coexist but adds complexity
+    - skills: [zustand, redux-toolkit, mobx]
+      reason: "Using multiple React state libraries adds complexity - choose one primary approach. Migration patterns exist for gradual transitions."
 
     # Redux is heavy for small projects with Zustand available
     - skills: [redux-toolkit, zustand]
@@ -319,9 +318,9 @@ relationships:
     - skills: [express, fastify]
       reason: "Express is mature but Fastify offers better performance"
 
-    # Cypress vs Playwright for cross-browser
+    # Cypress vs Playwright - different strengths
     - skills: [cypress-e2e, playwright-e2e]
-      reason: "Cypress has better DX but Playwright has better cross-browser support"
+      reason: "Cypress excels at interactive debugging and component testing; Playwright has better cross-browser support, parallelization, and CI/CD performance"
 
   # ─────────────────────────────────────────────────────────────────
   # RECOMMENDS (Soft suggestions - selecting A highlights B)
@@ -346,7 +345,7 @@ relationships:
     # Vue ecosystem recommendations
     - when: vue
       suggest: [pinia, vee-validate, vue-test-utils]
-      reason: "Official Vue ecosystem libraries"
+      reason: "Vue community standard libraries (Pinia is official, VeeValidate is community-maintained)"
 
     # Angular ecosystem recommendations
     - when: angular
@@ -414,10 +413,7 @@ relationships:
       suggest: [posthog]
       reason: "Complete observability with analytics"
 
-    # Email recommendations
-    - when: resend
-      suggest: [react]
-      reason: "React Email templates work with Resend"
+    # NOTE: Removed resend recommends [react] - Resend works with plain HTML/text, React Email is optional
 
     # Fastify recommendations
     - when: fastify
@@ -448,16 +444,16 @@ relationships:
   # REQUIRES (Hard dependencies - A requires B to be selected first)
   # ─────────────────────────────────────────────────────────────────
   requires:
-    # React-specific libraries
+    # React-specific libraries (note: these libraries have vanilla/other-framework options, but our skills teach React patterns)
     - skill: zustand
       needs: [react, react-native]
       needs_any: true
-      reason: "Zustand is React/React Native only"
+      reason: "Our Zustand skill covers React/React Native patterns (zustand/vanilla exists for other frameworks)"
 
     - skill: redux-toolkit
       needs: [react, react-native]
       needs_any: true
-      reason: "Redux Toolkit is React/React Native only"
+      reason: "Our Redux Toolkit skill covers React/React Native patterns (RTK core is framework-agnostic)"
 
     - skill: mobx
       needs: [react]
@@ -466,11 +462,12 @@ relationships:
     - skill: react-query
       needs: [react, react-native]
       needs_any: true
-      reason: "TanStack Query React adapter"
+      reason: "TanStack Query's React adapter. Note: TanStack Query also supports Vue, Solid, Svelte via separate adapters."
 
     - skill: swr
-      needs: [react]
-      reason: "SWR is React only"
+      needs: [react, react-native]
+      needs_any: true
+      reason: "SWR is a React Hooks library (also works with React Native)"
 
     - skill: react-hook-form
       needs: [react, react-native]
@@ -511,18 +508,11 @@ relationships:
 
     # Backend dependencies
     - skill: better-auth
-      needs: [drizzle]
-      reason: "Better Auth integration uses Drizzle"
-
-    - skill: drizzle
-      needs: [hono, express, fastify]
+      needs: [drizzle, prisma]
       needs_any: true
-      reason: "Drizzle needs an API framework"
+      reason: "Better Auth supports multiple database adapters (Drizzle, Prisma, Kysely, MongoDB). Our skill uses Drizzle adapter."
 
-    - skill: prisma
-      needs: [hono, express, fastify]
-      needs_any: true
-      reason: "Prisma needs an API framework"
+    # NOTE: Removed drizzle/prisma requires API framework - ORMs work standalone for scripts, CLI tools, workers, etc.
 
     # UI component dependencies
     - skill: shadcn-ui
@@ -531,14 +521,14 @@ relationships:
 
     # GraphQL clients need a framework
     - skill: graphql-apollo
-      needs: [react, vue]
+      needs: [react, vue, angular, svelte, solidjs]
       needs_any: true
-      reason: "Apollo Client for React or Vue"
+      reason: "Apollo Client - first-party React support, community-maintained integrations for Vue, Angular, Svelte, Solid"
 
     - skill: graphql-urql
-      needs: [react, vue]
+      needs: [react, vue, svelte, solidjs]
       needs_any: true
-      reason: "URQL for React or Vue"
+      reason: "URQL has first-party support for React, Vue, Svelte, and Solid (no Angular support)"
 
   # ─────────────────────────────────────────────────────────────────
   # ALTERNATIVES (Interchangeable options for same purpose)

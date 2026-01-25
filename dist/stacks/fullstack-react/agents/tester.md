@@ -694,14 +694,14 @@ Provide your test output in this structure:
 
 ## Test Coverage Summary
 
-| Category | Count | Description |
-|----------|-------|-------------|
-| Happy Path | [X] | [Core functionality scenarios] |
-| Validation | [X] | [Input validation scenarios] |
-| Error Handling | [X] | [Error/failure scenarios] |
-| Edge Cases | [X] | [Boundary conditions] |
-| Integration | [X] | [Interaction with other code] |
-| **Total** | **[X]** | |
+| Category       | Count   | Description                    |
+| -------------- | ------- | ------------------------------ |
+| Happy Path     | [X]     | [Core functionality scenarios] |
+| Validation     | [X]     | [Input validation scenarios]   |
+| Error Handling | [X]     | [Error/failure scenarios]      |
+| Edge Cases     | [X]     | [Boundary conditions]          |
+| Integration    | [X]     | [Interaction with other code]  |
+| **Total**      | **[X]** |                                |
 
 </test_suite>
 
@@ -712,39 +712,39 @@ Provide your test output in this structure:
 **File:** `/path/to/feature.test.ts`
 
 ```typescript
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from "vitest";
 // ... other imports
 
-describe('[Feature/Component Name]', () => {
+describe("[Feature/Component Name]", () => {
   // Setup
   beforeEach(() => {
     // Reset mocks, setup test state
   });
 
-  describe('Happy Path', () => {
-    it('should [expected behavior when normal input]', () => {
+  describe("Happy Path", () => {
+    it("should [expected behavior when normal input]", () => {
       // Test implementation
     });
 
-    it('should [another expected behavior]', () => {
-      // Test implementation
-    });
-  });
-
-  describe('Validation', () => {
-    it('should [reject/show error when invalid input]', () => {
+    it("should [another expected behavior]", () => {
       // Test implementation
     });
   });
 
-  describe('Error Handling', () => {
-    it('should [handle error gracefully]', () => {
+  describe("Validation", () => {
+    it("should [reject/show error when invalid input]", () => {
       // Test implementation
     });
   });
 
-  describe('Edge Cases', () => {
-    it('should [handle boundary condition]', () => {
+  describe("Error Handling", () => {
+    it("should [handle error gracefully]", () => {
+      // Test implementation
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("should [handle boundary condition]", () => {
       // Test implementation
     });
   });
@@ -758,23 +758,28 @@ describe('[Feature/Component Name]', () => {
 ## Behaviors Covered
 
 ### Happy Path
+
 - [Specific scenario 1 - e.g., "User submits valid form"]
 - [Specific scenario 2 - e.g., "API returns success response"]
 - [Specific scenario 3]
 
 ### Validation
+
 - [Validation scenario 1 - e.g., "Empty email shows error"]
 - [Validation scenario 2 - e.g., "Invalid format rejected"]
 
 ### Error Handling
+
 - [Error scenario 1 - e.g., "API timeout shows retry option"]
 - [Error scenario 2 - e.g., "Network error shows offline message"]
 
 ### Edge Cases
+
 - [Edge case 1 - e.g., "Empty list shows empty state"]
 - [Edge case 2 - e.g., "Maximum length input accepted"]
 
 ### Integration
+
 - [Integration point 1 - e.g., "Updates store on success"]
 - [Integration point 2 - e.g., "Triggers analytics event"]
 
@@ -797,10 +802,10 @@ describe('[Feature/Component Name]', () => {
 
 **Implementation patterns to follow:**
 
-| Pattern | Reference |
-|---------|-----------|
+| Pattern        | Reference                         |
+| -------------- | --------------------------------- |
 | [Pattern type] | [/path/to/similar/file.tsx:lines] |
-| [Pattern type] | [/path/to/utility.ts:lines] |
+| [Pattern type] | [/path/to/utility.ts:lines]       |
 
 **The implementation must NOT:**
 
@@ -816,20 +821,22 @@ describe('[Feature/Component Name]', () => {
 
 **Mocked Dependencies:**
 
-| Dependency | Mock Setup | Why Mocked |
-|------------|------------|------------|
-| [API client] | `vi.mock('@/lib/api')` | Isolate from network |
-| [Store] | `vi.mock('@/stores/user')` | Control state |
-| [External service] | `vi.mock('external-lib')` | Avoid side effects |
+| Dependency         | Mock Setup                 | Why Mocked           |
+| ------------------ | -------------------------- | -------------------- |
+| [API client]       | `vi.mock('@/lib/api')`     | Isolate from network |
+| [Store]            | `vi.mock('@/stores/user')` | Control state        |
+| [External service] | `vi.mock('external-lib')`  | Avoid side effects   |
 
 **Mock Responses:**
 
 ```typescript
 // Example mock setup
 const mockApi = {
-  success: { data: { id: 1, name: 'Test' } },
-  error: { error: { message: 'Failed' } },
-  timeout: new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 100)),
+  success: { data: { id: 1, name: "Test" } },
+  error: { error: { message: "Failed" } },
+  timeout: new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Timeout")), 100),
+  ),
 };
 ```
 
@@ -842,6 +849,7 @@ const mockApi = {
 **All Tests:** ❌ FAILING (Expected - no implementation exists)
 
 **Verification:**
+
 - [ ] Tests fail for the RIGHT reasons (not syntax errors)
 - [ ] Error messages are clear and actionable
 - [ ] No false positives (tests don't accidentally pass)
@@ -849,6 +857,7 @@ const mockApi = {
 **Ready for:** Developer agent implementation
 
 **Test Commands:**
+
 ```bash
 # Run these tests
 bun test [path/to/feature.test.ts]
@@ -867,17 +876,20 @@ bun test [path/to/feature.test.ts] --watch
 ## For Developer
 
 **Implementation Approach:**
+
 1. Read the test file to understand expected behaviors
 2. Implement minimum code to make first test pass
 3. Iterate: implement, test, refactor
 4. All tests green = implementation complete
 
 **Common Pitfalls:**
+
 - Don't modify tests to make them pass - fix implementation
 - If a test seems wrong, discuss before changing
 - Ensure cleanup in tests doesn't mask real bugs
 
 **Pattern References:**
+
 - See [/path/to/similar/implementation.tsx] for correct approach
 - Reuse utilities from [/path/to/utils/]
 
@@ -891,26 +903,26 @@ bun test [path/to/feature.test.ts] --watch
 
 ### Test Quality Requirements
 
-| Requirement | Description |
-|-------------|-------------|
-| **Minimum 3 tests per function** | Happy path + edge case + error case |
-| **Behavior-focused names** | "displays error when email invalid" not "sets error state" |
-| **Isolated tests** | Each test can run independently |
-| **Clear assertions** | One concept per test |
-| **Comprehensive mocking** | All external dependencies mocked |
+| Requirement                      | Description                                                |
+| -------------------------------- | ---------------------------------------------------------- |
+| **Minimum 3 tests per function** | Happy path + edge case + error case                        |
+| **Behavior-focused names**       | "displays error when email invalid" not "sets error state" |
+| **Isolated tests**               | Each test can run independently                            |
+| **Clear assertions**             | One concept per test                                       |
+| **Comprehensive mocking**        | All external dependencies mocked                           |
 
 ### Test Naming Convention
 
 ```typescript
 // Good - describes user-visible behavior
-it('displays error message when email format is invalid', () => {});
-it('disables submit button while loading', () => {});
-it('calls onSuccess callback after successful submission', () => {});
+it("displays error message when email format is invalid", () => {});
+it("disables submit button while loading", () => {});
+it("calls onSuccess callback after successful submission", () => {});
 
 // Bad - describes implementation details
-it('sets isError to true', () => {});
-it('updates state', () => {});
-it('triggers effect', () => {});
+it("sets isError to true", () => {});
+it("updates state", () => {});
+it("triggers effect", () => {});
 ```
 
 ### Red-Green-Refactor Contract

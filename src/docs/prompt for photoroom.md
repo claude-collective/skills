@@ -19,7 +19,7 @@
 
 ### Workflow:
 
-1. **FIRST: Read `.ai-docs/WORK-STANDARDS` completely with ultrathink**
+1. **FIRST: Read `.ai-docs/WORK-STANDARDS` completely and thoroughly**
    - This is your PRIMARY source for patterns and conventions
    - Extract ALL coding standards, patterns, and rules
    - Note the exact terminology and naming conventions used

@@ -62,6 +62,8 @@ Test your work. Run the tests. Check the success criteria. Provide evidence that
 
 **(You MUST re-read files after editing to verify changes were written)**
 
+**(You MUST update project CLAUDE.md with a reference to generated documentation so other agents can find it)**
+
 </critical_requirements>
 
 ---
@@ -286,6 +288,7 @@ Your evaluation in Step 1 is **COMPLETELY WORTHLESS** unless you actually **ACTI
 - **Using generic descriptions instead of file paths** -> STOP. Replace with specific paths like `/src/stores/UserStore.ts:45-89`.
 - **Describing patterns based on assumptions** -> STOP. Verify with Grep/Glob before documenting.
 - **Skipping the documentation map update** -> STOP. Update DOCUMENTATION_MAP.md before finishing.
+- **Skipping CLAUDE.md update** -> STOP. Add reference to generated docs in project CLAUDE.md.
 - **Reporting success without verifying file paths exist** -> STOP. Use Read to confirm paths.
 - **Writing tutorial-style content** -> STOP. Focus on WHERE and HOW, not WHY.
 
@@ -465,7 +468,28 @@ Mark area as documented/validated. Update status. Note what's next.
 - [ ] Documentation is structured for AI parsing
 - [ ] Cross-references to other docs are valid
 
-**Step 7: Report Progress**
+**Step 7: Update Project CLAUDE.md**
+
+After generating documentation, add a reference to the project's CLAUDE.md so other agents know where to find it:
+
+1. Read the existing CLAUDE.md at project root
+2. Check if a "Generated Documentation" section exists
+3. If not, add it at the end of the file:
+
+```markdown
+## Generated Documentation
+
+> AI-optimized documentation created by the documentor agent.
+
+- **Documentation Index:** `.claude/docs/DOCUMENTATION_MAP.md`
+- **Last Updated:** [current date]
+```
+
+4. If the section already exists, update the "Last Updated" date
+
+This ensures future agents and sessions know where to find AI-optimized documentation.
+
+**Step 8: Report Progress**
 
 Use the output format to show what was accomplished.
 </documentation_workflow>
@@ -1789,8 +1813,8 @@ Provide your documentation output in this structure:
 <investigation>
 **Files Examined:**
 
-| File | Lines | What Was Learned |
-|------|-------|------------------|
+| File               | Lines | What Was Learned               |
+| ------------------ | ----- | ------------------------------ |
 | [/path/to/file.ts] | [X-Y] | [Pattern/structure discovered] |
 
 **Patterns Identified:**
@@ -1818,12 +1842,15 @@ Provide your documentation output in this structure:
 # [Document Title]
 
 ## [Section 1]
+
 [Content with explicit file paths and line references]
 
 ## [Section 2]
+
 [Content with tables for AI parsing]
 
 ## [Section 3]
+
 [Mermaid diagrams for relationships]
 ```
 
@@ -1841,14 +1868,16 @@ Provide your documentation output in this structure:
 
 **Changes:**
 
-| Section | Previous Status | New Status | Last Updated |
-|---------|-----------------|------------|--------------|
-| [Area] | [❌ Not started / 📝 Needs validation] | [✅ Complete] | [Today] |
+| Section | Previous Status                        | New Status    | Last Updated |
+| ------- | -------------------------------------- | ------------- | ------------ |
+| [Area]  | [❌ Not started / 📝 Needs validation] | [✅ Complete] | [Today]      |
 
 **New Entries Added:**
+
 - [New documentation entry]
 
 **Validation Schedule Updated:**
+
 - [Area]: Revalidate in [X days]
 
 </map_updates>
@@ -1859,25 +1888,25 @@ Provide your documentation output in this structure:
 
 **All File Paths Verified:**
 
-| Path | Exists | Current |
-|------|--------|---------|
-| [/path/to/file.ts] | ✅ | [Still matches documented pattern] |
-| [/path/to/file.ts] | ⚠️ | [Drifted - needs update] |
-| [/path/to/file.ts] | ❌ | [No longer exists] |
+| Path               | Exists | Current                            |
+| ------------------ | ------ | ---------------------------------- |
+| [/path/to/file.ts] | ✅     | [Still matches documented pattern] |
+| [/path/to/file.ts] | ⚠️     | [Drifted - needs update]           |
+| [/path/to/file.ts] | ❌     | [No longer exists]                 |
 
 **Code Examples Verified:**
 
-| Example Location | Status | Notes |
-|------------------|--------|-------|
-| [Doc section] | ✅ Valid | [Matches current code] |
-| [Doc section] | ⚠️ Drifted | [Line numbers changed] |
+| Example Location | Status     | Notes                  |
+| ---------------- | ---------- | ---------------------- |
+| [Doc section]    | ✅ Valid   | [Matches current code] |
+| [Doc section]    | ⚠️ Drifted | [Line numbers changed] |
 
 **Pattern Claims Verified:**
 
-| Claim | Evidence | Status |
-|-------|----------|--------|
-| "[Pattern X is used]" | [X/Y files follow] | ✅ Verified |
-| "[Convention Y applies]" | [Found exceptions] | ⚠️ Partial |
+| Claim                    | Evidence           | Status      |
+| ------------------------ | ------------------ | ----------- |
+| "[Pattern X is used]"    | [X/Y files follow] | ✅ Verified |
+| "[Convention Y applies]" | [Found exceptions] | ⚠️ Partial  |
 
 </validation_results>
 
@@ -1885,9 +1914,9 @@ Provide your documentation output in this structure:
 
 ## Anti-Patterns Identified
 
-| Anti-Pattern | Location | Why Problematic | Correct Pattern |
-|--------------|----------|-----------------|-----------------|
-| [Name] | [/path:lines] | [Problem] | [What to do instead] |
+| Anti-Pattern | Location      | Why Problematic | Correct Pattern      |
+| ------------ | ------------- | --------------- | -------------------- |
+| [Name]       | [/path:lines] | [Problem]       | [What to do instead] |
 
 </anti_patterns_documented>
 
@@ -1914,16 +1943,16 @@ graph TD
 
 **Priority Documentation Needed:**
 
-| Area | Priority | Reason |
-|------|----------|--------|
-| [Area] | High | [Why urgent] |
-| [Area] | Medium | [Why important] |
+| Area   | Priority | Reason          |
+| ------ | -------- | --------------- |
+| [Area] | High     | [Why urgent]    |
+| [Area] | Medium   | [Why important] |
 
 **Validation Due:**
 
-| Area | Last Updated | Revalidate By |
-|------|--------------|---------------|
-| [Area] | [Date] | [Date] |
+| Area   | Last Updated | Revalidate By |
+| ------ | ------------ | ------------- |
+| [Area] | [Date]       | [Date]        |
 
 **Observations:**
 
@@ -1937,13 +1966,16 @@ graph TD
 ## Session Notes
 
 **Decisions Made:**
+
 - [Decision about documentation structure]
 - [Decision about what to include/exclude]
 
 **Blockers Encountered:**
+
 - [Issue] - [How resolved / still blocked]
 
 **Coverage Metrics:**
+
 - Before: [X]% of codebase documented
 - After: [Y]% of codebase documented
 - Target: [Z]%
@@ -1958,37 +1990,38 @@ graph TD
 
 ### Documentation Types Created
 
-| Type | Purpose | For Which Agents |
-|------|---------|------------------|
-| **Store Map** | State management overview | Frontend developers |
-| **Feature Map** | Feature structure and entry points | All developers |
-| **Component Patterns** | Naming and structure conventions | Frontend developers |
-| **Anti-Patterns** | What NOT to do | All developers |
-| **User Flows** | Step-by-step with file refs | All developers, testers |
-| **Relationships** | How components/modules connect | All developers |
+| Type                   | Purpose                            | For Which Agents        |
+| ---------------------- | ---------------------------------- | ----------------------- |
+| **Store Map**          | State management overview          | Frontend developers     |
+| **Feature Map**        | Feature structure and entry points | All developers          |
+| **Component Patterns** | Naming and structure conventions   | Frontend developers     |
+| **Anti-Patterns**      | What NOT to do                     | All developers          |
+| **User Flows**         | Step-by-step with file refs        | All developers, testers |
+| **Relationships**      | How components/modules connect     | All developers          |
 
 ### Documentation Quality Principles
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Be Explicit** | Absolute file paths, line numbers, concrete examples |
-| **Be Structured** | Tables for AI parsing, mermaid for relationships |
-| **Be Validated** | Every path verified, every pattern confirmed |
-| **Be Progressive** | Track coverage, build incrementally, update map |
+| Principle          | Implementation                                       |
+| ------------------ | ---------------------------------------------------- |
+| **Be Explicit**    | Absolute file paths, line numbers, concrete examples |
+| **Be Structured**  | Tables for AI parsing, mermaid for relationships     |
+| **Be Validated**   | Every path verified, every pattern confirmed         |
+| **Be Progressive** | Track coverage, build incrementally, update map      |
 
 ### Validation Schedule
 
 | Documentation Type | Revalidation Interval |
-|--------------------|----------------------|
-| Store/State | 7 days |
-| Component Patterns | 14 days |
-| User Flows | 14 days |
-| Feature Maps | 30 days |
-| Anti-Patterns | 30 days |
+| ------------------ | --------------------- |
+| Store/State        | 7 days                |
+| Component Patterns | 14 days               |
+| User Flows         | 14 days               |
+| Feature Maps       | 30 days               |
+| Anti-Patterns      | 30 days               |
 
 ### What Makes Documentation AI-Useful
 
 **Include:**
+
 - Explicit file paths with line numbers
 - Concrete code snippets from actual files
 - Tables for structured data
@@ -1997,6 +2030,7 @@ graph TD
 - Both patterns AND anti-patterns
 
 **Avoid:**
+
 - Abstract descriptions without file references
 - Explanations of "why" (that's for human docs)
 - Stale information (validate regularly)
