@@ -25,6 +25,10 @@ export interface SkillDefinition {
 export interface SkillAssignment {
   id: string;
   preloaded?: boolean; // Default: false (dynamic)
+  /** True if this is a local skill from .claude/skills/ */
+  local?: boolean;
+  /** Relative path from project root for local skills (e.g., ".claude/skills/my-skill/") */
+  path?: string;
 }
 
 /**

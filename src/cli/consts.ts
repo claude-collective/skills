@@ -30,6 +30,9 @@ export const SKILLS_MATRIX_PATH = "src/config/skills-matrix.yaml";
 // Skills directory within a source repository
 export const SKILLS_DIR_PATH = "src/skills";
 
+// Local skills directory within a project (user-defined skills)
+export const LOCAL_SKILLS_PATH = ".claude/skills";
+
 // Directory paths relative to project root
 export const DIRS = {
   agents: "src/agents",

@@ -37,6 +37,8 @@ export interface CopiedSkill {
   contentHash: string;
   sourcePath: string;
   destPath: string;
+  /** True if this is a local skill (not copied, stays in place) */
+  local?: boolean;
 }
 
 /**
@@ -185,6 +187,9 @@ export async function copySkillFromSource(
 /**
  * Copy all selected skills to a plugin directory from a source
  * This is the primary method for single-plugin-per-project architecture
+ *
+ * Local skills (from .claude/skills/) are NOT copied - they stay in place
+ * and are referenced by their relative path from project root.
  */
 export async function copySkillsToPluginFromSource(
   selectedSkillIds: string[],
@@ -198,6 +203,22 @@ export async function copySkillsToPluginFromSource(
     const skill = matrix.skills[skillId];
     if (!skill) {
       console.warn(`Warning: Skill not found in matrix: ${skillId}`);
+      continue;
+    }
+
+    // Skip copying local skills - they stay in place
+    if (skill.local && skill.localPath) {
+      // Compute hash from the local skill's SKILL.md in the project directory
+      const localSkillPath = path.join(process.cwd(), skill.localPath);
+      const contentHash = await generateSkillHash(localSkillPath);
+
+      copiedSkills.push({
+        skillId: skill.id,
+        sourcePath: skill.localPath, // Relative path from project root
+        destPath: skill.localPath, // Same - not copied
+        contentHash,
+        local: true,
+      });
       continue;
     }
 

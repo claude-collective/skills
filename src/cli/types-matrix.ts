@@ -302,6 +302,19 @@ export interface ExtractedSkillMetadata {
    * @example "skills/frontend/client-state-management/zustand (@vince)"
    */
   path: string;
+
+  // --- Local Skill Fields ---
+
+  /**
+   * True if this skill is from .claude/skills/ (user-defined local skill)
+   */
+  local?: boolean;
+
+  /**
+   * Relative path from project root for local skills
+   * @example ".claude/skills/my-skill/"
+   */
+  localPath?: string;
 }
 
 // =============================================================================
@@ -462,6 +475,19 @@ export interface ResolvedSkill {
 
   /** Relative path to skill directory from src/ */
   path: string;
+
+  // --- Local Skill Fields ---
+
+  /**
+   * True if this skill is from .claude/skills/ (user-defined local skill)
+   */
+  local?: boolean;
+
+  /**
+   * Relative path from project root for local skills
+   * @example ".claude/skills/my-skill/"
+   */
+  localPath?: string;
 }
 
 /**
