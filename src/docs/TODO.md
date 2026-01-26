@@ -1,22 +1,21 @@
 # Outstanding Tasks
 
 > **Generated**: 2026-01-21
-> **Updated**: 2026-01-26 (Restructured into Now/After Migration/Backlog)
+> **Updated**: 2026-01-26
 > **Completed Tasks**: See [TODO-COMPLETED.md](./TODO-COMPLETED.md)
 >
-> **Architecture Status**: Implementation complete. See [plugins/INDEX.md](./plugins/INDEX.md) for complete documentation.
+> **Architecture Status**: Simplified plugin architecture complete. See [plugins/INDEX.md](./plugins/INDEX.md) for documentation.
 
 ---
 
 ## Related Files
 
-| File                                            | Purpose                                                     | Location                        |
-| ----------------------------------------------- | ----------------------------------------------------------- | ------------------------------- |
-| `SKILLS-MATRIX-VERIFICATION.md`                 | **Complete** - 18-agent verification of skill relationships | `.claude/research/`             |
-| `CLI-REVIEW-FINDINGS.md`                        | **Active** - 12-agent code review findings                  | Root                            |
-| `CLAUDE-COLLECTIVE-DIRECTORY-IMPLEMENTATION.md` | **Critical** - `.claude-collective/` separation research    | `.claude/research/findings/v2/` |
-| `SIMPLIFIED-PLUGIN-ARCHITECTURE.md`             | **Critical** - One plugin per project architecture          | `.claude/research/findings/v2/` |
-| `CLI-AGENT-INVOCATION-RESEARCH.md`              | **Key** - Inline `--agents` JSON invocation                 | `src/docs/cli/`                 |
+| File                                | Purpose                                                     | Location                        |
+| ----------------------------------- | ----------------------------------------------------------- | ------------------------------- |
+| `SIMPLIFIED-PLUGIN-MIGRATION.md`    | **Complete** - 8-phase migration tracking                   | `.claude/tasks/`                |
+| `SKILLS-MATRIX-VERIFICATION.md`     | **Complete** - 18-agent verification of skill relationships | `.claude/research/`             |
+| `SIMPLIFIED-PLUGIN-ARCHITECTURE.md` | **Complete** - One plugin per project architecture          | `.claude/research/findings/v2/` |
+| `CLI-AGENT-INVOCATION-RESEARCH.md`  | **Key** - Inline `--agents` JSON invocation                 | `src/docs/cli/`                 |
 
 ---
 
@@ -24,9 +23,9 @@
 
 | Status              | Count |
 | ------------------- | ----- |
-| **Do Now**          | 10    |
+| **Do Now**          | 3     |
 | **After Migration** | 14    |
-| **Backlog**         | 18    |
+| **Backlog**         | 19    |
 
 ---
 
@@ -34,28 +33,12 @@
 
 > Complete these while skills and CLI live in same repo.
 
-### Simplified Plugin Architecture (CRITICAL)
-
-> **MAJOR REFACTOR:** Eliminate `.claude-collective/` directory entirely. One plugin per project.
-> See [SIMPLIFIED-PLUGIN-ARCHITECTURE.md](/.claude/research/findings/v2/SIMPLIFIED-PLUGIN-ARCHITECTURE.md)
-
-| Priority | Task                      | Description                                                      |
-| -------- | ------------------------- | ---------------------------------------------------------------- |
-| CRITICAL | A5.1 Research migration   | Identify all files referencing stacks/`.claude-collective/`      |
-| CRITICAL | A5.2 Remove `cc switch`   | Eliminate stack switching entirely                               |
-| CRITICAL | A5.3 Simplify `cc init`   | Create plugin directly, use "templates" instead of "stacks"      |
-| CRITICAL | A5.4 Update `cc edit/add` | Modify plugin directly, not stack                                |
-| CRITICAL | A5.5 Remove stack files   | Delete stack-list.ts, stack-config.ts, stack-creator.ts          |
-| CRITICAL | A5.6 Update `cc list`     | Show plugin info (version, skills, agents) instead of stack list |
-| CRITICAL | A5.7 User migration       | Detect `.claude-collective/` and offer migration prompt          |
-
-### Other Pre-Migration Tasks
-
-| Priority | Task                    | Description                                                          |
-| -------- | ----------------------- | -------------------------------------------------------------------- |
-| HIGH     | A7 Inline agent test    | Test `--agents` JSON flag with model/tools (CLI-AGENT-INVOCATION.md) |
-| HIGH     | Manual skill testing    | Manually test all 76 skills and 11 stacks for correctness            |
-| MEDIUM   | Re-add schema to skills | Post-migration: inject schema path once CLI repo bundles the schema  |
+| Priority | Task                                  | Description                                                                                                                                                                                                                            |
+| -------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HIGH     | A7 Inline agent test                  | Test `--agents` JSON flag with model/tools (CLI-AGENT-INVOCATION.md)                                                                                                                                                                   |
+| HIGH     | Manual skill testing                  | Manually test all 76 skills and 11 stacks for correctness                                                                                                                                                                              |
+| MEDIUM   | Re-add schema to skills               | Post-migration: inject schema path once CLI repo bundles the schema                                                                                                                                                                    |
+| MEDIUM   | Update stacks with methodology skills | Uncomment methodology skills in all stack configs - skills exist but are commented out with outdated "don't exist yet" note. Use directory refs: `methodology/universal`, `methodology/implementation`, `methodology/extended-session` |
 
 ---
 
@@ -73,19 +56,20 @@
 
 ### Post-Split Features
 
-| Priority | Task                      | Description                                                                 |
-| -------- | ------------------------- | --------------------------------------------------------------------------- |
-| HIGH     | C1 Schema Distribution    | GitHub raw URLs, SchemaStore PR                                             |
-| HIGH     | C2 Private Repos          | Configurable source, auth, pre-flight checks                                |
-| HIGH     | C8 Agent plugins          | Agents become individually installable plugins in marketplace               |
-| HIGH     | C9 `cc add <agent>`       | Install individual agents (e.g., `cc add pattern-scout`)                    |
-| HIGH     | C10 Essential vs optional | Stacks install ~9-10 essential agents; optional agents installed separately |
-| HIGH     | C11 Hooks in frontmatter  | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml                     |
-| MEDIUM   | C3 Multi-Source           | Community + private skills composition                                      |
-| MEDIUM   | C4 Skill Reorg            | Separate PhotoRoom from community skills                                    |
-| MEDIUM   | C5 Custom principles      | `cc customize --principles` for user-added principles merged on compile     |
-| MEDIUM   | C6 `cc doctor`            | Diagnose connectivity/auth issues                                           |
-| MEDIUM   | C7 `cc eject`             | Local export or GitHub fork for full independence                           |
+| Priority | Task                      | Description                                                                                      |
+| -------- | ------------------------- | ------------------------------------------------------------------------------------------------ |
+| HIGH     | C1 Schema Distribution    | GitHub raw URLs, SchemaStore PR                                                                  |
+| HIGH     | C2 Private Repos          | Configurable source, auth, pre-flight checks                                                     |
+| HIGH     | C8 Agent plugins          | Agents become individually installable plugins in marketplace                                    |
+| HIGH     | C9 `cc add <agent>`       | Install individual agents (e.g., `cc add pattern-scout`)                                         |
+| HIGH     | C10 Essential vs optional | Stacks install ~9-10 essential agents; optional agents installed separately                      |
+| HIGH     | C11 Hooks in frontmatter  | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml                                          |
+| MEDIUM   | C3 Multi-Source           | Local → Remote → Official priority; merge skills from multiple sources                           |
+| MEDIUM   | C12 Local skills folder   | Auto-discover skills from `./custom-skills/`; auto-generate metadata.yaml without schema comment |
+| MEDIUM   | C4 Skill Reorg            | Separate PhotoRoom from community skills                                                         |
+| MEDIUM   | C5 Custom principles      | `cc customize --principles` for user-added principles merged on compile                          |
+| MEDIUM   | C6 `cc doctor`            | Diagnose connectivity/auth issues                                                                |
+| MEDIUM   | C7 `cc eject`             | Local export or GitHub fork for full independence                                                |
 
 ---
 
@@ -105,17 +89,19 @@
 
 ### CLI & Infrastructure
 
-| Priority | Task                    | Description                                                                                                |
-| -------- | ----------------------- | ---------------------------------------------------------------------------------------------------------- |
-| MEDIUM   | Output styles research  | Investigate Claude Code output styles for sub-agents; could set concise mode for agent cross-communication |
-| LOW      | Template refactoring    | Split agent.liquid into partials (moved to src/agents/\_templates/)                                        |
-| LOW      | Marketplace foundation  | Stack Marketplace Phase 1-2                                                                                |
-| LOW      | Community submission    | `cc submit` flow                                                                                           |
-| LOW      | External skill sources  | `cc add skill-id --source github:user/repo` fetches external skills to local                               |
-| LOW      | Claude simplifier hook  | Add hook that simplifies/improves Claude's responses or workflow                                           |
-| LOW      | CLI branding            | ASCII art logo + animated mascot on startup                                                                |
-| LOW      | Agent partials refactor | Review agent partials (workflow.md, intro.md, examples.md) - improve naming, modularity                    |
-| LOW      | Configurable thinking   | CLI flags `--thinking <tokens>` and `--agent-thinking <agent>:<tokens>` to override default max thinking   |
+| Priority | Task                     | Description                                                                                                              |
+| -------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| MEDIUM   | Output styles research   | Investigate Claude Code output styles for sub-agents; could set concise mode for agent cross-communication               |
+| LOW      | Template refactoring     | Split agent.liquid into partials (moved to src/agents/\_templates/)                                                      |
+| LOW      | Marketplace foundation   | Stack Marketplace Phase 1-2                                                                                              |
+| LOW      | Community submission     | `cc submit` flow                                                                                                         |
+| LOW      | External skill sources   | `cc add skill-id --source github:user/repo` fetches external skills to local                                             |
+| LOW      | Claude simplifier hook   | Add hook that simplifies/improves Claude's responses or workflow                                                         |
+| LOW      | CLI branding             | ASCII art logo + animated mascot on startup                                                                              |
+| LOW      | Agent partials refactor  | Review agent partials (workflow.md, intro.md, examples.md) - improve naming, modularity                                  |
+| LOW      | Configurable thinking    | CLI flags `--thinking <tokens>` and `--agent-thinking <agent>:<tokens>` to override default max thinking                 |
+| LOW      | Metadata auto-generation | Generate metadata.yaml from SKILL.md frontmatter for custom skills (no schema comment, relaxed validation)               |
+| LOW      | Project agent-hooks      | `.claude/agent-hooks.yaml` maps agents to package.json scripts; merged at compile time. See `AGENT-HOOKS-PORTABILITY.md` |
 
 ### Documentation
 
@@ -142,19 +128,20 @@
 
 ## Decision Log
 
-| Date       | Decision                           | Rationale                                                                                                                                                                                                                                     |
-| ---------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-01-25 | **Simplified plugin architecture** | One plugin per project, eliminate `.claude-collective/` entirely. Grow plugin with `cc add` instead of switching stacks. "Stacks" become "templates". See `SIMPLIFIED-PLUGIN-ARCHITECTURE.md`.                                                |
-| 2026-01-25 | Version deprecated in metadata     | `version` field removed from metadata.yaml and types. Version lives only in `plugin.json`. `content_hash` is primary identifier for change detection.                                                                                         |
-| 2026-01-25 | Summoners as local agents          | `cc create skill/agent` commands won't do. Users install skill-summoner/agent-summoner as optional agents (`cc add`), run locally. Avoids network dependency, works offline, consistent with other agents. Staleness caught by `cc validate`. |
-| 2026-01-25 | Thinking budget: use defaults      | Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. No need to configure per-agent - defer CLI configurability to later.                                                                     |
-| 2026-01-25 | Core principles in template        | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local.                                                                  |
-| 2026-01-24 | Agents as individual plugins       | **Future**: Agents will be standalone installable plugins. Stacks install ~9-10 essential agents; users can add others via `cc add agent-name`.                                                                                               |
-| 2026-01-24 | Plugin-based versioning            | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                                                                                                    |
-| 2026-01-24 | Stack-based architecture           | Skills stored in `.claude-collective/stacks/` (project-local), single plugin at `.claude/plugins/claude-collective/` (project-local). `cc switch` for instant switching.                                                                      |
-| 2026-01-23 | Architecture finalized             | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                                                                                              |
-| 2026-01-22 | Inline agent invocation via CLI    | `--agents` JSON flag verified working; no file writes needed                                                                                                                                                                                  |
-| 2026-01-21 | Integer versioning                 | Zero friction; semver overkill for markdown skills                                                                                                                                                                                            |
+| Date       | Decision                             | Rationale                                                                                                                                                                                                                                     |
+| ---------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-01-26 | **Custom skills: no schema comment** | Official skills include `yaml-language-server` schema comment for strict validation. Custom/local skills omit it - no IDE validation, users free to use any category values. Simpler than maintaining multiple schemas.                       |
+| 2026-01-26 | **Expert Mode in wizard**            | Toggle on approach screen disables conflict checking, allows combining any skills (e.g., React + Vue). For advanced users who know what they're doing.                                                                                        |
+| 2026-01-25 | **Simplified plugin architecture**   | One plugin per project. "Stacks" are now "templates" (starting points). No more `cc switch`. Migration complete - see `.claude/tasks/SIMPLIFIED-PLUGIN-MIGRATION.md`.                                                                         |
+| 2026-01-25 | Version deprecated in metadata       | `version` field removed from metadata.yaml and types. Version lives only in `plugin.json`. `content_hash` is primary identifier for change detection.                                                                                         |
+| 2026-01-25 | Summoners as local agents            | `cc create skill/agent` commands won't do. Users install skill-summoner/agent-summoner as optional agents (`cc add`), run locally. Avoids network dependency, works offline, consistent with other agents. Staleness caught by `cc validate`. |
+| 2026-01-25 | Thinking budget: use defaults        | Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. No need to configure per-agent - defer CLI configurability to later.                                                                     |
+| 2026-01-25 | Core principles in template          | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local.                                                                  |
+| 2026-01-24 | Agents as individual plugins         | **Future**: Agents will be standalone installable plugins. Templates install ~9-10 essential agents; users can add others via `cc add agent-name`.                                                                                            |
+| 2026-01-24 | Plugin-based versioning              | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                                                                                                    |
+| 2026-01-23 | Architecture finalized               | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                                                                                              |
+| 2026-01-22 | Inline agent invocation via CLI      | `--agents` JSON flag verified working; no file writes needed                                                                                                                                                                                  |
+| 2026-01-21 | Integer versioning                   | Zero friction; semver overkill for markdown skills                                                                                                                                                                                            |
 
 ---
 

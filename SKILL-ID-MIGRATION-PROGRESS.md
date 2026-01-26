@@ -44,20 +44,20 @@ Directory Path → Frontmatter Name mappings will be documented here.
 - Agent: backend-developer
 - Started: 2026-01-25
 - Completed: 2026-01-25
-- Notes: Updated all 68 skill_aliases in src/config/skills-matrix.yaml from three-level directory paths to two-level frontmatter name format. Changes include:
-  - Frameworks: `frontend/framework/react` -> `frontend/react`
-  - Styling: `frontend/styling/scss-modules` -> `frontend/scss-modules`
-  - Client state: `frontend/client-state-management/zustand` -> `frontend/state-zustand`
-  - Server state: `frontend/server-state-management/react-query` -> `frontend/react-query`
-  - Data fetching: `frontend/data-fetching/swr` -> `frontend/swr`
-  - Forms: `frontend/forms/react-hook-form` -> `frontend/react-hook-form`
-  - Testing: `frontend/testing/vitest` -> `frontend/vitest`
-  - UI: `frontend/ui/shadcn-ui` -> `frontend/shadcn-ui`
-  - Backend API: `backend/api/hono` -> `backend/hono`
-  - Backend DB: `backend/database/drizzle` -> `backend/drizzle`
-  - Backend auth: `backend/auth/better-auth+drizzle+hono` -> `backend/auth-better-auth+drizzle+hono`
-  - Setup: `setup/monorepo/turborepo` -> `setup/turborepo`
-  - Research: `research/research-methodology/research-methodology` -> `research/research-methodology`
+- Notes: Updated all 68 skill_aliases in src/config/skills-matrix.yaml from three-level directory paths to simplified frontmatter name format. Changes include:
+  - Frameworks: `frontend/framework/react` -> `react`
+  - Styling: `frontend/styling/scss-modules` -> `scss-modules`
+  - Client state: `frontend/client-state-management/zustand` -> `zustand`
+  - Server state: `frontend/server-state-management/react-query` -> `react-query`
+  - Data fetching: `frontend/data-fetching/swr` -> `swr`
+  - Forms: `frontend/forms/react-hook-form` -> `react-hook-form`
+  - Testing: `frontend/testing/vitest` -> `vitest`
+  - UI: `frontend/ui/shadcn-ui` -> `shadcn-ui`
+  - Backend API: `backend/api/hono` -> `hono`
+  - Backend DB: `backend/database/drizzle` -> `drizzle`
+  - Backend auth: `backend/auth/better-auth+drizzle+hono` -> `better-auth+drizzle+hono`
+  - Setup: `setup/monorepo/turborepo` -> `turborepo`
+  - Research: `research/research-methodology/research-methodology` -> `research-methodology`
   - And 55 more similar transformations
 
 ### Task 3: Update Stack Configs
@@ -135,7 +135,7 @@ Directory Path → Frontmatter Name mappings will be documented here.
   - Called with `skill.id` which is the canonical frontmatter name
 
   **skill-copier.ts:**
-  - Uses `skill.path` (e.g., `skills/frontend/framework/react (@vince)/`) for filesystem access
+  - Uses `skill.path` (e.g., `skills/frontend/framework/react (@vince)/`) for filesystem access (directory path unchanged)
   - Uses `skill.id` for identification (frontmatter name)
   - The `ResolvedSkill` type correctly separates these concerns
 

@@ -5,6 +5,37 @@
 
 ---
 
+## Simplified Plugin Architecture Migration (2026-01-25)
+
+> **Tracking file**: `.claude/tasks/SIMPLIFIED-PLUGIN-MIGRATION.md`
+
+Eliminated multi-stack architecture (`.claude-collective/stacks/`) in favor of single-plugin-per-project model.
+
+| Task                      | Description                                                       | Completed  |
+| ------------------------- | ----------------------------------------------------------------- | ---------- |
+| A5.1 Research migration   | Identified all files referencing stacks/`.claude-collective/`     | 2026-01-25 |
+| A5.2 Remove `cc switch`   | Eliminated stack switching entirely                               | 2026-01-25 |
+| A5.3 Simplify `cc init`   | Creates plugin directly, uses "templates" instead of "stacks"     | 2026-01-25 |
+| A5.4 Update `cc edit/add` | Modifies plugin directly, not stack                               | 2026-01-25 |
+| A5.5 Remove stack files   | Deleted stack-list.ts, stack-config.ts, stack-creator.ts          | 2026-01-25 |
+| A5.6 Update `cc list`     | Shows plugin info (version, skills, agents) instead of stack list | 2026-01-25 |
+| A5.7 User migration       | `.claude-collective/` still used for config only (stacks removed) | 2026-01-25 |
+
+**8 Phases completed:**
+
+1. Phase 1: Removed switch command
+2. Phase 2: Removed stack config infrastructure
+3. Phase 3: Removed COLLECTIVE\_\* constants
+4. Phase 4: Refactored init.ts, edit.ts, list.ts
+5. Phase 5: Refactored library files
+6. Phase 6: Updated types
+7. Phase 7: Updated tests
+8. Phase 8: Documentation & cleanup
+
+All 323 tests pass.
+
+---
+
 ## Plugin Distribution - Production Readiness
 
 | Task                         | Description                                                                                          | Completed |
