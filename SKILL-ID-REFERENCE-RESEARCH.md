@@ -10,11 +10,11 @@
 
 The codebase currently uses **THREE different skill ID formats** depending on context:
 
-| Format               | Example                             | Where Used                         |
-| -------------------- | ----------------------------------- | ---------------------------------- |
-| **Directory Path**   | `frontend/framework/react (@vince)` | Stack configs, internal loaders    |
-| **Frontmatter Name** | `frontend/react (@vince)`           | SKILL.md `name` field              |
-| **Plugin Name**      | `skill-react`                       | Compiled output, agent frontmatter |
+| Format               | Example                             | Where Used                                     |
+| -------------------- | ----------------------------------- | ---------------------------------------------- |
+| **Directory Path**   | `frontend/framework/react (@vince)` | Filesystem paths only (internal)               |
+| **Frontmatter Name** | `react (@vince)`                    | SKILL.md `name` field, stack configs, all APIs |
+| **Plugin Name**      | `skill-react`                       | Compiled output, agent frontmatter             |
 
 **Key Finding**: 70% of skills have a mismatch between directory path and frontmatter name. The system maintains a `frontmatterToPath` mapping to bridge this gap.
 
@@ -22,7 +22,7 @@ The codebase currently uses **THREE different skill ID formats** depending on co
 
 ## 1. Current ID Formats
 
-### 1.1 Directory Path ID (Currently "Canonical")
+### 1.1 Directory Path ID (Internal Only)
 
 **Format**: `{category}/{subcategory}/{skill-name} (@{author})`
 
@@ -35,26 +35,25 @@ The codebase currently uses **THREE different skill ID formats** depending on co
 
 **Where Used**:
 
-- Stack config files (`src/stacks/*/config.yaml`) - **889 total references**
-- Internal data structures (`ExtractedSkillMetadata.id`)
-- Matrix loader output
-- Skill copier paths
+- Filesystem paths only (internal to loaders)
+- NOT used in stack configs anymore (migrated to frontmatter names)
 
-### 1.2 Frontmatter Name
+### 1.2 Frontmatter Name (Canonical - NOW STANDARD)
 
-**Format**: `{category}/{slug-name} (@{author})` (flattened)
+**Format**: `{skill-name} (@{author})` (simplified, no category prefix)
 
 **Examples**:
 
-- `frontend/react (@vince)` (from `frontend/framework/react (@vince)`)
-- `frontend/state-zustand (@vince)` (from `frontend/client-state-management/zustand (@vince)`)
-- `backend/api-hono (@vince)` (from `backend/api/hono (@vince)`)
+- `react (@vince)` (from directory `frontend/framework/react (@vince)`)
+- `zustand (@vince)` (from directory `frontend/client-state-management/zustand (@vince)`)
+- `hono (@vince)` (from directory `backend/api/hono (@vince)`)
 
 **Where Used**:
 
-- SKILL.md `name` field
-- Referenced in `metadata.yaml` relationships
-- Legacy references
+- SKILL.md `name` field (source of truth)
+- Stack config files (`src/stacks/*/config.yaml`)
+- skill_aliases in skills-matrix.yaml
+- All external APIs and references
 
 ### 1.3 Plugin Name (Compiled Output)
 
@@ -76,19 +75,19 @@ The codebase currently uses **THREE different skill ID formats** depending on co
 
 ## 2. Directory Path vs Frontmatter Name Comparison
 
-| Directory Path                                      | Frontmatter Name                         | Match? |
-| --------------------------------------------------- | ---------------------------------------- | ------ |
-| `frontend/framework/react (@vince)`                 | `frontend/react (@vince)`                | NO     |
-| `frontend/client-state-management/zustand (@vince)` | `frontend/state-zustand (@vince)`        | NO     |
-| `backend/api/hono (@vince)`                         | `backend/api-hono (@vince)`              | NO     |
-| `frontend/styling/scss-modules (@vince)`            | `frontend/styling-scss-modules (@vince)` | NO     |
-| `frontend/testing/vitest (@vince)`                  | `frontend/testing-vitest (@vince)`       | NO     |
-| `backend/database/drizzle (@vince)`                 | `backend/database-drizzle (@vince)`      | NO     |
-| `reviewing/reviewing (@vince)`                      | `reviewing/reviewing (@vince)`           | YES    |
-| `security/security (@vince)`                        | `security/security (@vince)`             | YES    |
-| `setup/tooling/tooling (@vince)`                    | `setup/tooling (@vince)`                 | YES    |
+| Directory Path                                      | Frontmatter Name (Canonical) |
+| --------------------------------------------------- | ---------------------------- |
+| `frontend/framework/react (@vince)`                 | `react (@vince)`             |
+| `frontend/client-state-management/zustand (@vince)` | `zustand (@vince)`           |
+| `backend/api/hono (@vince)`                         | `hono (@vince)`              |
+| `frontend/styling/scss-modules (@vince)`            | `scss-modules (@vince)`      |
+| `frontend/testing/vitest (@vince)`                  | `vitest (@vince)`            |
+| `backend/database/drizzle (@vince)`                 | `drizzle (@vince)`           |
+| `reviewing/reviewing (@vince)`                      | `reviewing (@vince)`         |
+| `security/security (@vince)`                        | `security (@vince)`          |
+| `setup/tooling/tooling (@vince)`                    | `tooling (@vince)`           |
 
-**Pattern**: The frontmatter name flattens the three-level directory structure into a two-level format by hyphenating the subcategory with the skill name.
+**Pattern**: The frontmatter name uses just the skill name plus author - no category prefix. Directory paths are internal only.
 
 ---
 
@@ -96,14 +95,14 @@ The codebase currently uses **THREE different skill ID formats** depending on co
 
 ### 3.1 skill_aliases Section
 
-Maps short names to full directory path IDs:
+Maps short names to canonical frontmatter IDs:
 
 ```yaml
 skill_aliases:
-  react: "frontend/framework/react (@vince)"
-  zustand: "frontend/client-state-management/zustand (@vince)"
-  hono: "backend/api/hono (@vince)"
-  reviewing: "reviewing/reviewing (@vince)"
+  react: "react (@vince)"
+  zustand: "zustand (@vince)"
+  hono: "hono (@vince)"
+  reviewing: "reviewing (@vince)"
 ```
 
 ### 3.2 Relationships (conflicts, recommends, requires, alternatives)
@@ -154,30 +153,30 @@ suggested_stacks:
 | `resolveToFullId()`           | matrix-loader.ts:236-251 | Resolve any format → directory path     |
 | `buildReverseAliases()`       | matrix-loader.ts:206-214 | Map directory path → short alias        |
 
-### 4.2 Resolution Order in `resolveToFullId()`
+### 4.2 Resolution Order in `resolveToCanonicalId()`
 
 ```typescript
-function resolveToFullId(aliasOrId, aliases, frontmatterToPath) {
-  // 1. Check aliases first
+function resolveToCanonicalId(aliasOrId, aliases, idToDirectoryPath) {
+  // 1. Check aliases first - maps to canonical frontmatter names
   if (aliases[aliasOrId]) return aliases[aliasOrId];
 
-  // 2. Check frontmatter names
-  if (frontmatterToPath[aliasOrId]) return frontmatterToPath[aliasOrId];
+  // 2. Check if it's already a canonical ID
+  if (idToDirectoryPath[aliasOrId]) return aliasOrId;
 
-  // 3. Return as-is (assume it's already a full ID)
+  // 3. Return as-is (assume it's already a canonical ID)
   return aliasOrId;
 }
 ```
 
-### 4.3 The `frontmatterToPath` Mapping
+### 4.3 The `idToDirectoryPath` Mapping
 
-Built during matrix loading to handle the mismatch:
+Built during matrix loading to resolve canonical IDs to filesystem paths:
 
 ```typescript
 {
-  "frontend/react (@vince)": "frontend/framework/react (@vince)",
-  "frontend/state-zustand (@vince)": "frontend/client-state-management/zustand (@vince)",
-  "backend/api-hono (@vince)": "backend/api/hono (@vince)"
+  "react (@vince)": "frontend/framework/react (@vince)",
+  "zustand (@vince)": "frontend/client-state-management/zustand (@vince)",
+  "hono (@vince)": "backend/api/hono (@vince)"
 }
 ```
 
@@ -190,10 +189,10 @@ Built during matrix loading to handle the mismatch:
 ```yaml
 # src/stacks/fullstack-react/config.yaml
 skills:
-  - id: frontend/framework/react (@vince)
-  - id: frontend/styling/scss-modules (@vince)
-  - id: backend/api/hono (@vince)
-  - id: reviewing/reviewing (@vince)
+  - id: react (@vince)
+  - id: scss-modules (@vince)
+  - id: hono (@vince)
+  - id: reviewing (@vince)
 ```
 
 ### 5.2 Per-agent skill assignments
@@ -202,14 +201,14 @@ skills:
 agent_skills:
   frontend-developer:
     framework:
-      - id: frontend/framework/react (@vince)
+      - id: react (@vince)
         preloaded: true
     styling:
-      - id: frontend/styling/scss-modules (@vince)
+      - id: scss-modules (@vince)
         preloaded: true
 ```
 
-**Total references across all stacks**: ~889
+**Note**: All stack configs now use simplified frontmatter names.
 
 ---
 
@@ -218,12 +217,11 @@ agent_skills:
 ### 6.1 Skill Plugin Compiler
 
 ```typescript
-// From: frontend/framework/react (@vince)
+// From: react (@vince)
 // To: skill-react
 
 function extractSkillPluginName(skillId: string): string {
-  const lastPart = skillId.split("/").pop() || skillId;
-  const withoutAuthor = lastPart.replace(/\s*\(@\w+\)$/, "").trim();
+  const withoutAuthor = skillId.replace(/\s*\(@\w+\)$/, "").trim();
   return `skill-${withoutAuthor}`;
 }
 ```
@@ -247,12 +245,12 @@ skills:
 
 ```typescript
 interface SkillAssignment {
-  id: string; // Full directory path ID
+  id: string; // Canonical frontmatter name (e.g., "react (@vince)")
   preloaded?: boolean;
 }
 
 interface SkillFrontmatter {
-  name: string; // Kebab-case or "category/name (@author)"
+  name: string; // Canonical ID: "skillname (@author)"
   description: string;
 }
 ```
@@ -261,13 +259,14 @@ interface SkillFrontmatter {
 
 ```typescript
 interface ExtractedSkillMetadata {
-  id: string; // Directory path: "frontend/framework/react (@vince)"
-  frontmatterName: string; // From SKILL.md: "frontend/react (@vince)"
+  id: string; // Canonical frontmatter name: "react (@vince)"
+  directoryPath: string; // Filesystem path: "frontend/framework/react (@vince)"
   name: string; // Display name: "React"
 }
 
 interface ResolvedSkill {
-  id: string; // Full directory path
+  id: string; // Canonical frontmatter name
+  path: string; // Directory path for filesystem access
   alias?: string; // Short alias from skill_aliases
   name: string; // Display name
 }
@@ -283,8 +282,8 @@ interface ResolvedSkill {
 {
   "name": {
     "type": "string",
-    "description": "Skill identifier. For Claude Code plugins, use kebab-case. Legacy format 'category/name (@author)' is supported.",
-    "examples": ["react", "api-hono", "frontend/react (@vince)"]
+    "description": "Skill identifier. Use format 'name (@author)' (e.g., 'react (@vince)').",
+    "examples": ["react (@vince)", "hono (@vince)", "zustand (@vince)"]
   }
 }
 ```
@@ -297,103 +296,71 @@ const KEBAB_CASE_REGEX = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
 ---
 
-## 9. Files That Would Need Changes
+## 9. Migration Status (COMPLETED)
 
-To standardize on frontmatter name as the canonical ID:
+All files have been migrated to use frontmatter name as canonical ID.
 
-### 9.1 Stack Config Files (13 files, ~889 references)
+### 9.1 Stack Config Files - MIGRATED
 
-| File                                           | References |
-| ---------------------------------------------- | ---------- |
-| `src/stacks/fullstack-react/config.yaml`       | 256        |
-| `src/stacks/modern-react/config.yaml`          | 84         |
-| `src/stacks/enterprise-react/config.yaml`      | 84         |
-| `src/stacks/modern-react-tailwind/config.yaml` | 77         |
-| `src/stacks/full-observability/config.yaml`    | 63         |
-| `src/stacks/remix-stack/config.yaml`           | 60         |
-| `src/stacks/nuxt-stack/config.yaml`            | 54         |
-| `src/stacks/vue-stack/config.yaml`             | 49         |
-| `src/stacks/work-stack/config.yaml`            | 44         |
-| `src/stacks/angular-stack/config.yaml`         | 34         |
-| `src/stacks/solidjs-stack/config.yaml`         | 34         |
-| `src/stacks/mobile-stack/config.yaml`          | 32         |
-| `src/stacks/minimal-backend/config.yaml`       | 18         |
+All 13 stack config files now use simplified frontmatter names (e.g., `react (@vince)` instead of `frontend/framework/react (@vince)`).
 
-### 9.2 Skills Matrix (1 file)
+### 9.2 Skills Matrix - MIGRATED
 
-- `src/config/skills-matrix.yaml` - Update `skill_aliases` values
+- `src/config/skills-matrix.yaml` - All `skill_aliases` use frontmatter names
 
-### 9.3 Loader Files (3 files)
+### 9.3 Loader Files - MIGRATED
 
-- `src/cli/lib/loader.ts` - Change ID extraction logic
-- `src/cli/lib/matrix-loader.ts` - Remove/invert `frontmatterToPath` mapping
-- `src/cli/lib/matrix-resolver.ts` - Update resolution logic
+- `src/cli/lib/loader.ts` - Uses frontmatter name as canonical ID
+- `src/cli/lib/matrix-loader.ts` - `buildIdToDirectoryPathMap()` for path resolution
+- `src/cli/lib/matrix-resolver.ts` - Updated resolution logic
 
-### 9.4 Compiler Files (3 files)
+### 9.4 Compiler Files - MIGRATED
 
-- `src/cli/lib/skill-plugin-compiler.ts` - Update ID extraction
-- `src/cli/lib/stack-plugin-compiler.ts` - Update skill resolution
-- `src/cli/lib/skill-copier.ts` - Update path handling
+- `src/cli/lib/skill-plugin-compiler.ts` - Works with frontmatter names
+- `src/cli/lib/stack-plugin-compiler.ts` - Resolves paths via skill.path
+- `src/cli/lib/skill-copier.ts` - Uses skill.path for filesystem
 
-### 9.5 Test Files (6+ files)
+### 9.5 Test Files - MIGRATED
 
-- `src/cli/lib/__tests__/skill-plugin-compiler.test.ts`
-- `src/cli/lib/__tests__/stack-plugin-compiler.test.ts`
-- `src/cli/lib/__tests__/integration.test.ts`
-- `src/cli/lib/matrix-resolver.test.ts`
-- `src/cli/lib/__tests__/plugin-validator.test.ts`
-- `src/cli/lib/loader.test.ts`
+All test files updated to use frontmatter name format.
 
 ---
 
-## 10. Proposed Standardization
+## 10. Current Standard (IMPLEMENTED)
 
-### Option A: Frontmatter Name as Canonical (Recommended)
+### Frontmatter Name as Canonical
 
-**Format**: `{category}/{slug-name} (@{author})`
+**Format**: `{skill-name} (@{author})` (no category prefix)
 
-**Pros**:
+**Examples**:
 
-- Cleaner, more concise
-- Already used in SKILL.md (source of truth for skill identity)
-- Better for user-facing references
+- `react (@vince)`
+- `zustand (@vince)`
+- `hono (@vince)`
+- `drizzle (@vince)`
 
-**Cons**:
+**Benefits**:
 
-- Requires updating ~889 stack config references
-- Directory structure won't match ID
-
-### Option B: Directory Path as Canonical (Current)
-
-**Format**: `{category}/{subcategory}/{skill-name} (@{author})`
-
-**Pros**:
-
-- Already the default throughout configs
-- Matches file system structure
-
-**Cons**:
-
-- Verbose
-- Requires maintaining `frontmatterToPath` mapping
-- Mismatch with SKILL.md frontmatter
+- Simple and clean
+- SKILL.md `name` field is the source of truth
+- User-friendly for all external references
+- Directory paths are internal implementation detail
 
 ---
 
-## 11. Migration Strategy
+## 11. Migration Completed
 
-If choosing Option A (frontmatter name as canonical):
+All phases complete as of 2026-01-25:
 
-1. **Phase 1**: Update `skill_aliases` in skills-matrix.yaml to use frontmatter names
-2. **Phase 2**: Update all stack config files (can use `replace_all`)
-3. **Phase 3**: Simplify loader to use frontmatter name directly
-4. **Phase 4**: Remove `frontmatterToPath` mapping (no longer needed)
-5. **Phase 5**: Update tests
-6. **Phase 6**: Update documentation
+1. **Phase 1**: skill_aliases updated - DONE
+2. **Phase 2**: Stack configs updated - DONE
+3. **Phase 3**: Loaders updated - DONE
+4. **Phase 4**: Mapping inverted to `idToDirectoryPath` - DONE
+5. **Phase 5**: Tests updated - DONE
+6. **Phase 6**: Documentation updated - DONE
 
 ---
 
 ## References
 
-- TODO.md line 163: "Skill ID: use frontmatter name - Currently using directory path as skill ID (workaround)"
-- TODO.md note: "The proper fix would be to use `frontmatter.name` as the canonical ID everywhere"
+- See SKILL-ID-MIGRATION-PROGRESS.md for detailed migration log

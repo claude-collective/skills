@@ -296,20 +296,21 @@ Located in `.claude/research/claude-improvements/`:
 
 Located in `.claude/research/findings/v2/`:
 
-| Document                                   | Purpose                                                         |
-| ------------------------------------------ | --------------------------------------------------------------- |
-| **`SIMPLIFIED-PLUGIN-ARCHITECTURE.md`**    | **CRITICAL: One plugin per project, eliminate stacks**          |
-| `ARCHITECTURE-IMPROVEMENT-FINDINGS.md`     | System architecture improvement proposals                       |
-| `COMPILATION-PIPELINE-FINDINGS.md`         | Findings on the compilation system                              |
-| `PROFILE-SYSTEM-FINDINGS.md`               | Stack switching research (partially obsolete)                   |
-| `TEMPLATE-ARCHITECTURE-FINDINGS.md`        | Template system design                                          |
-| `DRY-PRINCIPLES-AGENT5-FINDINGS.md`        | DRY principles for agents                                       |
-| `MODEL-SPECIFIC-OPTIMIZATIONS-FINDINGS.md` | Sonnet vs Opus optimizations                                    |
-| `SCALABILITY-ANALYSIS.md`                  | Scalability considerations                                      |
-| `TYPE-SAFETY-DETAILED.md`                  | TypeScript type safety research                                 |
-| `FINAL-DECISION.md`                        | Key architectural decisions                                     |
-| `CLI-DATA-DRIVEN-ARCHITECTURE.md`          | Skills matrix, relationships, eject design (partially obsolete) |
-| `RULES-TASKS-INTEGRATION-PLAN.md`          | Claude Rules, Tasks, v2.1.x integration                         |
+| Document                                   | Purpose                                                          |
+| ------------------------------------------ | ---------------------------------------------------------------- |
+| **`SIMPLIFIED-PLUGIN-ARCHITECTURE.md`**    | **CRITICAL: One plugin per project, eliminate stacks**           |
+| `ARCHITECTURE-IMPROVEMENT-FINDINGS.md`     | System architecture improvement proposals                        |
+| `COMPILATION-PIPELINE-FINDINGS.md`         | Findings on the compilation system                               |
+| `PROFILE-SYSTEM-FINDINGS.md`               | Stack switching research (partially obsolete)                    |
+| `TEMPLATE-ARCHITECTURE-FINDINGS.md`        | Template system design                                           |
+| `DRY-PRINCIPLES-AGENT5-FINDINGS.md`        | DRY principles for agents                                        |
+| `MODEL-SPECIFIC-OPTIMIZATIONS-FINDINGS.md` | Sonnet vs Opus optimizations                                     |
+| `SCALABILITY-ANALYSIS.md`                  | Scalability considerations                                       |
+| `TYPE-SAFETY-DETAILED.md`                  | TypeScript type safety research                                  |
+| `FINAL-DECISION.md`                        | Key architectural decisions                                      |
+| `CLI-DATA-DRIVEN-ARCHITECTURE.md`          | Skills matrix, relationships, eject design (partially obsolete)  |
+| `RULES-TASKS-INTEGRATION-PLAN.md`          | Claude Rules, Tasks, v2.1.x integration                          |
+| `AGENT-HOOKS-PORTABILITY.md`               | Project-level agent-hook mappings via `.claude/agent-hooks.yaml` |
 
 ### Skill Architecture Research
 

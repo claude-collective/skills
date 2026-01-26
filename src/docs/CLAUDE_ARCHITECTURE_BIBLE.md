@@ -1312,8 +1312,8 @@ cli_name: React
 cli_description: React component patterns
 usage_guidance: Use when building React components, hooks, or following React 19 patterns.
 compatible_with:
-  - frontend/client-state-management/zustand
-  - frontend/server-state-management/react-query
+  - zustand (@vince)
+  - react-query (@vince)
 tags:
   - react
   - react-19

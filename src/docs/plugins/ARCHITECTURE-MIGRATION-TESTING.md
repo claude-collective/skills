@@ -71,12 +71,12 @@ ls dist/stacks/fullstack-react/skills/
 # Expected: backend, frontend, research, security, setup, shared
 
 # Check a specific skill exists with content
-ls "dist/stacks/fullstack-react/skills/frontend/framework/react (@vince)/"
+ls "dist/stacks/fullstack-react/skills/react (@vince)/"
 
 # Expected: SKILL.md, metadata.yaml, reference.md, examples/
 
 # Verify SKILL.md has content
-head -20 "dist/stacks/fullstack-react/skills/frontend/framework/react (@vince)/SKILL.md"
+head -20 "dist/stacks/fullstack-react/skills/react (@vince)/SKILL.md"
 ```
 
 ### Pass Criteria
