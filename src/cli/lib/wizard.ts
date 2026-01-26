@@ -72,6 +72,8 @@ export interface WizardResult {
 interface WizardOptions {
   /** Pre-selected skill IDs (for update mode) */
   initialSkills?: string[];
+  /** Whether local skills were discovered (auto-enables expert mode) */
+  hasLocalSkills?: boolean;
 }
 
 function createInitialState(options: WizardOptions = {}): WizardState {
@@ -90,7 +92,8 @@ function createInitialState(options: WizardOptions = {}): WizardState {
     lastSelectedCategory: null,
     lastSelectedSubcategory: null,
     lastSelectedSkill: null,
-    expertMode: false,
+    // Auto-enable expert mode when local skills exist (dependencies can't be checked)
+    expertMode: options.hasLocalSkills ?? false,
   };
 }
 
@@ -572,7 +575,23 @@ export async function runWizard(
   matrix: MergedSkillsMatrix,
   options: WizardOptions = {},
 ): Promise<WizardResult | null> {
-  const state = createInitialState(options);
+  // Check if matrix contains local skills
+  const hasLocalSkills = Object.values(matrix.skills).some(
+    (skill) => skill.local === true,
+  );
+
+  const state = createInitialState({
+    ...options,
+    hasLocalSkills,
+  });
+
+  // Show message if expert mode was auto-enabled due to local skills
+  if (hasLocalSkills && state.expertMode) {
+    console.log(
+      pc.yellow("\n  Local skills detected") +
+        pc.dim(" - Expert Mode enabled (dependency checking disabled)\n"),
+    );
+  }
 
   while (true) {
     switch (state.currentStep) {

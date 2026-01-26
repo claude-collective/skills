@@ -104,7 +104,18 @@ export function generateConfigFromSkills(
   }
 
   // Build the skills array (flat list of all selected skills)
-  const skills: SkillAssignment[] = selectedSkillIds.map((id) => ({ id }));
+  // For local skills, include the local flag and path
+  const skills: SkillAssignment[] = selectedSkillIds.map((id) => {
+    const skill = matrix.skills[id];
+    if (skill?.local && skill?.localPath) {
+      return {
+        id,
+        local: true,
+        path: skill.localPath,
+      };
+    }
+    return { id };
+  });
 
   // Build the config
   const config: StackConfig = {
@@ -179,8 +190,18 @@ export function mergeStackWithSkills(
   // Start with the base config
   const config = generateConfigFromStack(baseStackConfig);
 
-  // Update the skills array
-  config.skills = selectedSkillIds.map((id) => ({ id }));
+  // Update the skills array (handle local skills with extra fields)
+  config.skills = selectedSkillIds.map((id) => {
+    const skill = matrix.skills[id];
+    if (skill?.local && skill?.localPath) {
+      return {
+        id,
+        local: true,
+        path: skill.localPath,
+      };
+    }
+    return { id };
+  });
 
   // Add new skills to agent_skills
   if (addedSkills.length > 0 && config.agent_skills) {
