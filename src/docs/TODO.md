@@ -12,6 +12,7 @@
 
 | File                                | Purpose                                                     | Location                        |
 | ----------------------------------- | ----------------------------------------------------------- | ------------------------------- |
+| `DUAL-REPO-ARCHITECTURE.md`         | **Next Refactor** - Public marketplace + private work repo  | `.claude/research/findings/v2/` |
 | `SIMPLIFIED-PLUGIN-MIGRATION.md`    | **Complete** - 8-phase migration tracking                   | `.claude/tasks/`                |
 | `SKILLS-MATRIX-VERIFICATION.md`     | **Complete** - 18-agent verification of skill relationships | `.claude/research/`             |
 | `SIMPLIFIED-PLUGIN-ARCHITECTURE.md` | **Complete** - One plugin per project architecture          | `.claude/research/findings/v2/` |
@@ -24,8 +25,8 @@
 | Status              | Count |
 | ------------------- | ----- |
 | **Do Now**          | 3     |
-| **After Migration** | 14    |
-| **Backlog**         | 20    |
+| **After Migration** | 11    |
+| **Backlog**         | 24    |
 
 ---
 
@@ -56,20 +57,20 @@
 
 ### Post-Split Features
 
-| Priority | Task                      | Description                                                                                      |
-| -------- | ------------------------- | ------------------------------------------------------------------------------------------------ |
-| HIGH     | C1 Schema Distribution    | GitHub raw URLs, SchemaStore PR                                                                  |
-| HIGH     | C2 Private Repos          | Configurable source, auth, pre-flight checks                                                     |
-| HIGH     | C8 Agent plugins          | Agents become individually installable plugins in marketplace                                    |
-| HIGH     | C9 `cc add <agent>`       | Install individual agents (e.g., `cc add pattern-scout`)                                         |
-| HIGH     | C10 Essential vs optional | Stacks install ~9-10 essential agents; optional agents installed separately                      |
-| HIGH     | C11 Hooks in frontmatter  | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml                                          |
-| MEDIUM   | C3 Multi-Source           | Local → Remote → Official priority; merge skills from multiple sources                           |
-| MEDIUM   | C12 Local skills folder   | Auto-discover skills from `./custom-skills/`; auto-generate metadata.yaml without schema comment |
-| MEDIUM   | C4 Skill Reorg            | Separate PhotoRoom from community skills                                                         |
-| MEDIUM   | C5 Custom principles      | `cc customize --principles` for user-added principles merged on compile                          |
-| MEDIUM   | C6 `cc doctor`            | Diagnose connectivity/auth issues                                                                |
-| MEDIUM   | C7 `cc eject`             | Local export or GitHub fork for full independence                                                |
+| Priority | Task                          | Description                                                                                                  |
+| -------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| HIGH     | C1 Schema Distribution        | GitHub raw URLs, SchemaStore PR                                                                              |
+| HIGH     | C2 Private Repos              | Configurable source, auth, pre-flight checks                                                                 |
+| ~~HIGH~~ | ~~C8 Agent plugins~~          | **REMOVED** - Agents are compiled output, not marketplace plugins. Only Skills and Stacks are distributable. |
+| ~~HIGH~~ | ~~C9 `cc add <agent>`~~       | **REMOVED** - Agents are compiled from templates + skills, not installed individually.                       |
+| ~~HIGH~~ | ~~C10 Essential vs optional~~ | **REMOVED** - All agents compiled locally from bundled templates.                                            |
+| HIGH     | C11 Hooks in frontmatter      | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml                                                      |
+| MEDIUM   | C3 Multi-Source               | Local → Remote → Official priority; merge skills from multiple sources                                       |
+| MEDIUM   | C12 Local skills folder       | Auto-discover skills from `./custom-skills/`; auto-generate metadata.yaml without schema comment             |
+| MEDIUM   | C4 Skill Reorg                | Separate PhotoRoom from community skills                                                                     |
+| MEDIUM   | C5 Custom principles          | `cc customize --principles` for user-added principles merged on compile                                      |
+| MEDIUM   | C6 `cc doctor`                | Diagnose connectivity/auth issues                                                                            |
+| MEDIUM   | C7 `cc eject`                 | Local export or GitHub fork for full independence                                                            |
 
 ---
 
@@ -91,15 +92,18 @@
 
 | Priority | Task                     | Description                                                                                                                                                                                                                                                                                                                                                                                                      |
 | -------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HIGH     | Dual-repo architecture   | Support local-only mode for work repos: `cc init --local`, `.claude/skills/` for local skills, mixed sources in config.yaml (installed plugins + local skills). See `DUAL-REPO-ARCHITECTURE.md`. Public marketplace remains separate, work repos consume meta agents only.                                                                                                                                       |
+| HIGH     | Bundle templates in CLI  | Move templates AND partials into CLI bundle so work repos don't need public repo access. Templates (agent.liquid) and partials (workflow.md, intro.md, examples.md, etc.) bundled internally, used by default on compile.                                                                                                                                                                                        |
+| HIGH     | `cc eject` command       | Eject bundled content for local customization: `cc eject templates`, `cc eject skills`, `cc eject config`, `cc eject all`. Copies BOTH agent.liquid AND all partials to `.claude/templates/`. Resolution: local (if ejected) -> bundled. One-way operation, no sync back.                                                                                                                                        |
 | MEDIUM   | Advanced wizard UI       | Migrate `cc init` wizard from @clack to Ink (or alternative). Enables: horizontal tabs, arrow key navigation, single-view skill selection with expand/collapse categories, horizontal dividers. See `CLI-FRAMEWORK-RESEARCH.md`. Options: **Ink** (React for CLI, recommended), **blessed/neo-blessed** (widget-based TUI), **terminal-kit** (low-level + widgets), **Textual** (Python, would require rewrite). |
 | MEDIUM   | Output styles research   | Investigate Claude Code output styles for sub-agents; could set concise mode for agent cross-communication                                                                                                                                                                                                                                                                                                       |
-| LOW      | Template refactoring     | Split agent.liquid into partials (moved to src/agents/\_templates/)                                                                                                                                                                                                                                                                                                                                              |
+| LOW      | Template refactoring     | Split agent.liquid into partials (partials bundled in CLI repo alongside templates, not in public skills repo)                                                                                                                                                                                                                                                                                                   |
 | LOW      | Marketplace foundation   | Stack Marketplace Phase 1-2                                                                                                                                                                                                                                                                                                                                                                                      |
 | LOW      | Community submission     | `cc submit` flow                                                                                                                                                                                                                                                                                                                                                                                                 |
 | LOW      | External skill sources   | `cc add skill-id --source github:user/repo` fetches external skills to local                                                                                                                                                                                                                                                                                                                                     |
 | LOW      | Claude simplifier hook   | Add hook that simplifies/improves Claude's responses or workflow                                                                                                                                                                                                                                                                                                                                                 |
 | LOW      | CLI branding             | ASCII art logo + animated mascot on startup                                                                                                                                                                                                                                                                                                                                                                      |
-| LOW      | Agent partials refactor  | Review agent partials (workflow.md, intro.md, examples.md) - improve naming, modularity                                                                                                                                                                                                                                                                                                                          |
+| LOW      | Agent partials refactor  | Review agent partials bundled in CLI (workflow.md, intro.md, examples.md) - improve naming, modularity. Note: Partials live in CLI repo, not public skills repo                                                                                                                                                                                                                                                  |
 | LOW      | Configurable thinking    | CLI flags `--thinking <tokens>` and `--agent-thinking <agent>:<tokens>` to override default max thinking                                                                                                                                                                                                                                                                                                         |
 | LOW      | Metadata auto-generation | Generate metadata.yaml from SKILL.md frontmatter for custom skills (no schema comment, relaxed validation)                                                                                                                                                                                                                                                                                                       |
 | LOW      | Project agent-hooks      | `.claude/agent-hooks.yaml` maps agents to package.json scripts; merged at compile time. See `AGENT-HOOKS-PORTABILITY.md`                                                                                                                                                                                                                                                                                         |
@@ -138,8 +142,8 @@
 | 2026-01-25 | Summoners as local agents            | `cc create skill/agent` commands won't do. Users install skill-summoner/agent-summoner as optional agents (`cc add`), run locally. Avoids network dependency, works offline, consistent with other agents. Staleness caught by `cc validate`. |
 | 2026-01-25 | Thinking budget: use defaults        | Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. No need to configure per-agent - defer CLI configurability to later.                                                                     |
 | 2026-01-25 | Core principles in template          | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local.                                                                  |
-| 2026-01-24 | Agents as individual plugins         | **Future**: Agents will be standalone installable plugins. Templates install ~9-10 essential agents; users can add others via `cc add agent-name`.                                                                                            |
-| 2026-01-24 | Plugin-based versioning              | Skills, agents, and stacks are ALL plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Single versioning model for all artifacts.                                                                                                    |
+| 2026-01-28 | Agents are NOT plugins               | **Decision**: Agents are compiled OUTPUT, not marketplace artifacts. Only Skills and Stacks are distributable plugins. Agents are generated locally from bundled templates + user-selected skills.                                            |
+| 2026-01-24 | Plugin-based versioning              | Skills and stacks are plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Agents are not versioned separately (compiled output).                                                                                                     |
 | 2026-01-23 | Architecture finalized               | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                                                                                              |
 | 2026-01-22 | Inline agent invocation via CLI      | `--agents` JSON flag verified working; no file writes needed                                                                                                                                                                                  |
 | 2026-01-21 | Integer versioning                   | Zero friction; semver overkill for markdown skills                                                                                                                                                                                            |
