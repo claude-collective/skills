@@ -11,6 +11,10 @@ author: "@photoroom"
 version: "1.0.0"
 
 skills:
+  # Methodology
+  - id: methodology/universal
+  - id: methodology/implementation
+  - id: methodology/extended-session
   # Frontend - Photoroom specific
   - id: react+mobx (@vince)
   - id: tailwind (@vince)
@@ -45,6 +49,11 @@ agents:
 # Per-agent skill assignments (hierarchical by category)
 agent_skills:
   frontend-developer:
+    methodology:
+      - id: methodology/universal
+        preloaded: true
+      - id: methodology/implementation
+        preloaded: true
     framework:
       - id: react+mobx (@vince)
         preloaded: true
@@ -89,6 +98,11 @@ agent_skills:
     #   - id: testing+karma+playwright (@vince)
 
   tester:
+    methodology:
+      - id: methodology/universal
+        preloaded: true
+      - id: methodology/implementation
+        preloaded: true
     framework:
       - id: react+mobx (@vince)
     state:
@@ -101,6 +115,9 @@ agent_skills:
     #     preloaded: true
 
   pm:
+    methodology:
+      - id: methodology/universal
+        preloaded: true
     framework:
       - id: react+mobx (@vince)
     styling:
