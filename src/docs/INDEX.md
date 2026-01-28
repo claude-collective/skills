@@ -38,7 +38,7 @@ The source of truth for the modular agent & skill compilation system.
 - Agent categories (developer, reviewer, researcher, planning, pattern, meta, tester)
 - How agents are generic (role + workflow) while skills are stack-specific (implementation patterns)
 - Adding new agents and skills
-- Template system (`src/agents/_templates/agent.liquid`)
+- Template system (`agent.liquid` + partials bundled in CLI, not public skills repo)
 - **Skill schema requirements** (metadata.yaml, SKILL.md frontmatter, validation rules)
 
 **Use when:** Creating or modifying agents, understanding the build system, switching stacks, authoring new skills.
@@ -202,7 +202,7 @@ The CLI (`cc`) is the user-facing tool for managing skills, stacks, and agents.
 
 ## Core Principles (Embedded in All Agents)
 
-The 5 core principles are **hardcoded directly in the agent template** (`src/agents/_templates/agent.liquid`). This ensures every agent has consistent foundational instructions:
+The 5 core principles are **hardcoded directly in the agent template** (`agent.liquid`, bundled in CLI). This ensures every agent has consistent foundational instructions:
 
 | Principle                        | Purpose                                                      |
 | -------------------------------- | ------------------------------------------------------------ |
@@ -298,6 +298,7 @@ Located in `.claude/research/findings/v2/`:
 
 | Document                                   | Purpose                                                          |
 | ------------------------------------------ | ---------------------------------------------------------------- |
+| **`DUAL-REPO-ARCHITECTURE.md`**            | **NEXT: Public marketplace + private work repo pattern**         |
 | **`SIMPLIFIED-PLUGIN-ARCHITECTURE.md`**    | **CRITICAL: One plugin per project, eliminate stacks**           |
 | `ARCHITECTURE-IMPROVEMENT-FINDINGS.md`     | System architecture improvement proposals                        |
 | `COMPILATION-PIPELINE-FINDINGS.md`         | Findings on the compilation system                               |
