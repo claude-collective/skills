@@ -146,57 +146,60 @@ Complete reference for all CLI commands.
 
 ---
 
-## CLI Documentation
+## Dual-Repo Architecture
 
-The CLI (`cc`) is the user-facing tool for managing skills, stacks, and agents.
+> **Status**: Implemented (2026-01-29)
+> **Source of Truth**: `.claude/research/findings/v2/DUAL-REPO-ARCHITECTURE.md`
 
-### Core CLI Documents
+This repository is now part of a **dual-repo architecture**:
 
-| Document                              | Path                            | Purpose                                                                |
-| ------------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| `PLUGIN-DISTRIBUTION-ARCHITECTURE.md` | `src/docs/plugins/`             | **Current** - Plugin-based distribution + CLI compilation architecture |
-| `CLI-AGENT-INVOCATION-RESEARCH.md`    | `src/docs/cli/`                 | **Key Discovery** - Inline agent invocation via `--agents` JSON flag   |
-| `CLI-FRAMEWORK-RESEARCH.md`           | `src/docs/cli/`                 | Framework comparison (@clack vs Ink vs Inquirer)                       |
-| `CLI-REFERENCE.md`                    | `src/docs/plugins/`             | **Complete** - All CLI commands with options and examples              |
-| `PLUGIN-DEVELOPMENT.md`               | `src/docs/plugins/`             | **New** - How to create and publish plugins                            |
-| `CLI-IMPLEMENTATION-PLAN.md`          | `.claude/research/findings/v2/` | Phase 1-5 implementation details                                       |
-| `CLI-PHASE-2-PLAN.md`                 | `.claude/research/findings/v2/` | Remaining features (list, create, update)                              |
-| `CLI-DATA-DRIVEN-ARCHITECTURE.md`     | `.claude/research/findings/v2/` | **Moved** - Skills matrix, relationships, eject design (research)      |
+| Repository             | Purpose                               | Location                   |
+| ---------------------- | ------------------------------------- | -------------------------- |
+| **CLI Repo**           | CLI tool (`cc`) for managing skills   | Separate repo              |
+| **Skills Repo** (this) | Skills, stacks, agents, documentation | `claude-collective-skills` |
 
-### CLI Architecture Principles
+### What Lives Where
 
-1. **Data-Driven**: CLI reads `skills-matrix.yaml` for all decisions (no hardcoded logic)
-2. **Repository Separation**: CLI fetches matrix from content repo via `giget`
-3. **Caching**: Matrix cached locally, refreshed via `cc update`
-4. **Minimal MVP**: 10-skill test dataset covers all wizard flows
-5. **Ephemeral Agent Invocation**: Meta-agents fetched and invoked inline via `--agents` JSON (no files written)
+| Content                             | Repository         |
+| ----------------------------------- | ------------------ |
+| Skills (`src/skills/`)              | Skills Repo (this) |
+| Stacks (`src/stacks/`)              | Skills Repo (this) |
+| Agent definitions (`src/agents/`)   | Skills Repo (this) |
+| Compiled agents (`.claude/agents/`) | Skills Repo (this) |
+| CLI code (`src/cli/`)               | CLI Repo           |
+| Templates (`agent.liquid`)          | CLI Repo (bundled) |
+| Skills matrix                       | CLI Repo           |
+| JSON Schemas                        | CLI Repo           |
 
-### Key Configuration Files
+### Key Documents
 
-| File                      | Path                                | Purpose                                                                                                          |
-| ------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `skills-matrix.yaml`      | `src/config/skills-matrix.yaml`     | Full production matrix - categories, relationships, suggested stacks, skill aliases (70+ skills, 20+ categories) |
-| `skills-matrix-mvp.yaml`  | `src/config/skills-matrix-mvp.yaml` | MVP test dataset - minimal 10-skill dataset for testing all wizard flows                                         |
-| `skills/**/metadata.yaml` | `src/skills/`                       | Per-skill metadata (auto-extracted)                                                                              |
+| Document                           | Path                            | Purpose                                                    |
+| ---------------------------------- | ------------------------------- | ---------------------------------------------------------- |
+| `DUAL-REPO-ARCHITECTURE.md`        | `.claude/research/findings/v2/` | **Architecture spec** - Plugin vs Local mode, eject system |
+| `CLI-AGENT-INVOCATION-RESEARCH.md` | `src/docs/cli/`                 | Inline agent invocation via `--agents` JSON                |
+| `PLUGIN-DEVELOPMENT.md`            | `src/docs/plugins/`             | How to create and publish plugins                          |
+| `CLI-REFERENCE.md`                 | `src/docs/plugins/`             | CLI command reference                                      |
 
-### TypeScript Types & Schemas
+### Architecture Principles
 
-| File                        | Path                                    | Purpose                                                        |
-| --------------------------- | --------------------------------------- | -------------------------------------------------------------- |
-| `types-matrix.ts`           | `src/cli/types-matrix.ts`               | TypeScript types for the matrix system (676 lines, 6 sections) |
-| `skills-matrix.schema.json` | `src/schemas/skills-matrix.schema.json` | JSON Schema (draft-07) for validating skills-matrix.yaml files |
+1. **Templates bundled in CLI**: `agent.liquid` and partials are bundled, not in this repo
+2. **Two installation modes**: Plugin Mode (native `claude plugin install`) or Local Mode (copy to `.claude/skills/`)
+3. **Unified compilation**: `cc compile` discovers from both `.claude/plugins/` and `.claude/skills/`
+4. **Eject for customization**: `cc eject templates` copies bundled templates for local modification
+5. **Skills are source of truth**: `src/skills/` has full metadata, agents are compiled output
 
 ### Implementation Status
 
-| Phase   | Description          | Status                                                   |
-| ------- | -------------------- | -------------------------------------------------------- |
-| Phase 0 | Schema Alignment     | **Complete** (skill, agent, plugin, marketplace schemas) |
-| Phase 1 | Skill-as-Plugin      | **Complete** (83 plugins compiled)                       |
-| Phase 2 | Marketplace Setup    | **Complete** (marketplace.json generated)                |
-| Phase 3 | Stack Compilation    | **Complete** (compile-stack command)                     |
-| Phase 4 | CLI Updates          | **Complete** (init, version commands)                    |
-| Phase 5 | Testing & Validation | **Complete** (validator + 34 tests)                      |
-| Phase 6 | Documentation        | **Complete** (CLI-REFERENCE, PLUGIN-DEVELOPMENT)         |
+All 6 phases of DUAL-REPO-ARCHITECTURE.md are complete:
+
+| Phase   | Description                | Status       |
+| ------- | -------------------------- | ------------ |
+| Phase 1 | Bundle templates in CLI    | **Complete** |
+| Phase 2 | Wizard mode selection      | **Complete** |
+| Phase 3 | Plugin Mode implementation | **Complete** |
+| Phase 4 | Local Mode implementation  | **Complete** |
+| Phase 5 | Unified compilation        | **Complete** |
+| Phase 6 | Eject command              | **Complete** |
 
 ---
 
@@ -298,8 +301,8 @@ Located in `.claude/research/findings/v2/`:
 
 | Document                                   | Purpose                                                          |
 | ------------------------------------------ | ---------------------------------------------------------------- |
-| **`DUAL-REPO-ARCHITECTURE.md`**            | **NEXT: Public marketplace + private work repo pattern**         |
-| **`SIMPLIFIED-PLUGIN-ARCHITECTURE.md`**    | **CRITICAL: One plugin per project, eliminate stacks**           |
+| **`DUAL-REPO-ARCHITECTURE.md`**            | **IMPLEMENTED**: Public marketplace + private work repo pattern  |
+| **`SIMPLIFIED-PLUGIN-ARCHITECTURE.md`**    | One plugin per project architecture (superseded by dual-repo)    |
 | `ARCHITECTURE-IMPROVEMENT-FINDINGS.md`     | System architecture improvement proposals                        |
 | `COMPILATION-PIPELINE-FINDINGS.md`         | Findings on the compilation system                               |
 | `PROFILE-SYSTEM-FINDINGS.md`               | Stack switching research (partially obsolete)                    |
