@@ -1,149 +1,180 @@
 # Outstanding Tasks
 
-> **Generated**: 2026-01-21
-> **Updated**: 2026-01-29
-> **Completed Tasks**: See [TODO-COMPLETED.md](./TODO-COMPLETED.md)
+> **Generated**: 2026-01-21 | **Updated**: 2026-01-29 | **Completed**: [TODO-COMPLETED.md](./TODO-COMPLETED.md)
 >
-> **Architecture Status**: Dual-repo architecture complete. CLI at `/home/vince/dev/cli`, skills here. See [DUAL-REPO-ARCHITECTURE.md](./.claude/research/findings/v2/DUAL-REPO-ARCHITECTURE.md).
+> **Architecture**: Dual-repo complete. CLI at `/home/vince/dev/cli`. See [DUAL-REPO-ARCHITECTURE.md](./.claude/research/findings/v2/DUAL-REPO-ARCHITECTURE.md).
 
 ---
 
 ## Related Files
 
-| File                                | Purpose                                                     | Location                        |
-| ----------------------------------- | ----------------------------------------------------------- | ------------------------------- |
-| `DUAL-REPO-ARCHITECTURE.md`         | **IMPLEMENTED** - Public marketplace + private work repo    | `.claude/research/findings/v2/` |
-| `SIMPLIFIED-PLUGIN-MIGRATION.md`    | **Complete** - 8-phase migration tracking                   | `.claude/tasks/`                |
-| `SKILLS-MATRIX-VERIFICATION.md`     | **Complete** - 18-agent verification of skill relationships | `.claude/research/`             |
-| `SIMPLIFIED-PLUGIN-ARCHITECTURE.md` | **Complete** - One plugin per project architecture          | `.claude/research/findings/v2/` |
-| `CLI-AGENT-INVOCATION-RESEARCH.md`  | **Key** - Inline `--agents` JSON invocation                 | `src/docs/cli/`                 |
+| File                                | Status         | Location                        |
+| ----------------------------------- | -------------- | ------------------------------- |
+| `DUAL-REPO-ARCHITECTURE.md`         | ✅ Implemented | `.claude/research/findings/v2/` |
+| `SIMPLIFIED-PLUGIN-MIGRATION.md`    | ✅ Complete    | `.claude/tasks/`                |
+| `SKILLS-MATRIX-VERIFICATION.md`     | ✅ Complete    | `.claude/research/`             |
+| `SIMPLIFIED-PLUGIN-ARCHITECTURE.md` | ✅ Complete    | `.claude/research/findings/v2/` |
+| `CLI-AGENT-INVOCATION-RESEARCH.md`  | 📌 Key ref     | `src/docs/cli/`                 |
 
 ---
 
-## Totals
+## Counts
 
-| Status              | Count       |
-| ------------------- | ----------- |
-| **Do Now**          | 3           |
-| **After Migration** | 8 (4 done)  |
-| **Backlog**         | 21 (3 done) |
+| Do Now | After Migration | Backlog | Triad |
+| ------ | --------------- | ------- | ----- |
+| 9      | 2               | 19      | 4     |
 
 ---
 
-## 1. Do Now (Before CLI Migration)
+## 0. Triad (Human + AI Collaboration Required)
 
-> Complete these while skills and CLI live in same repo.
+> Tasks the AI should NOT execute autonomously. Require human review at each step.
 
-| Priority   | Task                                      | Description                                                                                                                                                                                                                                                                                          |
-| ---------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| HIGH       | A7 Inline agent test                      | Test `--agents` JSON flag with model/tools (CLI-AGENT-INVOCATION.md)                                                                                                                                                                                                                                 |
-| HIGH       | Test entire flow and all permutations     | once marketplace has been created, use the CLI to generate stacks from manual skill selections, local skill selections, skill plugins to local, skill plugins to plugin, and make sure that the correct files are created and no errors are thrown. removing the compiled files each time afterwards |
-| HIGH       | Manual skill testing                      | Manually test all 76 skills and 11 stacks for correctness                                                                                                                                                                                                                                            |
-| MEDIUM     | Re-add schema to skills                   | Post-migration: inject schema path once CLI repo bundles the schema                                                                                                                                                                                                                                  |
-| ~~MEDIUM~~ | ~~Update stacks with methodology skills~~ | **DONE** (2026-01-29) - Added to fullstack-react, modern-react, enterprise-react, work-stack                                                                                                                                                                                                         |
+| Pri | Task                             | Status | Description                                           |
+| --- | -------------------------------- | ------ | ----------------------------------------------------- |
+| H   | Finish CLI skills & subagents    | DONE   | Complete setup of CLI skills and subagent definitions |
+| H   | Meta-review CLI skills & agents  | DONE   | Review CLI skills/agents with meta agents before use  |
+| H   | Audit CLI repo with CLI reviewer | DONE   | Run CLI reviewer subagent on `/home/vince/dev/cli`    |
+| H   | Implement refactors via CLI dev  | DONE   | Execute approved refactors using CLI developer agent  |
+
+**Workflow**: Task 1 → Task 2 (meta-review must pass) → Task 3 → Task 4
 
 ---
 
-## 2. After CLI Migration (Post Repo Split)
+## 1. Do Now
 
-> These require the CLI to fetch from remote marketplace.
+| Pri | Task                        | Status  | Description                                              |
+| --- | --------------------------- | ------- | -------------------------------------------------------- |
+| H   | Rename agents domain prefix | DONE    | `frontend-developer` → `web-frontend-developer` etc [^6] |
+| H   | Update stack agent refs     | DONE    | Update all stack configs with new agent names            |
+| H   | Update agent compilation    | DONE    | Ensure compiler uses domain-prefixed agent names         |
+| H   | Update agent partials       | DONE    | Update partials to reference new agent names             |
+| H   | CLI skill name refs         | DONE    | Update CLI TypeScript refs to new skill paths [^7]       |
+| H   | A7 Inline agent test        | PARTIAL | Needs: `model`/`tools` fields, large prompt test [^1]    |
+| H   | E2E flow tests              | PARTIAL | 385 unit pass. Missing E2E wizard + flow tests [^2]      |
+| H   | Manual skill testing        | TODO    | Test all 82 skills + 14 stacks                           |
+| M   | Re-add schema to skills     | TODO    | Inject schema path once CLI bundles it                   |
 
-### Repo Split Milestone
+---
 
-| Priority     | Task                     | Description                                                                                   |
-| ------------ | ------------------------ | --------------------------------------------------------------------------------------------- |
-| ~~CRITICAL~~ | ~~B1 CLI Repository~~    | **DONE** (2026-01-29) - CLI at `/home/vince/dev/cli`, all phases implemented                  |
-| ~~CRITICAL~~ | ~~B2 Rename Repository~~ | **DONE** (2026-01-29) - Repository renamed to `claude-collective/skills` via `gh repo rename` |
-| ~~CRITICAL~~ | ~~B3 Remote fetching~~   | **DONE** (2026-01-29) - giget integration in source-fetcher.ts, tested locally                |
+## 2. After Migration
 
-### Post-Split Features
-
-| Priority   | Task                                | Description                                                                                                    |
-| ---------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| HIGH       | Add marketplace for this repository | Add marketplace                                                                                                |
-| HIGH       | C1 Schema Distribution              | GitHub raw URLs, SchemaStore PR                                                                                |
-| ~~HIGH~~   | ~~C8 Agent plugins~~                | **REMOVED** - Agents are compiled output, not marketplace plugins. Only Skills and Stacks are distributable.   |
-| ~~HIGH~~   | ~~C9 `cc add <agent>`~~             | **REMOVED** - Agents are compiled from templates + skills, not installed individually.                         |
-| ~~HIGH~~   | ~~C10 Essential vs optional~~       | **REMOVED** - All agents compiled locally from bundled templates.                                              |
-| HIGH       | C11 Hooks in frontmatter            | Support PreToolUse/PostToolUse/Stop hooks in agent.yaml                                                        |
-| MEDIUM     | C6 `cc doctor`                      | Diagnose connectivity/auth issues                                                                              |
-| ~~MEDIUM~~ | ~~C7 `cc eject`~~                   | **DONE** (2026-01-29) - `cc eject templates`, `cc eject skills`, `cc eject config`, `cc eject all` implemented |
+| Pri | Task                   | Description                                     |
+| --- | ---------------------- | ----------------------------------------------- |
+| H   | C1 Schema Distribution | GitHub raw URLs + SchemaStore PR                |
+| M   | C6 `cc doctor`         | Diagnose connectivity/auth issues (new command) |
 
 ---
 
 ## 3. Backlog
 
-> Deferred items. Nice to have but not blocking.
-
 ### Skills & Content
 
-| Priority | Task                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| -------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| HIGH     | Skill optimization suite   | **Combined effort:** (1) Try existing tools: [johnlindquist gist](https://gist.github.com/johnlindquist/849b813e76039a908d962b2f0923dc9a), [ClaudeSkills-Optimizer-GEFA](https://github.com/rartzi/ClaudeSkills-Optimizer-GEFA), [prompt-optimization-analyzer](https://github.com/Exploration-labs/Nates-Substack-Skills/tree/main/prompt-optimization-analyzer). (2) Create Rolf Wiggins-inspired prompt compaction skill. (3) Build meta-skills for diagnosing skill issues, improving prompts to align with Claude expectations, and validating skill quality. |
-| MEDIUM   | Skill granularity refactor | Make skills more granular - split into `examples/` and `patterns/` folders instead of just examples. will do this manually                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| LOW      | New skills (Critical)      | nx, docker, kubernetes, vite, svelte, supabase, AI. will do this manually later SDKs                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| LOW      | New skills (High)          | astro, firebase, clerk, cloudflare, terraform, etc.. will do this manually later                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| LOW      | Roadmap Phase 3-5          | background-jobs, caching, i18n, payments, etc.. will do this manually later                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Pri | Task                       | Description                                   |
+| --- | -------------------------- | --------------------------------------------- |
+| H   | Skill optimization suite   | Eval existing tools + build meta-skills [^3]  |
+| M   | Skill granularity refactor | Split into `examples/` + `patterns/` folders  |
+| L   | New skills (Critical)      | nx, docker, k8s, vite, svelte, supabase, AI   |
+| L   | New skills (High)          | astro, firebase, clerk, cloudflare, terraform |
+| L   | Roadmap Phase 3-5          | background-jobs, caching, i18n, payments      |
 
 ### CLI & Infrastructure
 
-| Priority | Task                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| -------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ~~HIGH~~ | ~~Dual-repo architecture~~  | **DONE** (2026-01-29) - Phases 1-6 complete. See `DUAL-REPO-ARCHITECTURE.md` and knowledge base.                                                                                                                                                                                                                                                                                                                                              |
-| ~~HIGH~~ | ~~Bundle templates in CLI~~ | **DONE** (2026-01-29) - Templates bundled at `src/agents/_templates/agent.liquid` in CLI repo.                                                                                                                                                                                                                                                                                                                                                |
-| ~~HIGH~~ | ~~`cc eject` command~~      | **DONE** (2026-01-29) - `cc eject templates`, `cc eject skills`, `cc eject config`, `cc eject all` implemented.                                                                                                                                                                                                                                                                                                                               |
-| MEDIUM   | Advanced wizard UI          | Migrate `cc init` wizard from @clack to Ink (or alternative). Enables: horizontal tabs, arrow key navigation, single-view skill selection with expand/collapse categories, horizontal dividers. See `CLI-FRAMEWORK-RESEARCH.md`. Options: **Ink** (React for CLI, recommended), **blessed/neo-blessed** (widget-based TUI), **terminal-kit** (low-level + widgets), **Textual** (Python, would require rewrite).. will do this manually later |
-| MEDIUM   | Output styles research      | Investigate Claude Code output styles for sub-agents; could set concise mode for agent cross-communication                                                                                                                                                                                                                                                                                                                                    |
-| LOW      | Template refactoring        | Split agent.liquid into partials (partials bundled in CLI repo alongside templates, not in public skills repo)                                                                                                                                                                                                                                                                                                                                |
-| LOW      | Marketplace foundation      | Stack Marketplace Phase 1-2                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| LOW      | Community submission        | `cc submit` flow. will do this manually later                                                                                                                                                                                                                                                                                                                                                                                                 |
-| LOW      | External skill sources      | `cc add skill-id --source github:user/repo` fetches external skills to local                                                                                                                                                                                                                                                                                                                                                                  |
-| LOW      | Claude simplifier hook      | Add hook that simplifies/improves Claude's responses or workflow. will do this manually later                                                                                                                                                                                                                                                                                                                                                 |
-| LOW      | CLI branding                | ASCII art logo + animated mascot on startup                                                                                                                                                                                                                                                                                                                                                                                                   |
-| LOW      | Agent partials refactor     | Review agent partials bundled in CLI (workflow.md, intro.md, examples.md) - improve naming, modularity. Note: Partials live in CLI repo, not public skills repo                                                                                                                                                                                                                                                                               |
-| LOW      | Configurable thinking       | CLI flags `--thinking <tokens>` and `--agent-thinking <agent>:<tokens>` to override default max thinking                                                                                                                                                                                                                                                                                                                                      |
-| LOW      | Metadata auto-generation    | Generate metadata.yaml from SKILL.md frontmatter for custom skills (no schema comment, relaxed validation)                                                                                                                                                                                                                                                                                                                                    |
-| LOW      | Project agent-hooks         | `.claude/agent-hooks.yaml` maps agents to package.json scripts; merged at compile time. See `AGENT-HOOKS-PORTABILITY.md`. will do this manually later                                                                                                                                                                                                                                                                                         |
+| Pri | Task                     | Description                                            |
+| --- | ------------------------ | ------------------------------------------------------ |
+| M   | Multi-stack merging      | Compile + merge multiple stacks with agent rename [^5] |
+| M   | Advanced wizard UI       | Migrate @clack → Ink [^4]                              |
+| M   | Output styles research   | Concise mode for agent cross-communication             |
+| L   | Template refactoring     | Split agent.liquid into partials                       |
+| L   | Marketplace foundation   | Stack Marketplace Phase 1-2                            |
+| L   | Community submission     | `cc submit` flow                                       |
+| L   | External skill sources   | `cc add --source github:user/repo`                     |
+| L   | Claude simplifier hook   | Hook to simplify Claude responses                      |
+| L   | CLI branding             | ASCII art logo + animated mascot                       |
+| L   | Agent partials refactor  | Improve naming/modularity of workflow.md, intro.md     |
+| L   | Configurable thinking    | `--thinking <tokens>`, `--agent-thinking <agent>:<n>`  |
+| L   | Metadata auto-generation | Generate metadata.yaml from SKILL.md frontmatter       |
+| L   | Project agent-hooks      | `.claude/agent-hooks.yaml` → package.json scripts      |
 
 ### Documentation
 
-| Priority | Task                    | Description                                                              |
-| -------- | ----------------------- | ------------------------------------------------------------------------ |
-| LOW      | GitHub raw URLs         | Update `yaml-language-server` references                                 |
-| LOW      | SchemaStore PR          | Automatic IDE detection                                                  |
-| LOW      | Platform support docs   | GitHub, GitLab, GitHub Enterprise. will do this manually later           |
-| LOW      | Unsupported platforms   | Bitbucket private, Azure DevOps, CodeCommit. will do this manually later |
-| LOW      | Generalize MobX skill   | Remove PhotoRoom-specific patterns. will do this manually later          |
-| LOW      | Generalize Tailwind     | Remove PhotoRoom-specific patterns. will do this manually later          |
-| LOW      | Contribution guidelines | For community skills. will do this manually later                        |
-| LOW      | Private skill guide     | For company-specific skills. will do this manually later                 |
+| Pri | Task                    | Description                            |
+| --- | ----------------------- | -------------------------------------- |
+| L   | GitHub raw URLs         | Update yaml-language-server references |
+| L   | SchemaStore PR          | Automatic IDE detection                |
+| L   | Platform support docs   | GitHub, GitLab, GitHub Enterprise      |
+| L   | Unsupported platforms   | Bitbucket private, Azure DevOps        |
+| L   | Generalize MobX skill   | Remove PhotoRoom-specific patterns     |
+| L   | Generalize Tailwind     | Remove PhotoRoom-specific patterns     |
+| L   | Contribution guidelines | For community skills                   |
+| L   | Private skill guide     | For company-specific skills            |
 
 ### Testing
 
-| Priority | Task                  | Description                                                   |
-| -------- | --------------------- | ------------------------------------------------------------- |
-| LOW      | Private repo blockers | Document Bitbucket, Azure DevOps. will do this manually later |
-| LOW      | Content linting       | Skills can omit sections. will do this manually later         |
-| LOW      | Skill structure valid | Missing required sections undetected                          |
+| Pri | Task                  | Description                          |
+| --- | --------------------- | ------------------------------------ |
+| L   | Private repo blockers | Document Bitbucket, Azure DevOps     |
+| L   | Content linting       | Skills can omit sections             |
+| L   | Skill structure valid | Missing required sections undetected |
+
+---
+
+## Footnotes
+
+[^1]: **A7 Inline agent test** - Basic `--agents` JSON tested. Still needs: `model` and `tools` fields verification, large prompt test (~2000 lines), tool restrictions enforcement.
+
+[^2]: **E2E flow tests** - Missing: E2E wizard tests, local→plugin flow, plugin→local flow, plugin→plugin flow. See `CLI-TEST-PROGRESS.md`.
+
+[^3]: **Skill optimization suite** - Combined effort:
+
+1. Try existing tools: [johnlindquist gist](https://gist.github.com/johnlindquist/849b813e76039a908d962b2f0923dc9a), [ClaudeSkills-Optimizer-GEFA](https://github.com/rartzi/ClaudeSkills-Optimizer-GEFA), [prompt-optimization-analyzer](https://github.com/Exploration-labs/Nates-Substack-Skills/tree/main/prompt-optimization-analyzer)
+2. Create Rolf Wiggins-inspired prompt compaction skill
+3. Build meta-skills for diagnosing skill issues, improving prompts, validating quality
+
+[^4]: **Advanced wizard UI** - Migrate `cc init` wizard from @clack to Ink. Enables: horizontal tabs, arrow key navigation, single-view skill selection with expand/collapse, horizontal dividers. See `CLI-FRAMEWORK-RESEARCH.md`. Options: **Ink** (React for CLI, recommended), **blessed/neo-blessed** (widget-based TUI), **terminal-kit** (low-level + widgets), **Textual** (Python, rewrite required).
+
+[^5]: **Multi-stack merging** - Combine multiple stacks (web + mobile + backend) into one plugin. **Problem**: Agent name collisions (`frontend-developer` exists in both `fullstack-react` and `mobile-stack` with different skills). **Solution**: Domain-prefixed agent names:
+
+- `web-frontend-developer`, `web-backend-developer` (web stacks)
+- `mobile-frontend-developer` (mobile stacks)
+- `api-backend-developer` (API-only stacks)
+- Meta agents (`pm`, `skill-summoner`, `documentor`) stay unchanged (stack-agnostic)
+
+Requires renaming agents across all 14 stacks and updating `agent_skills` mappings.
+
+[^6]: **Rename agents domain prefix** - Rename all agents with domain prefixes to enable multi-stack installation without collisions:
+
+- `frontend-developer` → `web-frontend-developer`
+- `frontend-reviewer` → `web-frontend-reviewer`
+- `backend-developer` → `api-backend-developer`
+- `backend-reviewer` → `api-backend-reviewer`
+- Mobile stack: `mobile-developer`, `mobile-reviewer`, `mobile-pm`
+- Meta agents stay unprefixed: `pm`, `skill-summoner`, `agent-summoner`, `documentor`
+- Update: agent definitions in `src/agents/`, stack configs, agent_skills mappings, partials
+
+[^7]: **CLI skill name refs** - The CLI has TypeScript files that reference skill names (e.g., skill-to-agent mapping). These need updating to use new paths (`web/framework/react` instead of `frontend/framework/react`, `api/framework/hono` instead of `backend/api/hono`). Check `/home/vince/dev/cli/src/` for hardcoded skill references.
 
 ---
 
 ## Decision Log
 
-| Date       | Decision                             | Rationale                                                                                                                                                                                                                                     |
-| ---------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-01-26 | **Custom skills: no schema comment** | Official skills include `yaml-language-server` schema comment for strict validation. Custom/local skills omit it - no IDE validation, users free to use any category values. Simpler than maintaining multiple schemas.                       |
-| 2026-01-26 | **Expert Mode in wizard**            | Toggle on approach screen disables conflict checking, allows combining any skills (e.g., React + Vue). For advanced users who know what they're doing.                                                                                        |
-| 2026-01-25 | **Simplified plugin architecture**   | One plugin per project. "Stacks" are now "templates" (starting points). No more `cc switch`. Migration complete - see `.claude/tasks/SIMPLIFIED-PLUGIN-MIGRATION.md`.                                                                         |
-| 2026-01-25 | Version deprecated in metadata       | `version` field removed from metadata.yaml and types. Version lives only in `plugin.json`. `content_hash` is primary identifier for change detection.                                                                                         |
-| 2026-01-25 | Summoners as local agents            | `cc create skill/agent` commands won't do. Users install skill-summoner/agent-summoner as optional agents (`cc add`), run locally. Avoids network dependency, works offline, consistent with other agents. Staleness caught by `cc validate`. |
-| 2026-01-25 | Thinking budget: use defaults        | Claude Code defaults to max thinking (31,999 tokens) since Jan 2026. Ultrathink keywords deprecated. No need to configure per-agent - defer CLI configurability to later.                                                                     |
-| 2026-01-25 | Core principles in template          | Embedded directly in agent.liquid (not a skill). Methodology content available via skills. External skill sources deferred - would need `cc add --source` to fetch to local.                                                                  |
-| 2026-01-28 | Agents are NOT plugins               | **Decision**: Agents are compiled OUTPUT, not marketplace artifacts. Only Skills and Stacks are distributable plugins. Agents are generated locally from bundled templates + user-selected skills.                                            |
-| 2026-01-24 | Plugin-based versioning              | Skills and stacks are plugins. Version goes in `plugin.json`, NOT `metadata.yaml`. Agents are not versioned separately (compiled output).                                                                                                     |
-| 2026-01-23 | Architecture finalized               | Marketplace is single source of truth; CLI is thin (no bundled content); `cc init` produces complete plugin with skills + agents                                                                                                              |
-| 2026-01-22 | Inline agent invocation via CLI      | `--agents` JSON flag verified working; no file writes needed                                                                                                                                                                                  |
-| 2026-01-21 | Integer versioning                   | Zero friction; semver overkill for markdown skills                                                                                                                                                                                            |
+| Date       | Decision                         | Rationale                                                                             |
+| ---------- | -------------------------------- | ------------------------------------------------------------------------------------- |
+| 2026-01-29 | One plugin per domain            | Each domain (web, mobile, api) = one stack = one plugin. Enables multi-domain install |
+| 2026-01-29 | Skill taxonomy: domain/cat/lib   | Renamed 82 skills: frontend→web, backend→api, setup splits, methodology→meta          |
+| 2026-01-29 | Domain-prefixed agents           | `web-frontend-developer`, `api-backend-developer` to avoid collision across domains   |
+| 2026-01-28 | Agents are NOT plugins           | Agents are compiled output, not marketplace artifacts. Only Skills/Stacks distribute  |
+| 2026-01-26 | Custom skills: no schema comment | Official skills get strict validation; custom skills relaxed                          |
+| 2026-01-26 | Expert Mode in wizard            | Toggle disables conflict checking for advanced users                                  |
+| 2026-01-25 | Simplified plugin architecture   | One plugin per project. Stacks → templates. No `cc switch`                            |
+| 2026-01-25 | Version deprecated in metadata   | Version in `plugin.json` only; `content_hash` for change detection                    |
+| 2026-01-25 | Summoners as local agents        | `cc add` installs locally, works offline                                              |
+| 2026-01-25 | Thinking budget: use defaults    | Claude Code defaults to max thinking (31,999 tokens)                                  |
+| 2026-01-25 | Core principles in template      | Embedded in agent.liquid, not a skill                                                 |
+| 2026-01-24 | Plugin-based versioning          | Version in `plugin.json`, not `metadata.yaml`                                         |
+| 2026-01-23 | Architecture finalized           | Marketplace is source of truth; CLI is thin                                           |
+| 2026-01-22 | Inline agent invocation via CLI  | `--agents` JSON flag verified working                                                 |
+| 2026-01-21 | Integer versioning               | Zero friction; semver overkill for markdown skills                                    |
 
 ---
 
@@ -152,17 +183,10 @@
 ### Compile Plugins
 
 ```bash
-# Compile all skills to plugins
-bun src/cli/index.ts compile-plugins
-
-# Compile specific stack to plugin
-bun src/cli/index.ts compile-stack -s fullstack-react
-
-# Generate marketplace
-bun src/cli/index.ts generate-marketplace
-
-# Validate plugins
-bun src/cli/index.ts validate dist/plugins --all
+bun src/cli/index.ts compile-plugins           # Compile all skills
+bun src/cli/index.ts compile-stack -s fullstack-react  # Compile stack
+bun src/cli/index.ts generate-marketplace      # Generate marketplace
+bun src/cli/index.ts validate dist/plugins --all  # Validate plugins
 ```
 
 ### Test Inline Agent Invocation
@@ -170,10 +194,7 @@ bun src/cli/index.ts validate dist/plugins --all
 See `CLI-AGENT-INVOCATION-RESEARCH.md` for full details.
 
 ```bash
-# VERIFIED WORKING - Basic test via CLI
-bun src/cli/index.ts test-agent
-
-# VERIFIED WORKING - Direct invocation
+bun src/cli/index.ts test-agent  # Basic test via CLI
 claude --agents '{"test": {"description": "Test agent", "prompt": "You are a test agent."}}' --agent test -p "Hello"
 ```
 
@@ -181,10 +202,10 @@ claude --agents '{"test": {"description": "Test agent", "prompt": "You are a tes
 
 ## Exit Codes
 
-| Code | Meaning                 |
-| ---- | ----------------------- |
-| 0    | Success                 |
-| 1    | General error           |
-| 2    | Invalid arguments       |
-| 3    | Network/auth error      |
-| 4    | User cancelled (Ctrl+C) |
+| Code | Meaning            |
+| ---- | ------------------ |
+| 0    | Success            |
+| 1    | General error      |
+| 2    | Invalid arguments  |
+| 3    | Network/auth error |
+| 4    | User cancelled     |

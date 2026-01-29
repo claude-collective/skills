@@ -11,213 +11,179 @@ version: "1.0.0"
 
 skills:
   # Methodology (core agent behaviors)
-  - id: methodology/universal
-  - id: methodology/implementation
-  - id: methodology/extended-session
+  - id: meta/methodology
   # Frontend
-  - id: vue-composition-api (@vince)
-  - id: nuxt (@vince)
-  - id: tailwind (@vince)
-  - id: pinia (@vince)
-  - id: vee-validate (@vince)
-  - id: zod-validation (@vince)
-  - id: vue-test-utils (@vince)
+  - id: web/framework/vue-composition-api (@vince)
+  - id: web/framework/nuxt (@vince)
+  - id: web/styling/tailwind (@vince)
+  - id: web/state/pinia (@vince)
+  - id: web/forms/vee-validate (@vince)
+  - id: web/forms/zod-validation (@vince)
+  - id: web/testing/vue-test-utils (@vince)
   # Backend
-  - id: hono (@vince)
-  - id: drizzle (@vince)
+  - id: api/framework/hono (@vince)
+  - id: api/database/drizzle (@vince)
   # Shared
-  - id: reviewing (@vince)
+  - id: meta/reviewing/reviewing (@vince)
   # Research
-  - id: research-methodology (@vince)
+  - id: meta/research/research-methodology (@vince)
 
 agents:
   # Developer agents
-  - frontend-developer
-  - backend-developer
-  - architecture
+  - web-developer
+  - api-developer
+  - web-architecture
   # Reviewer agents
-  - frontend-reviewer
-  - backend-reviewer
+  - web-reviewer
+  - api-reviewer
   # Researcher agents
-  - frontend-researcher
-  - backend-researcher
+  - web-researcher
+  - api-researcher
   # Planning agents
-  - pm
+  - web-pm
   # Pattern agents
   - pattern-scout
-  - pattern-critique
+  - web-pattern-critique
   # Meta agents
   - agent-summoner
   - skill-summoner
   - documentor
   # Tester agents
-  - tester
+  - web-tester
 
 agent_skills:
-  frontend-developer:
+  web-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: vue-composition-api (@vince)
+      - id: web/framework/vue-composition-api (@vince)
         preloaded: true
-      - id: nuxt (@vince)
+      - id: web/framework/nuxt (@vince)
         preloaded: true
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
         preloaded: true
     state:
-      - id: pinia (@vince)
+      - id: web/state/pinia (@vince)
     forms:
-      - id: vee-validate (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/vee-validate (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vue-test-utils (@vince)
+      - id: web/testing/vue-test-utils (@vince)
 
-  backend-developer:
+  api-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
         preloaded: true
 
-  frontend-reviewer:
+  web-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: vue-composition-api (@vince)
+      - id: web/framework/vue-composition-api (@vince)
         preloaded: true
-      - id: nuxt (@vince)
+      - id: web/framework/nuxt (@vince)
         preloaded: true
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
         preloaded: true
     state:
-      - id: pinia (@vince)
+      - id: web/state/pinia (@vince)
     forms:
-      - id: vee-validate (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/vee-validate (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vue-test-utils (@vince)
+      - id: web/testing/vue-test-utils (@vince)
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
 
-  backend-reviewer:
+  api-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
         preloaded: true
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
 
-  tester:
+  web-tester:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     testing:
-      - id: vue-test-utils (@vince)
+      - id: web/testing/vue-test-utils (@vince)
         preloaded: true
 
-  pm:
+  web-pm:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
     framework:
-      - id: vue-composition-api (@vince)
-      - id: nuxt (@vince)
+      - id: web/framework/vue-composition-api (@vince)
+      - id: web/framework/nuxt (@vince)
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
     state:
-      - id: pinia (@vince)
+      - id: web/state/pinia (@vince)
     forms:
-      - id: vee-validate (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/vee-validate (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vue-test-utils (@vince)
+      - id: web/testing/vue-test-utils (@vince)
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
 
-  frontend-researcher:
+  web-researcher:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: vue-composition-api (@vince)
+      - id: web/framework/vue-composition-api (@vince)
         preloaded: true
-      - id: nuxt (@vince)
+      - id: web/framework/nuxt (@vince)
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
     state:
-      - id: pinia (@vince)
+      - id: web/state/pinia (@vince)
     forms:
-      - id: vee-validate (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/vee-validate (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vue-test-utils (@vince)
+      - id: web/testing/vue-test-utils (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
 
-  backend-researcher:
+  api-researcher:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
 
 philosophy: "Progressive Vue with Nuxt power"

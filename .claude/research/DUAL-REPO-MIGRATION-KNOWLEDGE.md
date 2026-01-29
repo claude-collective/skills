@@ -230,13 +230,13 @@ The CLI is ready for remote fetching:
 - **Local fallback**: Works perfectly with local paths
 - **Tests**: 10 source-fetcher tests pass (mostly local paths)
 
-**Status**: The repository is now `github:vincentbollaert/claude-collective-skills`. The CLI default source should be updated to match.
+**Status**: The repository is now `github:claude-collective/skills`. The CLI default source should be updated to match.
 
 **To test remote fetching**:
 
 ```bash
 cd /home/vince/dev/cli
-bun run src/cli/index.ts init --source github:vincentbollaert/claude-collective-skills
+bun run src/cli/index.ts init --source github:claude-collective/skills
 ```
 
 ---

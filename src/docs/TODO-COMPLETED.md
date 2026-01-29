@@ -1,7 +1,49 @@
 # Completed Tasks
 
 > **Purpose**: Archive of all completed work. Moved from TODO.md for cleaner tracking.
-> **Last Updated**: 2026-01-26
+> **Last Updated**: 2026-01-29
+
+---
+
+## Dual-Repo Architecture & CLI Migration (2026-01-29)
+
+> **Tracking file**: `.claude/research/findings/v2/DUAL-REPO-ARCHITECTURE.md`
+
+All 6 phases of dual-repo architecture complete. CLI at `/home/vince/dev/cli`, skills in this repo.
+
+| Task                                  | Description                                                                             | Completed  |
+| ------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| B1 CLI Repository                     | CLI moved to separate repo at `/home/vince/dev/cli`, all phases implemented             | 2026-01-29 |
+| B2 Rename Repository                  | Repository renamed to `claude-collective/skills` via `gh repo rename`                   | 2026-01-29 |
+| B3 Remote fetching                    | giget integration in source-fetcher.ts, tested locally                                  | 2026-01-29 |
+| C7 `cc eject`                         | `cc eject templates`, `cc eject skills`, `cc eject config`, `cc eject all` implemented  | 2026-01-29 |
+| Dual-repo architecture                | Phases 1-6 complete. See `DUAL-REPO-ARCHITECTURE.md` and knowledge base                 | 2026-01-29 |
+| Bundle templates in CLI               | Templates bundled at `src/agents/_templates/agent.liquid` in CLI repo                   | 2026-01-29 |
+| `cc eject` command                    | Full eject system: templates, skills, config, all                                       | 2026-01-29 |
+| Update stacks with methodology skills | Added methodology skills to fullstack-react, modern-react, enterprise-react, work-stack | 2026-01-29 |
+
+**Removed tasks (no longer applicable):**
+
+| Task                      | Reason                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| C8 Agent plugins          | Agents are compiled output, not marketplace plugins. Only Skills and Stacks distributable. |
+| C9 `cc add <agent>`       | Agents compiled from templates + skills, not installed individually.                       |
+| C10 Essential vs optional | All agents compiled locally from bundled templates.                                        |
+
+---
+
+## Additional Completions (2026-01-29)
+
+| Task                                | Description                                                           | Completed  |
+| ----------------------------------- | --------------------------------------------------------------------- | ---------- |
+| Add marketplace for this repository | `/.claude-plugin/marketplace.json` with 83 skills + README            | 2026-01-29 |
+| C11 Hooks in frontmatter            | Full PreToolUse/PostToolUse/Stop hook support in schemas and compiler | 2026-01-29 |
+
+**Note:** C11 Hooks was verified by research agent - full implementation exists in:
+
+- `/home/vince/dev/cli/src/schemas/stack.schema.json` (10 hook event types)
+- `/home/vince/dev/cli/src/cli/lib/stack-plugin-compiler.ts` (hooks.json generation)
+- Comprehensive test coverage in `stack-plugin-compiler.test.ts`
 
 ---
 

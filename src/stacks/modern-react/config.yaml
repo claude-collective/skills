@@ -11,257 +11,223 @@ version: "1.0.0"
 
 skills:
   # Methodology
-  - id: methodology/universal
-  - id: methodology/implementation
-  - id: methodology/extended-session
+  - id: meta/methodology
   # Frontend
-  - id: react (@vince)
-  - id: nextjs-app-router (@vince)
-  - id: scss-modules (@vince)
-  - id: zustand (@vince)
-  - id: react-query (@vince)
-  - id: react-hook-form (@vince)
-  - id: zod-validation (@vince)
-  - id: vitest (@vince)
-  - id: react-testing-library (@vince)
-  - id: playwright-e2e (@vince)
-  - id: msw (@vince)
+  - id: web/framework/react (@vince)
+  - id: web/framework/nextjs-app-router (@vince)
+  - id: web/styling/scss-modules (@vince)
+  - id: web/state/zustand (@vince)
+  - id: web/server-state/react-query (@vince)
+  - id: web/forms/react-hook-form (@vince)
+  - id: web/forms/zod-validation (@vince)
+  - id: web/testing/vitest (@vince)
+  - id: web/testing/react-testing-library (@vince)
+  - id: web/testing/playwright-e2e (@vince)
+  - id: web/mocks/msw (@vince)
   # Backend
-  - id: hono (@vince)
-  - id: drizzle (@vince)
-  - id: better-auth+drizzle+hono (@vince)
+  - id: api/framework/hono (@vince)
+  - id: api/database/drizzle (@vince)
+  - id: api/auth/better-auth+drizzle+hono (@vince)
   # Shared
-  - id: reviewing (@vince)
+  - id: meta/reviewing/reviewing (@vince)
   # Research
-  - id: research-methodology (@vince)
+  - id: meta/research/research-methodology (@vince)
 
 agents:
   # Developer agents
-  - frontend-developer
-  - backend-developer
-  - architecture
+  - web-developer
+  - api-developer
+  - web-architecture
   # Reviewer agents
-  - frontend-reviewer
-  - backend-reviewer
+  - web-reviewer
+  - api-reviewer
   # Researcher agents
-  - frontend-researcher
-  - backend-researcher
+  - web-researcher
+  - api-researcher
   # Planning agents
-  - pm
+  - web-pm
   # Pattern agents
   - pattern-scout
-  - pattern-critique
+  - web-pattern-critique
   # Meta agents
   - agent-summoner
   - skill-summoner
   - documentor
   # Tester agents
-  - tester
+  - web-tester
 
 agent_skills:
-  frontend-developer:
+  web-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react (@vince)
+      - id: web/framework/react (@vince)
         preloaded: true
-      - id: nextjs-app-router (@vince)
+      - id: web/framework/nextjs-app-router (@vince)
     styling:
-      - id: scss-modules (@vince)
+      - id: web/styling/scss-modules (@vince)
         preloaded: true
     state:
-      - id: zustand (@vince)
+      - id: web/state/zustand (@vince)
     server-state:
-      - id: react-query (@vince)
+      - id: web/server-state/react-query (@vince)
     forms:
-      - id: react-hook-form (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/react-hook-form (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vitest (@vince)
-      - id: react-testing-library (@vince)
-      - id: playwright-e2e (@vince)
+      - id: web/testing/vitest (@vince)
+      - id: web/testing/react-testing-library (@vince)
+      - id: web/testing/playwright-e2e (@vince)
     mocks:
-      - id: msw (@vince)
+      - id: web/mocks/msw (@vince)
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
 
-  backend-developer:
+  api-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
         preloaded: true
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
 
-  frontend-reviewer:
+  web-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react (@vince)
+      - id: web/framework/react (@vince)
         preloaded: true
-      - id: nextjs-app-router (@vince)
+      - id: web/framework/nextjs-app-router (@vince)
     styling:
-      - id: scss-modules (@vince)
+      - id: web/styling/scss-modules (@vince)
         preloaded: true
     state:
-      - id: zustand (@vince)
+      - id: web/state/zustand (@vince)
     server-state:
-      - id: react-query (@vince)
+      - id: web/server-state/react-query (@vince)
     forms:
-      - id: react-hook-form (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/react-hook-form (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vitest (@vince)
-      - id: react-testing-library (@vince)
-      - id: playwright-e2e (@vince)
+      - id: web/testing/vitest (@vince)
+      - id: web/testing/react-testing-library (@vince)
+      - id: web/testing/playwright-e2e (@vince)
     mocks:
-      - id: msw (@vince)
+      - id: web/mocks/msw (@vince)
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
 
-  backend-reviewer:
+  api-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
         preloaded: true
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
 
-  tester:
+  web-tester:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
         preloaded: true
-      - id: react-testing-library (@vince)
-      - id: playwright-e2e (@vince)
+      - id: web/testing/react-testing-library (@vince)
+      - id: web/testing/playwright-e2e (@vince)
     mocks:
-      - id: msw (@vince)
+      - id: web/mocks/msw (@vince)
         preloaded: true
 
-  pm:
+  web-pm:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
     framework:
-      - id: react (@vince)
-      - id: nextjs-app-router (@vince)
+      - id: web/framework/react (@vince)
+      - id: web/framework/nextjs-app-router (@vince)
     styling:
-      - id: scss-modules (@vince)
+      - id: web/styling/scss-modules (@vince)
     state:
-      - id: zustand (@vince)
+      - id: web/state/zustand (@vince)
     server-state:
-      - id: react-query (@vince)
+      - id: web/server-state/react-query (@vince)
     forms:
-      - id: react-hook-form (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/react-hook-form (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vitest (@vince)
-      - id: react-testing-library (@vince)
-      - id: playwright-e2e (@vince)
+      - id: web/testing/vitest (@vince)
+      - id: web/testing/react-testing-library (@vince)
+      - id: web/testing/playwright-e2e (@vince)
     mocks:
-      - id: msw (@vince)
+      - id: web/mocks/msw (@vince)
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
 
-  frontend-researcher:
+  web-researcher:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react (@vince)
+      - id: web/framework/react (@vince)
         preloaded: true
-      - id: nextjs-app-router (@vince)
+      - id: web/framework/nextjs-app-router (@vince)
     styling:
-      - id: scss-modules (@vince)
+      - id: web/styling/scss-modules (@vince)
     state:
-      - id: zustand (@vince)
+      - id: web/state/zustand (@vince)
     server-state:
-      - id: react-query (@vince)
+      - id: web/server-state/react-query (@vince)
     forms:
-      - id: react-hook-form (@vince)
-      - id: zod-validation (@vince)
+      - id: web/forms/react-hook-form (@vince)
+      - id: web/forms/zod-validation (@vince)
     testing:
-      - id: vitest (@vince)
-      - id: react-testing-library (@vince)
-      - id: playwright-e2e (@vince)
+      - id: web/testing/vitest (@vince)
+      - id: web/testing/react-testing-library (@vince)
+      - id: web/testing/playwright-e2e (@vince)
     mocks:
-      - id: msw (@vince)
+      - id: web/mocks/msw (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
 
-  backend-researcher:
+  api-researcher:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     api:
-      - id: hono (@vince)
+      - id: api/framework/hono (@vince)
         preloaded: true
     database:
-      - id: drizzle (@vince)
+      - id: api/database/drizzle (@vince)
     auth:
-      - id: better-auth+drizzle+hono (@vince)
+      - id: api/auth/better-auth+drizzle+hono (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
 
 philosophy: "Ship fast, iterate faster"

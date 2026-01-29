@@ -6,7 +6,7 @@ Recreate the layout shown in the provided screenshot as raw JSX with CSS.
 
 ## Instructions
 
-Use the **frontend-developer** agent to implement this layout.
+Use the **web-developer** agent to implement this layout.
 
 ### Phase 1: Raw Implementation (This Command)
 
@@ -36,6 +36,7 @@ Generate a visually accurate recreation of the screenshot using:
 ### Output
 
 Create two files in the target app:
+
 - `[page-name].tsx` - The JSX structure
 - `[page-name].module.scss` - The styles
 
@@ -44,6 +45,7 @@ Use mock data that matches what's visible in the screenshot.
 ### Phase 2: Component Integration (Separate Step)
 
 After reviewing the raw implementation, the user will iterate with requests like:
+
 - "Replace the header section with my Card component"
 - "Use my Button component for these actions"
 - "Swap the table for my Table component"

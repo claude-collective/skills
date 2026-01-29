@@ -12,167 +12,145 @@ version: "1.0.0"
 
 skills:
   # Methodology
-  - id: methodology/universal
-  - id: methodology/implementation
-  - id: methodology/extended-session
+  - id: meta/methodology
   # Frontend - Photoroom specific
-  - id: react+mobx (@vince)
-  - id: tailwind (@vince)
-  - id: mobx (@vince)
-  - id: react-query+axios+zod (@vince)
-  - id: frontend/accessibility (@vince)
-  - id: performance+mobx (@vince)
-  - id: frontend/mocks (@vince)
+  - id: web/framework/react+mobx (@vince)
+  - id: web/styling/tailwind (@vince)
+  - id: web/state/mobx (@vince)
+  - id: web/server-state/react-query+axios+zod (@vince)
+  - id: web/accessibility/web-accessibility (@vince)
+  - id: web/performance/performance+mobx (@vince)
+  - id: web/mocks/web-mocks (@vince)
   # testing+karma+playwright (@vince) doesn't exist - commented out
   # - id: testing+karma+playwright (@vince)
 
 agents:
   # Developer agents
-  - frontend-developer
-  - architecture
+  - web-developer
+  - web-architecture
   # Reviewer agents
-  - frontend-reviewer
+  - web-reviewer
   # Researcher agents
-  - frontend-researcher
+  - web-researcher
   # Planning agents
-  - pm
+  - web-pm
   # Pattern agents
   - pattern-scout
-  - pattern-critique
+  - web-pattern-critique
   # Meta agents
   - agent-summoner
   - skill-summoner
   - documentor
   # Tester agents
-  - tester
+  - web-tester
 
 # Per-agent skill assignments (hierarchical by category)
 agent_skills:
-  frontend-developer:
+  web-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react+mobx (@vince)
+      - id: web/framework/react+mobx (@vince)
         preloaded: true
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
         preloaded: true
     state:
-      - id: mobx (@vince)
+      - id: web/state/mobx (@vince)
         preloaded: true
     server-state:
-      - id: react-query+axios+zod (@vince)
+      - id: web/server-state/react-query+axios+zod (@vince)
     accessibility:
-      - id: frontend/accessibility (@vince)
+      - id: web/accessibility/web-accessibility (@vince)
     performance:
-      - id: performance+mobx (@vince)
+      - id: web/performance/performance+mobx (@vince)
     mocks:
-      - id: frontend/mocks (@vince)
+      - id: web/mocks/web-mocks (@vince)
     # testing skill doesn't exist - commented out
     # testing:
     #   - id: testing+karma+playwright (@vince)
 
-  frontend-reviewer:
+  web-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react+mobx (@vince)
+      - id: web/framework/react+mobx (@vince)
         preloaded: true
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
         preloaded: true
     state:
-      - id: mobx (@vince)
+      - id: web/state/mobx (@vince)
         preloaded: true
     server-state:
-      - id: react-query+axios+zod (@vince)
+      - id: web/server-state/react-query+axios+zod (@vince)
     accessibility:
-      - id: frontend/accessibility (@vince)
+      - id: web/accessibility/web-accessibility (@vince)
     performance:
-      - id: performance+mobx (@vince)
+      - id: web/performance/performance+mobx (@vince)
     mocks:
-      - id: frontend/mocks (@vince)
+      - id: web/mocks/web-mocks (@vince)
     # testing skill doesn't exist - commented out
     # testing:
     #   - id: testing+karma+playwright (@vince)
 
-  tester:
+  web-tester:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react+mobx (@vince)
+      - id: web/framework/react+mobx (@vince)
     state:
-      - id: mobx (@vince)
+      - id: web/state/mobx (@vince)
     mocks:
-      - id: frontend/mocks (@vince)
+      - id: web/mocks/web-mocks (@vince)
     # testing skill doesn't exist - commented out
     # testing:
     #   - id: testing+karma+playwright (@vince)
     #     preloaded: true
 
-  pm:
+  web-pm:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react+mobx (@vince)
+      - id: web/framework/react+mobx (@vince)
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
     state:
-      - id: mobx (@vince)
+      - id: web/state/mobx (@vince)
     server-state:
-      - id: react-query+axios+zod (@vince)
+      - id: web/server-state/react-query+axios+zod (@vince)
     accessibility:
-      - id: frontend/accessibility (@vince)
+      - id: web/accessibility/web-accessibility (@vince)
     performance:
-      - id: performance+mobx (@vince)
+      - id: web/performance/performance+mobx (@vince)
     mocks:
-      - id: frontend/mocks (@vince)
+      - id: web/mocks/web-mocks (@vince)
     # testing skill doesn't exist - commented out
     # testing:
     #   - id: testing+karma+playwright (@vince)
 
   skill-summoner:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     framework:
-      - id: react+mobx (@vince)
+      - id: web/framework/react+mobx (@vince)
     styling:
-      - id: tailwind (@vince)
+      - id: web/styling/tailwind (@vince)
     state:
-      - id: mobx (@vince)
+      - id: web/state/mobx (@vince)
     server-state:
-      - id: react-query+axios+zod (@vince)
+      - id: web/server-state/react-query+axios+zod (@vince)
     accessibility:
-      - id: frontend/accessibility (@vince)
+      - id: web/accessibility/web-accessibility (@vince)
     performance:
-      - id: performance+mobx (@vince)
+      - id: web/performance/performance+mobx (@vince)
     mocks:
-      - id: frontend/mocks (@vince)
+      - id: web/mocks/web-mocks (@vince)
     # testing skill doesn't exist - commented out
     # testing:
     #   - id: testing+karma+playwright (@vince)
