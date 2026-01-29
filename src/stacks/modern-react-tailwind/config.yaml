@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schemas/stack.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
 # Modern React + Tailwind Stack - React with Tailwind CSS and shadcn/ui for beautiful UIs
 
 name: "Modern React + Tailwind Stack"

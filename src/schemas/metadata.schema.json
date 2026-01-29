@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-collective.local/schemas/metadata.schema.json",
+  "title": "Skill Metadata",
+  "description": "Metadata for skill catalog, relationships, and CLI display. Identity comes from SKILL.md frontmatter.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "category",
+    "author",
+    "cli_name",
+    "cli_description",
+    "usage_guidance"
+  ],
+  "properties": {
+    "category": {
+      "$ref": "#/$defs/SkillCategory",
+      "description": "Skill category (framework, state, styling, etc.)"
+    },
+    "category_exclusive": {
+      "type": "boolean",
+      "description": "Only one skill from this category can be active",
+      "default": true
+    },
+    "author": {
+      "type": "string",
+      "description": "Author handle with @ prefix",
+      "pattern": "^@[a-z][a-z0-9-]*$",
+      "examples": ["@vince"]
+    },
+    "version": {
+      "type": "integer",
+      "description": "DEPRECATED: Use plugin.json version instead",
+      "minimum": 1
+    },
+    "cli_name": {
+      "type": "string",
+      "description": "Short display name for CLI",
+      "minLength": 1,
+      "maxLength": 30,
+      "examples": ["React", "Zustand"]
+    },
+    "cli_description": {
+      "type": "string",
+      "description": "Brief description for CLI display (5-6 words)",
+      "minLength": 1,
+      "maxLength": 60,
+      "examples": ["React component patterns"]
+    },
+    "usage_guidance": {
+      "type": "string",
+      "description": "When AI agent should invoke this skill",
+      "minLength": 10,
+      "examples": ["Use when building React components or hooks."]
+    },
+    "requires": {
+      "type": "array",
+      "description": "Required skill dependencies",
+      "items": { "$ref": "#/$defs/SkillReference" },
+      "uniqueItems": true
+    },
+    "compatible_with": {
+      "type": "array",
+      "description": "Skills this works well with",
+      "items": { "$ref": "#/$defs/SkillReference" },
+      "uniqueItems": true
+    },
+    "conflicts_with": {
+      "type": "array",
+      "description": "Skills that cannot coexist with this one",
+      "items": { "$ref": "#/$defs/SkillReference" },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for marketplace discoverability",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "uniqueItems": true
+    },
+    "requires_setup": {
+      "type": "array",
+      "description": "Setup skills required before using this skill",
+      "items": { "$ref": "#/$defs/SkillReference" },
+      "uniqueItems": true
+    },
+    "provides_setup_for": {
+      "type": "array",
+      "description": "Skills this setup skill configures",
+      "items": { "$ref": "#/$defs/SkillReference" },
+      "uniqueItems": true
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of skill content (auto-generated)",
+      "pattern": "^[a-f0-9]{7}$"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Last modified date (auto-generated)"
+    },
+    "forked_from": {
+      "type": "object",
+      "description": "Provenance for forked skills",
+      "additionalProperties": false,
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "Original skill ID"
+        },
+        "version": {
+          "type": "integer",
+          "description": "DEPRECATED: Use content_hash instead",
+          "minimum": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "description": "Hash at fork time"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source repository"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Fork date"
+        }
+      },
+      "required": ["skill_id", "content_hash", "date"]
+    }
+  },
+  "$defs": {
+    "SkillCategory": {
+      "type": "string",
+      "description": "Valid skill categories",
+      "enum": [
+        "framework",
+        "meta-framework",
+        "client-state",
+        "server-state",
+        "styling",
+        "testing",
+        "mocking",
+        "api",
+        "database",
+        "auth",
+        "analytics",
+        "observability",
+        "email",
+        "forms",
+        "ui-components",
+        "i18n",
+        "error-handling",
+        "files",
+        "file-upload",
+        "utilities",
+        "tooling",
+        "monorepo",
+        "mobile-framework",
+        "frontend",
+        "backend",
+        "security",
+        "shared",
+        "setup",
+        "research",
+        "performance",
+        "ci-cd",
+        "cli",
+        "flags",
+        "accessibility",
+        "frontend/realtime",
+        "frontend/animation",
+        "methodology"
+      ]
+    },
+    "SkillReference": {
+      "type": "string",
+      "description": "Skill ID or pattern (e.g., 'react (@vince)', 'framework/*')",
+      "minLength": 1
+    }
+  }
+}

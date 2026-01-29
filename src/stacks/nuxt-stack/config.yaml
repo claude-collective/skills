@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schemas/stack.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
 # Nuxt Full-Stack - Vue 3 with Nuxt for full-stack Vue development
 
 name: "Nuxt Full-Stack"
