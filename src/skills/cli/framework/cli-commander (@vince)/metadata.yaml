@@ -1,10 +1,10 @@
-# yaml-language-server: $schema=../../../schemas/metadata.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/metadata.schema.json
 category: cli
 category_exclusive: false
 author: "@vince"
 version: 1
 cli_name: CLI Commander
-cli_description: Node.js CLI development with Commander.js, @clack/prompts, and picocolors
+cli_description: CLI dev with Commander.js, clack, picocolors
 usage_guidance: Use when building CLI applications, interactive prompts, wizard flows, or command-line tools with Node.js.
 compatible_with:
   - tooling (@vince)
