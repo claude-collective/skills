@@ -11,34 +11,32 @@ version: "1.0.0"
 
 skills:
   # Methodology (core agent behaviors)
-  - id: methodology/universal
-  - id: methodology/implementation
-  - id: methodology/extended-session
+  - id: meta/methodology
   # CLI Core
-  - id: cli-commander (@vince)
+  - id: cli/framework/cli-commander (@vince)
   # CLI Reviewing
-  - id: cli-reviewing (@vince)
+  - id: meta/reviewing/cli-reviewing (@vince)
   # Testing
-  - id: vitest (@vince)
+  - id: web/testing/vitest (@vince)
   # Shared
-  - id: reviewing (@vince)
-  - id: research-methodology (@vince)
+  - id: meta/reviewing/reviewing (@vince)
+  - id: meta/research/research-methodology (@vince)
   # Setup/Tooling (relevant for CLI projects)
-  - id: turborepo (@vince)
-  - id: setup/tooling (@vince)
-  - id: setup/env (@vince)
+  - id: infra/monorepo/turborepo (@vince)
+  - id: infra/tooling/setup-tooling (@vince)
+  - id: infra/env/setup-env (@vince)
   # CI/CD
-  - id: github-actions (@vince)
+  - id: api/ci-cd/github-actions (@vince)
 
 agents:
   - cli-developer
   - cli-reviewer
-  - backend-developer
-  - backend-reviewer
-  - backend-researcher
-  - architecture
-  - pm
-  - tester
+  - api-developer
+  - api-reviewer
+  - api-researcher
+  - web-architecture
+  - web-pm
+  - web-tester
   - skill-summoner
   - agent-summoner
   - documentor
@@ -47,220 +45,176 @@ agents:
 agent_skills:
   cli-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
         preloaded: true
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
-      - id: setup/env (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
+      - id: infra/env/setup-env (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
   cli-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
         preloaded: true
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
-      - id: cli-reviewing (@vince)
+      - id: meta/reviewing/cli-reviewing (@vince)
         preloaded: true
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
-  tester:
+  web-tester:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
         preloaded: true
 
-  backend-developer:
+  api-developer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
-      - id: setup/env (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
+      - id: infra/env/setup-env (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
-  backend-reviewer:
+  api-reviewer:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     reviewing:
-      - id: reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
         preloaded: true
-      - id: cli-reviewing (@vince)
+      - id: meta/reviewing/cli-reviewing (@vince)
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
-  backend-researcher:
+  api-researcher:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
 
-  architecture:
+  web-architecture:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     setup:
-      - id: turborepo (@vince)
+      - id: infra/monorepo/turborepo (@vince)
         preloaded: true
-      - id: setup/tooling (@vince)
-      - id: setup/env (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
+      - id: infra/env/setup-env (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
-  pm:
+  web-pm:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
 
   skill-summoner:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     reviewing:
-      - id: reviewing (@vince)
-      - id: cli-reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
+      - id: meta/reviewing/cli-reviewing (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
-      - id: setup/env (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
+      - id: infra/env/setup-env (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
   agent-summoner:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     reviewing:
-      - id: reviewing (@vince)
-      - id: cli-reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
+      - id: meta/reviewing/cli-reviewing (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
-      - id: setup/env (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
+      - id: infra/env/setup-env (@vince)
     ci-cd:
-      - id: github-actions (@vince)
+      - id: api/ci-cd/github-actions (@vince)
 
   documentor:
     methodology:
-      - id: methodology/universal
-        preloaded: true
-      - id: methodology/implementation
-        preloaded: true
-      - id: methodology/extended-session
+      - id: meta/methodology
         preloaded: true
     cli:
-      - id: cli-commander (@vince)
+      - id: cli/framework/cli-commander (@vince)
     reviewing:
-      - id: reviewing (@vince)
-      - id: cli-reviewing (@vince)
+      - id: meta/reviewing/reviewing (@vince)
+      - id: meta/reviewing/cli-reviewing (@vince)
     research:
-      - id: research-methodology (@vince)
+      - id: meta/research/research-methodology (@vince)
         preloaded: true
     testing:
-      - id: vitest (@vince)
+      - id: web/testing/vitest (@vince)
     setup:
-      - id: turborepo (@vince)
-      - id: setup/tooling (@vince)
+      - id: infra/monorepo/turborepo (@vince)
+      - id: infra/tooling/setup-tooling (@vince)
 
 philosophy: "Clear, helpful CLI interactions"
 
