@@ -38,7 +38,7 @@ cc compile
 /plugin install skill-react@claude-collective
 
 # Or install a pre-built stack
-/plugin install stack-fullstack-react@claude-collective
+/plugin install stack-nextjs-fullstack@claude-collective
 ```
 
 ---
@@ -102,7 +102,7 @@ cc compile
 cc compile-plugins
 
 # Compile a stack
-cc compile-stack -s fullstack-react
+cc compile-stack -s nextjs-fullstack
 
 # Generate marketplace.json
 cc generate-marketplace
@@ -151,7 +151,7 @@ bun src/cli/index.ts list
 bun src/cli/index.ts compile-plugins
 
 # Compile stacks (for marketplace)
-bun src/cli/index.ts compile-stack -s fullstack-react
+bun src/cli/index.ts compile-stack -s nextjs-fullstack
 
 # Generate marketplace
 bun src/cli/index.ts generate-marketplace

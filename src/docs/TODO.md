@@ -22,7 +22,7 @@
 
 | Do Now | After Migration | Backlog | Triad |
 | ------ | --------------- | ------- | ----- |
-| 9      | 2               | 19      | 4     |
+| 10     | 2               | 19      | 4     |
 
 ---
 
@@ -53,6 +53,7 @@
 | H   | A7 Inline agent test        | PARTIAL | Needs: `model`/`tools` fields, large prompt test [^1]    |
 | H   | E2E flow tests              | PARTIAL | 385 unit pass. Missing E2E wizard + flow tests [^2]      |
 | H   | Manual skill testing        | TODO    | Test all 82 skills + 14 stacks                           |
+| H   | Update all documentation    | TODO    | Bibles reference non-existent CLI commands, wrong paths  |
 | M   | Re-add schema to skills     | TODO    | Inject schema path once CLI bundles it                   |
 
 ---
@@ -133,7 +134,7 @@
 
 [^4]: **Advanced wizard UI** - Migrate `cc init` wizard from @clack to Ink. Enables: horizontal tabs, arrow key navigation, single-view skill selection with expand/collapse, horizontal dividers. See `CLI-FRAMEWORK-RESEARCH.md`. Options: **Ink** (React for CLI, recommended), **blessed/neo-blessed** (widget-based TUI), **terminal-kit** (low-level + widgets), **Textual** (Python, rewrite required).
 
-[^5]: **Multi-stack merging** - Combine multiple stacks (web + mobile + backend) into one plugin. **Problem**: Agent name collisions (`frontend-developer` exists in both `fullstack-react` and `mobile-stack` with different skills). **Solution**: Domain-prefixed agent names:
+[^5]: **Multi-stack merging** - Combine multiple stacks (web + mobile + backend) into one plugin. **Problem**: Agent name collisions (`frontend-developer` exists in both `nextjs-fullstack` and `react-native-stack` with different skills). **Solution**: Domain-prefixed agent names:
 
 - `web-frontend-developer`, `web-backend-developer` (web stacks)
 - `mobile-frontend-developer` (mobile stacks)
@@ -184,7 +185,7 @@ Requires renaming agents across all 14 stacks and updating `agent_skills` mappin
 
 ```bash
 bun src/cli/index.ts compile-plugins           # Compile all skills
-bun src/cli/index.ts compile-stack -s fullstack-react  # Compile stack
+bun src/cli/index.ts compile-stack -s nextjs-fullstack  # Compile stack
 bun src/cli/index.ts generate-marketplace      # Generate marketplace
 bun src/cli/index.ts validate dist/plugins --all  # Validate plugins
 ```
