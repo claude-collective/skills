@@ -12,7 +12,7 @@
       "description": "Unique stack identifier (kebab-case)",
       "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
       "minLength": 1,
-      "examples": ["modern-react", "enterprise-react"]
+      "examples": ["nextjs-fullstack", "angular-stack"]
     },
     "name": {
       "type": "string",

@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
-# Fullstack React - Production-ready React with complete backend infrastructure
-# SCSS Modules, Zustand, React Query + Hono, Drizzle, PostHog, Observability
+# Next.js Fullstack - Production-ready Next.js with complete backend infrastructure
+# App Router, Server Actions, SCSS Modules, Zustand, React Query + Hono, Drizzle, PostHog
 
-name: "Fullstack React"
+name: "Next.js Fullstack"
 description: >
-  Production-ready React stack with complete backend infrastructure.
-  Frontend: React + SCSS Modules + cva, Zustand, React Query, Vitest, MSW.
+  Production-ready Next.js stack with complete backend infrastructure.
+  Frontend: Next.js App Router + Server Actions, SCSS Modules + cva, Zustand, React Query, Vitest, MSW.
   Backend: Hono, Drizzle, Better Auth, PostHog (analytics + flags), Resend email.
   Infrastructure: Axiom + Pino + Sentry observability, GitHub Actions CI/CD.
 author: "@vince"
@@ -16,6 +16,8 @@ skills:
   - id: meta/methodology
   # Frontend
   - id: web/framework/react (@vince)
+  - id: web/framework/nextjs-app-router (@vince)
+  - id: web/framework/nextjs-server-actions (@vince)
   - id: web/styling/scss-modules (@vince)
   - id: web/server-state/react-query (@vince)
   - id: web/state/zustand (@vince)

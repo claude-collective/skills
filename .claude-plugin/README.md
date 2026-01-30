@@ -23,7 +23,7 @@ Install individual skills as needed:
 Or install a pre-built stack:
 
 ```bash
-/plugin install stack-fullstack-react@claude-collective
+/plugin install stack-nextjs-fullstack@claude-collective
 ```
 
 ### 3. Use Skills
@@ -184,9 +184,9 @@ Once installed, skills are available via:
 
 ## Pre-built Stacks
 
-| Stack                   | Description                       | Skills              |
-| ----------------------- | --------------------------------- | ------------------- |
-| `stack-fullstack-react` | Full-stack React + Hono + Drizzle | 15 skills, 6 agents |
+| Stack                    | Description                       | Skills              |
+| ------------------------ | --------------------------------- | ------------------- |
+| `stack-nextjs-fullstack` | Full-stack React + Hono + Drizzle | 15 skills, 6 agents |
 
 ---
 

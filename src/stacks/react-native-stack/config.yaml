@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
-# React Native Mobile Stack - Cross-platform mobile with React Native and Expo
+# React Native Stack - Cross-platform mobile with React Native and Expo
 
-name: "React Native Mobile Stack"
+name: "React Native Stack"
 description: >
   Cross-platform mobile with React Native and Expo.
   Mobile: React Native with Zustand, React Query, React Hook Form.

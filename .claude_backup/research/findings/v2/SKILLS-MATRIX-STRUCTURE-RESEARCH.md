@@ -327,7 +327,7 @@ zustand:
   in_stacks:
     - modern-react
     - modern-react-tailwind
-    - mobile-stack
+    - react-native-stack
     - full-observability
 ```
 

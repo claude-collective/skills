@@ -115,7 +115,7 @@ When testing stack compilation:
 
 ```bash
 # Compile stack
-bun src/cli/index.ts compile-stack -s fullstack-react
+bun src/cli/index.ts compile-stack -s nextjs-fullstack
 
 # If output goes to .claude/, skills hot reload
 # Agents still need session restart
