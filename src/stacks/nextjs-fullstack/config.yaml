@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/skills/main/src/schemas/stack.schema.json
 # Next.js Fullstack - Production-ready Next.js with complete backend infrastructure
 # App Router, Server Actions, SCSS Modules, Zustand, React Query + Hono, Drizzle, PostHog
 
