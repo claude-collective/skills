@@ -71,13 +71,13 @@
 
 ### Skills & Content
 
-| Pri | Task                       | Description                                   |
-| --- | -------------------------- | --------------------------------------------- |
-| H   | Skill optimization suite   | Eval existing tools + build meta-skills [^3]  |
-| M   | Skill granularity refactor | Split into `examples/` + `patterns/` folders  |
-| L   | New skills (Critical)      | nx, docker, k8s, vite, svelte, supabase, AI   |
-| L   | New skills (High)          | astro, firebase, clerk, cloudflare, terraform |
-| L   | Roadmap Phase 3-5          | background-jobs, caching, i18n, payments      |
+| Pri | Task                       | Description                                           |
+| --- | -------------------------- | ----------------------------------------------------- |
+| H   | Skill optimization suite   | Eval existing tools + build meta-skills [^3]          |
+| M   | Skill granularity refactor | Split into `examples/` + `patterns/` folders          |
+| L   | New skills (Critical)      | tailwind, nx, docker, k8s, vite, svelte, supabase, AI |
+| L   | New skills (High)          | astro, firebase, clerk, cloudflare, terraform         |
+| L   | Roadmap Phase 3-5          | background-jobs, caching, i18n, payments              |
 
 ### CLI & Infrastructure
 
