@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/metadata.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/skills/main/src/schemas/metadata.schema.json
 category: cli
 category_exclusive: false
 author: "@vince"

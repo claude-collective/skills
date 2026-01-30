@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/claude-subagents/main/src/schemas/stack.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/claude-collective/skills/main/src/schemas/stack.schema.json
 # Remix Full-Stack - Remix for form-heavy applications with excellent DX
 
 name: "Remix Full-Stack"
