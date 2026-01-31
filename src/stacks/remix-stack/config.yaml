@@ -11,7 +11,12 @@ version: "1.0.0"
 
 skills:
   # Methodology (core agent behaviors)
-  - id: meta/methodology
+  - id: meta/methodology/anti-over-engineering (@vince)
+  - id: meta/methodology/context-management (@vince)
+  - id: meta/methodology/improvement-protocol (@vince)
+  - id: meta/methodology/investigation-requirements (@vince)
+  - id: meta/methodology/success-criteria (@vince)
+  - id: meta/methodology/write-verification (@vince)
   # Frontend
   - id: web/framework/react (@vince)
   - id: web/framework/remix (@vince)
@@ -55,7 +60,17 @@ agents:
 agent_skills:
   web-developer:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     framework:
       - id: web/framework/react (@vince)
@@ -76,7 +91,17 @@ agent_skills:
 
   api-developer:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     api:
       - id: api/framework/hono (@vince)
@@ -87,7 +112,17 @@ agent_skills:
 
   web-reviewer:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     framework:
       - id: web/framework/react (@vince)
@@ -111,7 +146,17 @@ agent_skills:
 
   api-reviewer:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     api:
       - id: api/framework/hono (@vince)
@@ -125,7 +170,17 @@ agent_skills:
 
   web-tester:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     testing:
       - id: web/testing/vitest (@vince)
@@ -134,7 +189,17 @@ agent_skills:
 
   web-pm:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     research:
       - id: meta/research/research-methodology (@vince)
@@ -159,7 +224,17 @@ agent_skills:
 
   web-researcher:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     framework:
       - id: web/framework/react (@vince)
@@ -181,7 +256,17 @@ agent_skills:
 
   api-researcher:
     methodology:
-      - id: meta/methodology
+      - id: meta/methodology/anti-over-engineering (@vince)
+        preloaded: true
+      - id: meta/methodology/context-management (@vince)
+        preloaded: true
+      - id: meta/methodology/improvement-protocol (@vince)
+        preloaded: true
+      - id: meta/methodology/investigation-requirements (@vince)
+        preloaded: true
+      - id: meta/methodology/success-criteria (@vince)
+        preloaded: true
+      - id: meta/methodology/write-verification (@vince)
         preloaded: true
     api:
       - id: api/framework/hono (@vince)
