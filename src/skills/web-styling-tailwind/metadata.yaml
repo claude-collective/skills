@@ -11,10 +11,10 @@ usage_guidance: >-
   with @utility, or integrating Tailwind with React components.
 requires: []
 compatible_with:
-  - react (@vince)
-  - cva (@vince)
+  - web-framework-react
+  - web-styling-cva
 conflicts_with:
-  - scss-modules (@vince)
+  - web-styling-scss-modules
 tags:
   - tailwind
   - tailwindcss

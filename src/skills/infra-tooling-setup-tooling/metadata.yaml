@@ -7,7 +7,7 @@ cli_name: Build Tooling
 cli_description: Build tooling and linting
 usage_guidance: Use when configuring ESLint, Prettier, TypeScript, Vite, or git hooks for a project.
 compatible_with:
-  - turborepo (@vince)
+  - infra-monorepo-turborepo
 tags:
   - eslint
   - prettier

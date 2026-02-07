@@ -7,10 +7,10 @@ cli_name: Playwright
 cli_description: E2E browser testing
 usage_guidance: Use when writing E2E tests, Page Object Models, or visual regression tests.
 compatible_with:
-  - react (@vince)
-  - vue-composition-api (@vince)
-  - angular-standalone (@vince)
-  - solidjs (@vince)
+  - web-framework-react
+  - web-framework-vue-composition-api
+  - web-framework-angular-standalone
+  - web-framework-solidjs
 tags:
   - playwright
   - e2e

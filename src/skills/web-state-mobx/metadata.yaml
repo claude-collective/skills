@@ -11,10 +11,10 @@ usage_guidance: >-
   state (use React Query) or simple UI state (use useState/Zustand).
 requires: []
 compatible_with:
-  - react (@vince)
+  - web-framework-react
 conflicts_with:
-  - web-state-zustand (@vince)
-  - web-state-redux-toolkit (@vince)
+  - web-state-zustand
+  - web-state-redux-toolkit
 tags:
   - mobx
   - state-management

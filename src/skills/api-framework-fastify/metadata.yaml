@@ -18,8 +18,8 @@ tags:
   - plugins
   - encapsulation
 compatible_with:
-  - better-auth+drizzle+hono (@vince)
-  - drizzle (@vince)
-  - prisma (@vince)
-  - axiom+pino+sentry (@vince)
-  - security (@vince)
+  - api-auth-better-auth-drizzle-hono
+  - api-database-drizzle
+  - api-database-prisma
+  - api-observability-axiom-pino-sentry
+  - security-auth-security

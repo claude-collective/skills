@@ -7,12 +7,12 @@ cli_name: PostHog Setup
 cli_description: PostHog initial setup
 usage_guidance: Use when setting up PostHog analytics or feature flags for the first time.
 compatible_with:
-  - posthog-analytics (@vince)
-  - posthog-flags (@vince)
-  - setup-env (@vince)
+  - api-analytics-posthog-analytics
+  - api-flags-posthog-flags
+  - infra-env-setup-env
 provides_setup_for:
-  - posthog-analytics (@vince)
-  - posthog-flags (@vince)
+  - api-analytics-posthog-analytics
+  - api-flags-posthog-flags
 tags:
   - posthog
   - setup

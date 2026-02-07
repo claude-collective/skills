@@ -7,8 +7,8 @@ cli_name: CLI Commander
 cli_description: CLI dev with Commander.js, clack, picocolors
 usage_guidance: Use when building CLI applications, interactive prompts, wizard flows, or command-line tools with Node.js.
 compatible_with:
-  - tooling (@vince)
-  - testing (@vince)
+  - infra-tooling-setup-tooling
+  - web-testing-vitest
 tags:
   - cli
   - commander

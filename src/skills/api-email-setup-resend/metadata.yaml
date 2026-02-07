@@ -7,10 +7,10 @@ cli_name: Email Setup
 cli_description: Email service setup
 usage_guidance: Use when configuring Resend email service or domain verification.
 compatible_with:
-  - resend+react-email (@vince)
-  - setup-env (@vince)
+  - api-email-resend-react-email
+  - infra-env-setup-env
 provides_setup_for:
-  - resend+react-email (@vince)
+  - api-email-resend-react-email
 tags:
   - resend
   - setup

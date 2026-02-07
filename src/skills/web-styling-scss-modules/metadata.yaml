@@ -7,10 +7,10 @@ cli_name: SCSS Modules
 cli_description: SCSS Modules styling
 usage_guidance: Use when styling with SCSS Modules, design tokens, or CSS cascade layers.
 compatible_with:
-  - react (@vince)
-  - vue-composition-api (@vince)
-  - angular-standalone (@vince)
-  - solidjs (@vince)
+  - web-framework-react
+  - web-framework-vue-composition-api
+  - web-framework-angular-standalone
+  - web-framework-solidjs
 tags:
   - scss
   - css-modules

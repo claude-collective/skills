@@ -7,10 +7,10 @@ cli_name: Apollo Client
 cli_description: Apollo GraphQL client
 usage_guidance: Use when working with Apollo Client for GraphQL queries and mutations.
 compatible_with:
-  - react (@vince)
-  - zustand (@vince)
-  - jotai (@vince)
-  - redux-toolkit (@vince)
+  - web-framework-react
+  - web-state-zustand
+  - web-state-jotai
+  - web-state-redux-toolkit
 tags:
   - apollo-client
   - graphql

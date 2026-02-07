@@ -7,9 +7,9 @@ cli_name: SWR
 cli_description: Server state and caching
 usage_guidance: Use when implementing stale-while-revalidate data fetching patterns.
 compatible_with:
-  - react (@vince)
-  - nextjs-app-router (@vince)
-  - nextjs-server-actions (@vince)
+  - web-framework-react
+  - web-framework-nextjs-app-router
+  - web-framework-nextjs-server-actions
 tags:
   - swr
   - swr-v2

@@ -15,5 +15,5 @@ tags:
   - forms
   - accessibility
 compatible_with:
-  - react (@vince)
-  - tailwind (@vince)
+  - web-framework-react
+  - web-styling-tailwind

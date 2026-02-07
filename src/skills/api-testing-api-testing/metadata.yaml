@@ -7,11 +7,11 @@ cli_name: Backend Testing
 cli_description: API and integration tests
 usage_guidance: Use when writing API tests, integration tests, or testing backend services.
 compatible_with:
-  - hono (@vince)
-  - express (@vince)
-  - fastify (@vince)
-  - drizzle (@vince)
-  - prisma (@vince)
+  - api-framework-hono
+  - api-framework-express
+  - api-framework-fastify
+  - api-database-drizzle
+  - api-database-prisma
 tags:
   - testing
   - api-tests

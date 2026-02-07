@@ -11,11 +11,11 @@ usage_guidance: >-
   useInput, useApp, render(), Command class, Flags, Args.
 requires: []
 compatible_with:
-  - react
-  - zustand
-  - vitest
+  - web-framework-react
+  - web-state-zustand
+  - web-testing-vitest
 conflicts_with:
-  - cli-commander
+  - cli-framework-cli-commander
 tags:
   - cli
   - oclif

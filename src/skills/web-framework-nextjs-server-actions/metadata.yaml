@@ -7,13 +7,13 @@ cli_name: Next.js Server Actions
 cli_description: Next.js Server Actions
 usage_guidance: Use when implementing Server Actions for mutations, revalidation, or form handling.
 requires:
-  - react (@vince)
+  - web-framework-react
 compatible_with:
-  - react-hook-form (@vince)
-  - zod-validation (@vince)
-  - drizzle (@vince)
-  - prisma (@vince)
-  - better-auth+drizzle+hono (@vince)
+  - web-forms-react-hook-form
+  - web-forms-zod-validation
+  - api-database-drizzle
+  - api-database-prisma
+  - api-auth-better-auth-drizzle-hono
 tags:
   - nextjs
   - server-actions

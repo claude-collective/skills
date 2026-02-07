@@ -18,7 +18,7 @@ tags:
   - progress-tracking
   - accessibility
 compatible_with:
-  - react (@vince)
-  - react-hook-form (@vince)
-  - vee-validate (@vince)
-  - hono (@vince)
+  - web-framework-react
+  - web-forms-react-hook-form
+  - web-forms-vee-validate
+  - api-framework-hono

@@ -7,10 +7,10 @@ cli_name: Socket.IO
 cli_description: Bidirectional real-time communication
 usage_guidance: Use when implementing Socket.IO client connections, rooms, or namespaces.
 compatible_with:
-  - react (@vince)
-  - zustand (@vince)
-  - jotai (@vince)
-  - redux-toolkit (@vince)
+  - web-framework-react
+  - web-state-zustand
+  - web-state-jotai
+  - web-state-redux-toolkit
 tags:
   - socket-io
   - realtime

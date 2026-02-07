@@ -7,11 +7,11 @@ cli_name: Backend Performance
 cli_description: Query and caching optimization
 usage_guidance: Use when optimizing database queries, implementing caching, or improving API response times.
 compatible_with:
-  - drizzle (@vince)
-  - prisma (@vince)
-  - hono (@vince)
-  - express (@vince)
-  - fastify (@vince)
+  - api-database-drizzle
+  - api-database-prisma
+  - api-framework-hono
+  - api-framework-express
+  - api-framework-fastify
 tags:
   - performance
   - query-optimization

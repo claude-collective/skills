@@ -7,10 +7,10 @@ cli_name: URQL
 cli_description: URQL GraphQL client
 usage_guidance: Use when working with URQL client for GraphQL.
 compatible_with:
-  - react (@vince)
-  - zustand (@vince)
-  - jotai (@vince)
-  - redux-toolkit (@vince)
+  - web-framework-react
+  - web-state-zustand
+  - web-state-jotai
+  - web-state-redux-toolkit
 tags:
   - urql
   - graphql
