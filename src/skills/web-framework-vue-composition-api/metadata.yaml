@@ -17,8 +17,8 @@ tags:
   - use-template-ref
   - use-id
 compatible_with:
-  - scss-modules (@vince)
-  - tailwind (@vince)
-  - vitest (@vince)
-  - playwright-e2e (@vince)
-  - cypress-e2e (@vince)
+  - web-styling-scss-modules
+  - web-styling-tailwind
+  - web-testing-vitest
+  - web-testing-playwright-e2e
+  - web-testing-cypress-e2e

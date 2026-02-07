@@ -7,10 +7,10 @@ cli_name: Drizzle
 cli_description: Drizzle ORM patterns
 usage_guidance: Use when writing database queries, migrations, or working with Drizzle ORM.
 compatible_with:
-  - hono (@vince)
-  - express (@vince)
-  - fastify (@vince)
-  - better-auth+drizzle+hono (@vince)
+  - api-framework-hono
+  - api-framework-express
+  - api-framework-fastify
+  - api-auth-better-auth-drizzle-hono
 tags:
   - drizzle
   - orm

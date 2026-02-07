@@ -8,10 +8,10 @@ cli_description: React Native mobile apps
 usage_guidance: Use when building cross-platform mobile apps, working with native modules, or React Navigation.
 requires: []
 compatible_with:
-  - zustand (@vince)
-  - react-query (@vince)
-  - react-hook-form (@vince)
-  - zod-validation (@vince)
+  - web-state-zustand
+  - web-server-state-react-query
+  - web-forms-react-hook-form
+  - web-forms-zod-validation
 tags:
   - react-native
   - mobile

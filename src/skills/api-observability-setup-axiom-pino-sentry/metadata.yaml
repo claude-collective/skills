@@ -7,10 +7,10 @@ cli_name: Observability Setup
 cli_description: Logging and monitoring setup
 usage_guidance: Use when setting up Pino logging, Axiom, or Sentry for the first time.
 compatible_with:
-  - axiom+pino+sentry (@vince)
-  - setup-env (@vince)
+  - api-observability-axiom-pino-sentry
+  - infra-env-setup-env
 provides_setup_for:
-  - axiom+pino+sentry (@vince)
+  - api-observability-axiom-pino-sentry
 tags:
   - pino
   - axiom

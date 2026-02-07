@@ -7,10 +7,10 @@ cli_name: Accessibility
 cli_description: WCAG accessibility patterns
 usage_guidance: Use when implementing WCAG compliance, ARIA attributes, or keyboard navigation.
 compatible_with:
-  - react (@vince)
-  - vue-composition-api (@vince)
-  - angular-standalone (@vince)
-  - solidjs (@vince)
+  - web-framework-react
+  - web-framework-vue-composition-api
+  - web-framework-angular-standalone
+  - web-framework-solidjs
 tags:
   - wcag
   - wcag-22

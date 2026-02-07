@@ -8,10 +8,10 @@ cli_description: Native CSS animations
 usage_guidance: Use when implementing CSS transitions, keyframes, or scroll-driven animations.
 requires: []
 compatible_with:
-  - scss-modules (@vince)
-  - tailwind (@vince)
-  - frontend/accessibility (@vince)
-  - frontend/performance (@vince)
+  - web-styling-scss-modules
+  - web-styling-tailwind
+  - web-accessibility-web-accessibility
+  - web-performance-web-performance
 tags:
   - animation
   - css
