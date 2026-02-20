@@ -11,8 +11,8 @@ description: CLI code review patterns. Use when reviewing CLI applications built
 
 **Detailed Resources:**
 
-- For CLI implementation patterns, see [cli-commander (@vince)](<../../cli/cli-commander%20(@vince)/SKILL.md>)
-- For general reviewing patterns, see [reviewing (@vince)](<../reviewing%20(@vince)/SKILL.md>)
+- For CLI implementation patterns, see the cli-commander skill
+- For general reviewing patterns, see the reviewing skill
 
 ---
 
