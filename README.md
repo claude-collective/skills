@@ -41,10 +41,10 @@ A `web-developer` subagent might reference React, Tailwind, and Vitest skills. A
 87+ skills organized by domain:
 
 **Web**<br>
-`React` `Vue` `Angular` `SolidJS` `Next.js` `Remix` `Nuxt` `SCSS Modules` `CVA` `Zustand` `Pinia` `NgRx SignalStore` `Jotai` `React Query` `SWR` `tRPC` `GraphQL` `React Hook Form` `Zod` `shadcn/ui` `Radix UI` `TanStack Table` `Vitest` `Playwright` `Cypress` `MSW` `Framer Motion` `Storybook` `Accessibility`
+`React` `Vue` `Angular` `SolidJS` `Next.js` `Remix` `Nuxt` `SCSS Modules` `CVA` `Zustand` `Pinia` <br> `NgRx SignalStore` `Jotai` `React Query` `SWR` `tRPC` `GraphQL` `React Hook Form` `Zod` `shadcn/ui` <br> `Radix UI` `TanStack Table` `Vitest` `Playwright` `Cypress` `MSW` `Framer Motion` `Storybook` <br> `Accessibility`
 
 **API**<br>
-`Hono` `Express` `Fastify` `Drizzle` `Prisma` `Better Auth` `PostHog` `Resend` `Axiom + Pino + Sentry` `GitHub Actions`
+`Hono` `Express` `Fastify` `Drizzle` `Prisma` `Better Auth` `PostHog` `Resend` `GitHub Actions` <br> `Axiom + Pino + Sentry`
 
 **Mobile**<br>
 `React Native` `Expo`
@@ -59,7 +59,7 @@ A `web-developer` subagent might reference React, Tailwind, and Vitest skills. A
 `Auth patterns` `XSS prevention` `Secrets management`
 
 **Meta**<br>
-`Code reviewing` `Research methodology` `Investigation requirements` `Anti-over-engineering` `Context management`
+`Code reviewing` `Research methodology` `Investigation requirements` `Anti-over-engineering` <br> `Context management`
 
 Each skill covers patterns, conventions, anti-patterns, edge cases, and real code examples for a single technology. Not surface-level docs, but the kind of knowledge you'd normally have to explain to Claude repeatedly.
 
