@@ -2,7 +2,6 @@
 category: web-i18n
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: React Intl
 cliDescription: React internationalization
 usageGuidance: Use when implementing i18n in React with FormatJS/react-intl.

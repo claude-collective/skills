@@ -2,7 +2,6 @@
 category: api-performance
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Backend Performance
 cliDescription: Query and caching optimization
 usageGuidance: Use when optimizing database queries, implementing caching, or improving API response times.

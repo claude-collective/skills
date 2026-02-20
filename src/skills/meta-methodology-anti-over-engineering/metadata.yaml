@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Anti-Over-Engineering
 cliDescription: Surgical implementation, not architectural innovation
 usageGuidance: Apply to every implementation task. Prevents scope creep, unnecessary abstractions, and "while I'm here" syndrome.

@@ -2,7 +2,6 @@
 category: web-accessibility
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Accessibility
 cliDescription: WCAG accessibility patterns
 usageGuidance: Use when implementing WCAG compliance, ARIA attributes, or keyboard navigation.

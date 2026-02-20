@@ -2,7 +2,6 @@
 category: api-observability
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Observability
 cliDescription: Logging and error tracking
 usageGuidance: Use when implementing structured logging, error tracking, or performance monitoring.

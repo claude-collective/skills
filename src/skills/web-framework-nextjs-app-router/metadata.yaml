@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Next.js App Router
 cliDescription: Next.js App Router
 usageGuidance: Use when building Next.js apps with App Router, Server/Client Components, or streaming.

@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Remix
 cliDescription: Remix full-stack framework
 usageGuidance: Use when building Remix apps with loaders, actions, or useFetcher.

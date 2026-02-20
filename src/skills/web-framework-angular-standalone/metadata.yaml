@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Angular
 cliDescription: Angular standalone components
 usageGuidance: Use when building Angular 17+ apps with standalone components, signals, or DI.

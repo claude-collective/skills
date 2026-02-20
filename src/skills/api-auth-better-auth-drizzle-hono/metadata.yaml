@@ -2,7 +2,6 @@
 category: api-auth
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Better Auth
 cliDescription: Authentication and sessions
 usageGuidance: Use when implementing authentication, sessions, OAuth, or user management.

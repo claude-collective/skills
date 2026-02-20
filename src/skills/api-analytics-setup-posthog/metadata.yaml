@@ -2,7 +2,6 @@
 category: api-analytics
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: PostHog Setup
 cliDescription: PostHog initial setup
 usageGuidance: Use when setting up PostHog analytics or feature flags for the first time.

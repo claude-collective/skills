@@ -2,7 +2,6 @@
 category: web-client-state
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Pinia
 cliDescription: Vue client state
 usageGuidance: Use when managing state in Vue apps with Options or Setup stores.

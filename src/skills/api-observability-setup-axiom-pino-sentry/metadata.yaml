@@ -2,7 +2,6 @@
 category: api-observability
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Observability Setup
 cliDescription: Logging and monitoring setup
 usageGuidance: Use when setting up Pino logging, Axiom, or Sentry for the first time.

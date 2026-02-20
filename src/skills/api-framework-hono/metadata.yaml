@@ -2,7 +2,6 @@
 category: api-api
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Hono
 cliDescription: Hono API framework
 usageGuidance: Use when building API routes with Hono, implementing OpenAPI specs, or Zod validation.

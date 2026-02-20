@@ -2,7 +2,6 @@
 category: shared-tooling
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Storybook
 cliDescription: Component documentation
 usageGuidance: Use when documenting components with Storybook, writing stories, or interaction tests.

@@ -2,7 +2,6 @@
 category: api-database
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Prisma
 cliDescription: Prisma ORM patterns
 usageGuidance: Use when writing database queries, migrations, or working with Prisma ORM.

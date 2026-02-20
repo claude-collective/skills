@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 2
 cliName: React
 cliDescription: React component patterns
 usageGuidance: Use when building React components, hooks, or following React 19 patterns.

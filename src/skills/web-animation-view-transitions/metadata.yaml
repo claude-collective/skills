@@ -2,7 +2,6 @@
 category: web-animation
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: View Transitions
 cliDescription: Page transition animations
 usageGuidance: Use when implementing page transitions with View Transitions API.

@@ -2,7 +2,6 @@
 category: web-testing
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: React Testing Library
 cliDescription: React component testing
 usageGuidance: Use when testing React components with user-centric queries.

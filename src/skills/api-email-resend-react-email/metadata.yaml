@@ -2,7 +2,6 @@
 category: api-email
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Resend
 cliDescription: Transactional email templates
 usageGuidance: Use when sending transactional emails or building React Email templates.

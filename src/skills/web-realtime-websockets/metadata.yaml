@@ -2,7 +2,6 @@
 category: web-realtime
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: WebSockets
 cliDescription: Bidirectional real-time communication
 usageGuidance: Use when implementing WebSocket connections, reconnection, or message handling.

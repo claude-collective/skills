@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Success Criteria
 cliDescription: Define done with measurable criteria
 usageGuidance: Define success criteria before starting any task. Verify each criterion and provide evidence after completion.

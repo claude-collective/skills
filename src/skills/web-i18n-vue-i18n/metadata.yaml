@@ -2,7 +2,6 @@
 category: web-i18n
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Vue I18n
 cliDescription: Vue internationalization
 usageGuidance: Use when implementing i18n in Vue with vue-i18n.

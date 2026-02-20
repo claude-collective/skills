@@ -2,7 +2,6 @@
 category: api-analytics
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: PostHog Analytics
 cliDescription: Product analytics tracking
 usageGuidance: Use when tracking user events, setting up funnels, or implementing GDPR-compliant analytics.

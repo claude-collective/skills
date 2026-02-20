@@ -2,7 +2,6 @@
 category: api-api
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Express
 cliDescription: Express API framework
 usageGuidance: Use when building Express.js APIs, middleware chains, or error handling.

@@ -2,7 +2,6 @@
 category: shared-tooling
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Environment
 cliDescription: Environment variable management
 usageGuidance: Use when setting up environment variables, .env files, or Zod validation for config.

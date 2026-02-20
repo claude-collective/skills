@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Nuxt
 cliDescription: Nuxt 3 full-stack framework
 usageGuidance: Use when building Nuxt 3 apps with useFetch, useState, or server routes.

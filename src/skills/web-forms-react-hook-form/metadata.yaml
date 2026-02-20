@@ -2,7 +2,6 @@
 category: web-forms
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: React Hook Form
 cliDescription: React form handling
 usageGuidance: Use when building forms in React with validation, field arrays, or Controller.

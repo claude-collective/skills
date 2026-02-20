@@ -2,7 +2,6 @@
 category: web-forms
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Zod
 cliDescription: Schema validation
 usageGuidance: Use when defining validation schemas, type inference, or data transforms.

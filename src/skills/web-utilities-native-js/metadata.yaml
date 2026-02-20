@@ -2,7 +2,6 @@
 category: web-utilities
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Native JS
 cliDescription: Native JS utilities
 usageGuidance: Use when using modern JS methods instead of lodash utilities.

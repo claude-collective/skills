@@ -2,7 +2,6 @@
 category: shared-monorepo
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Turborepo
 cliDescription: Monorepo orchestration
 usageGuidance: Use when configuring monorepo pipelines, workspaces, or package architecture.

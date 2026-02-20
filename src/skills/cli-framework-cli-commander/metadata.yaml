@@ -2,7 +2,6 @@
 category: cli-framework
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: CLI Commander
 cliDescription: CLI dev with Commander.js, clack, picocolors
 usageGuidance: Use when building CLI applications, interactive prompts, wizard flows, or command-line tools with Node.js.

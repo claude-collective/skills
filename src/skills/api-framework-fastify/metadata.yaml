@@ -2,7 +2,6 @@
 category: api-api
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Fastify
 cliDescription: Fastify API framework
 usageGuidance: Use when building Fastify APIs, using JSON Schema validation, or plugin architecture.

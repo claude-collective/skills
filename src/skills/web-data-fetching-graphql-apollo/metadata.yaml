@@ -2,7 +2,6 @@
 category: web-server-state
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Apollo Client
 cliDescription: Apollo GraphQL client
 usageGuidance: Use when working with Apollo Client for GraphQL queries and mutations.

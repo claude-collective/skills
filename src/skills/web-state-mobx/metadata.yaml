@@ -2,7 +2,6 @@
 category: web-client-state
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: MobX
 cliDescription: Observable reactive state management
 usageGuidance: >-

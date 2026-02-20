@@ -2,7 +2,6 @@
 category: mobile-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Expo
 cliDescription: Expo managed workflow
 usageGuidance: Use when building React Native apps with Expo, configuring EAS builds, or using Expo Router.

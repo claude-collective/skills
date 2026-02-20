@@ -2,7 +2,6 @@
 category: web-testing
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Cypress
 cliDescription: E2E browser testing
 usageGuidance: Use when writing Cypress E2E tests, custom commands, or component tests.

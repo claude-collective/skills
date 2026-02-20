@@ -2,7 +2,6 @@
 category: web-server-state
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: URQL
 cliDescription: URQL GraphQL client
 usageGuidance: Use when working with URQL client for GraphQL.

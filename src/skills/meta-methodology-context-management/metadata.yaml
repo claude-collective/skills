@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Context Management
 cliDescription: Maintain continuity across sessions
 usageGuidance: Use for long-running agents and multi-session projects. Ensures context is preserved between sessions.

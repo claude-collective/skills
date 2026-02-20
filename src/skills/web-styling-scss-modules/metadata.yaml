@@ -2,7 +2,6 @@
 category: web-styling
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: SCSS Modules
 cliDescription: SCSS Modules styling
 usageGuidance: Use when styling with SCSS Modules, design tokens, or CSS cascade layers.

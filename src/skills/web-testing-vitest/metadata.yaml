@@ -2,7 +2,6 @@
 category: web-testing
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Vitest
 cliDescription: Unit and integration testing
 usageGuidance: Use when writing unit tests, integration tests, or configuring Vitest.

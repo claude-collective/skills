@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Write Verification
 cliDescription: Verify edits were actually saved
 usageGuidance: Apply after any file write or edit operation. Re-read and verify before reporting success.

@@ -2,7 +2,6 @@
 category: api-database
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Drizzle
 cliDescription: Drizzle ORM patterns
 usageGuidance: Use when writing database queries, migrations, or working with Drizzle ORM.

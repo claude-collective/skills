@@ -2,7 +2,6 @@
 category: web-forms
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: VeeValidate
 cliDescription: Vue form validation
 usageGuidance: Use when building forms in Vue with useForm, useField, or schema validation.

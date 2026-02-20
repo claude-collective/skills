@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: SolidJS
 cliDescription: SolidJS reactive patterns
 usageGuidance: Use when building SolidJS apps with signals, effects, or SolidStart.

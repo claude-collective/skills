@@ -2,7 +2,6 @@
 category: web-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Vue
 cliDescription: Vue 3 Composition API
 usageGuidance: Use when building Vue 3 apps with Composition API, composables, or reactivity.

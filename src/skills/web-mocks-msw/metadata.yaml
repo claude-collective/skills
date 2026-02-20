@@ -2,7 +2,6 @@
 category: web-mocking
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: MSW
 cliDescription: API mocking
 usageGuidance: Use when mocking APIs for development or testing with MSW handlers.

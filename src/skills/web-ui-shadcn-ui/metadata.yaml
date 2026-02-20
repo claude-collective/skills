@@ -2,7 +2,6 @@
 category: web-ui-components
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: shadcn/ui
 cliDescription: Tailwind component library
 usageGuidance: Use when using shadcn/ui components, theming, or customization.

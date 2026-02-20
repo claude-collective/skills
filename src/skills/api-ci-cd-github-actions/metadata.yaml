@@ -2,7 +2,6 @@
 category: shared-ci-cd
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: GitHub Actions
 cliDescription: CI/CD pipelines
 usageGuidance: Use when configuring CI/CD pipelines, GitHub workflows, or deployment automation.

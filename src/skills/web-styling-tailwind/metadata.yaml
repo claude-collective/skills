@@ -2,7 +2,6 @@
 category: web-styling
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: Tailwind CSS
 cliDescription: Utility-first CSS framework v4
 usageGuidance: >-

@@ -2,7 +2,6 @@
 category: shared-security
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Security
 cliDescription: Application security patterns
 usageGuidance: Use when implementing authentication, authorization, XSS prevention, CSRF protection, CSP headers, or managing secrets.

@@ -2,7 +2,6 @@
 category: web-i18n
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: next-intl
 cliDescription: Next.js internationalization
 usageGuidance: Use when implementing i18n in Next.js with next-intl.

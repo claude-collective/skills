@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Investigation Requirements
 cliDescription: Never speculate - read actual code first
 usageGuidance: Apply before any implementation or analysis. Prevents hallucination by requiring evidence-based claims.

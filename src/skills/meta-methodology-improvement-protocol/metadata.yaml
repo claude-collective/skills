@@ -2,7 +2,6 @@
 category: shared-methodology
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Improvement Protocol
 cliDescription: Evidence-based self-improvement for agents
 usageGuidance: Use when agents need to improve their own prompts or configurations. Evidence-based changes only.

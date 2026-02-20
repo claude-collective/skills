@@ -2,7 +2,6 @@
 category: web-server-state
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: React Query
 cliDescription: Server state and caching
 usageGuidance: Use when fetching API data, caching responses, or managing server state.

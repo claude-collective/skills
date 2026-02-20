@@ -2,7 +2,6 @@
 category: web-error-handling
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: Result Types
 cliDescription: Type-safe error handling
 usageGuidance: Use when implementing Result/Either types for type-safe error handling.

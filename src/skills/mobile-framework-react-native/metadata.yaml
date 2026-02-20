@@ -2,7 +2,6 @@
 category: mobile-framework
 categoryExclusive: true
 author: "@vince"
-version: 1
 cliName: React Native
 cliDescription: React Native mobile apps
 usageGuidance: Use when building cross-platform mobile apps, working with native modules, or React Navigation.

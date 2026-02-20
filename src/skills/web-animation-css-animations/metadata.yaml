@@ -2,7 +2,6 @@
 category: web-animation
 categoryExclusive: false
 author: "@vince"
-version: 1
 cliName: CSS Animations
 cliDescription: Native CSS animations
 usageGuidance: Use when implementing CSS transitions, keyframes, or scroll-driven animations.
