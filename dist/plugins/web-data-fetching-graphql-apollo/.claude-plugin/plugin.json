@@ -1,0 +1,22 @@
+{
+  "name": "web-data-fetching-graphql-apollo",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Apollo Client GraphQL patterns - useQuery, useMutation, cache management, optimistic updates, subscriptions",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "apollo-client",
+    "graphql",
+    "data-fetching",
+    "caching",
+    "real-time",
+    "subscriptions",
+    "optimistic-updates",
+    "suspense",
+    "use-suspense-query",
+    "use-loadable-query",
+    "apollo-client-v4"
+  ]
+}

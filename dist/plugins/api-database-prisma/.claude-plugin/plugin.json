@@ -1,0 +1,21 @@
+{
+  "name": "api-database-prisma",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Prisma ORM, type-safe queries, migrations, relations",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "prisma",
+    "orm",
+    "database",
+    "typescript",
+    "migrations",
+    "queries",
+    "postgresql",
+    "mysql",
+    "sqlite",
+    "type-safety"
+  ]
+}

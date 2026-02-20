@@ -1,0 +1,16 @@
+{
+  "name": "web-server-state-react-query",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "REST APIs, React Query, data fetching",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "react-query",
+    "tanstack-query",
+    "data-fetching",
+    "rest-api",
+    "caching"
+  ]
+}

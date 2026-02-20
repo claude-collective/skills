@@ -1,0 +1,26 @@
+{
+  "name": "web-ui-radix-ui",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Unstyled accessible UI primitives",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "radix",
+    "radix-ui",
+    "primitives",
+    "headless",
+    "accessibility",
+    "compound-components",
+    "as-child",
+    "dialog",
+    "popover",
+    "tooltip",
+    "dropdown",
+    "react-19",
+    "rsc",
+    "otp",
+    "password-toggle"
+  ]
+}

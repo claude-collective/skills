@@ -1,0 +1,18 @@
+{
+  "name": "web-i18n-next-intl",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Type-safe i18n for Next.js App Router",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "next-intl",
+    "i18n",
+    "internationalization",
+    "localization",
+    "translations",
+    "icu",
+    "next-intl-v4"
+  ]
+}

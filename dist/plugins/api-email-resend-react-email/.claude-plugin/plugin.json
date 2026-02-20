@@ -1,0 +1,16 @@
+{
+  "name": "api-email-resend-react-email",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Resend + React Email templates",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "resend",
+    "react-email",
+    "email",
+    "templates",
+    "transactional"
+  ]
+}

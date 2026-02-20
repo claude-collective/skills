@@ -1,0 +1,20 @@
+{
+  "name": "web-error-handling-error-boundaries",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Error boundary patterns, fallback UI, reset/retry functionality, react-error-boundary library",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "error-boundary",
+    "error-handling",
+    "fallback-ui",
+    "react-error-boundary",
+    "get-derived-state-from-error",
+    "component-did-catch",
+    "use-error-boundary",
+    "error-recovery",
+    "graceful-degradation"
+  ]
+}

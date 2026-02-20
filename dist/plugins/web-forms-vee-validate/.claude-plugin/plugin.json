@@ -1,0 +1,19 @@
+{
+  "name": "web-forms-vee-validate",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "VeeValidate v4 patterns - useForm, useField, defineField, useFieldArray, schema validation with Composition API",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "forms",
+    "vee-validate",
+    "vue",
+    "use-form",
+    "use-field",
+    "define-field",
+    "use-field-array",
+    "validation"
+  ]
+}

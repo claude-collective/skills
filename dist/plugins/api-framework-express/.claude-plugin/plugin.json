@@ -1,0 +1,18 @@
+{
+  "name": "api-framework-express",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Express.js routes, middleware, error handling, request/response patterns",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "express",
+    "expressjs",
+    "nodejs",
+    "rest-api",
+    "middleware",
+    "routing",
+    "http"
+  ]
+}

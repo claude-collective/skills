@@ -1,0 +1,20 @@
+{
+  "name": "web-i18n-react-intl",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "ICU message format internationalization",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "react-intl",
+    "formatjs",
+    "i18n",
+    "internationalization",
+    "localization",
+    "translations",
+    "icu",
+    "formatted-message",
+    "use-intl"
+  ]
+}

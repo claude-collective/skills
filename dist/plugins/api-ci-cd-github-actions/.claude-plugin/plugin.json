@@ -1,0 +1,17 @@
+{
+  "name": "api-ci-cd-github-actions",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "GitHub Actions, pipelines, deployment",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "github-actions",
+    "pipelines",
+    "deployment",
+    "ci",
+    "cd",
+    "automation"
+  ]
+}

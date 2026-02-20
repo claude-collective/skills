@@ -1,0 +1,16 @@
+{
+  "name": "api-email-setup-resend",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Resend email setup, domain verification",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "resend",
+    "setup",
+    "email",
+    "domain-verification",
+    "installation"
+  ]
+}

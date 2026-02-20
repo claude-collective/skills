@@ -1,0 +1,21 @@
+{
+  "name": "mobile-framework-expo",
+  "version": "1.0.0",
+  "skills": "./skills/",
+  "description": "Expo managed workflow",
+  "author": {
+    "name": "@vince"
+  },
+  "keywords": [
+    "expo",
+    "expo-router",
+    "eas-build",
+    "eas-update",
+    "expo-dev-client",
+    "expo-prebuild",
+    "managed-workflow",
+    "ota-updates",
+    "config-plugins",
+    "react-native"
+  ]
+}
