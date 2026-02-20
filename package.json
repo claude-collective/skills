@@ -1,18 +1,18 @@
 {
-  "name": "@claude-collective/skills",
+  "name": "@agents-inc/skills",
   "version": "1.0.0",
-  "description": "Skills, stacks, and agents for Claude Collective",
+  "description": "Skills, stacks, and agents for Agents Inc",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/claude-collective/skills.git"
+    "url": "git+https://github.com/agents-inc/skills.git"
   },
   "author": "Vincent Bollaert",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/claude-collective/skills/issues"
+    "url": "https://github.com/agents-inc/skills/issues"
   },
-  "homepage": "https://github.com/claude-collective/skills#readme",
+  "homepage": "https://github.com/agents-inc/skills#readme",
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",

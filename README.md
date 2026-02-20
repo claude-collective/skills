@@ -1,95 +1,138 @@
-# Claude Collective Skills
+<!-- TODO: Add centered logo with dark/light mode support (same logo as the CLI repo)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-dark.svg">
+    <img alt="Agents Inc Skills" src="./assets/logo-light.svg" width="300">
+  </picture>
+</p>
+-->
 
-this is the skills marketplace for Claude Code. it contains curated skills and pre-built stacks that you can customise and install via the CLI.
+# Agents Inc Skills
 
-## what's here
+The official skills marketplace for [Agents Inc](https://github.com/agents-inc/cli).
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Skills: 87+](https://img.shields.io/badge/Skills-87%2B-green.svg)](./src/skills)
+
+Curated skills and pre-built stacks that you can install and customize via the [Agents Inc CLI](https://github.com/agents-inc/cli). This repo is structured content, not code: YAML + markdown files with metadata, used to give subagents domain-specific knowledge. All of the logic (installation, compilation, validation) lives in the [CLI](https://github.com/agents-inc/cli).
+
+## Quick start
+
+```bash
+npx @agents-inc/cli init
+```
+
+The wizard walks you through selecting a stack or individual skills, then compiles subagents and generates a config file. See the [CLI repo](https://github.com/agents-inc/cli) for the full setup guide.
+
+## How skills become subagents
+
+Skills on their own are structured content, not code. The CLI compiles them into specialized subagents by combining skills with agent definitions and Liquid templates:
 
 ```
-.claude/
-  skills/       # compiled skills (what Claude loads)
-  agents/       # agent definitions
+marketplace skills + agent definitions + Liquid templates
+  → CLI compile
+    → compiled subagents (.claude/agents/)
+```
+
+A `web-developer` subagent might get React, Tailwind, and Vitest skills. A `web-tester` gets Vitest, Playwright, and React Testing Library. Each subagent knows its domain deeply instead of knowing everything shallowly.
+
+## Skill categories
+
+87+ skills organized by domain:
+
+| Category | Examples                                                                                                                                                                                                                                                                              |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Web      | React, Vue, Angular, SolidJS, Next.js, Remix, Nuxt, SCSS Modules, CVA, Zustand, Pinia, NgRx SignalStore, Jotai, React Query, SWR, tRPC, GraphQL, React Hook Form, Zod, shadcn/ui, Radix UI, TanStack Table, Vitest, Playwright, Cypress, MSW, Framer Motion, Storybook, accessibility |
+| API      | Hono, Express, Fastify, Drizzle, Prisma, Better Auth, PostHog, Resend, Axiom + Pino + Sentry, GitHub Actions                                                                                                                                                                          |
+| Mobile   | React Native, Expo                                                                                                                                                                                                                                                                    |
+| CLI      | Commander, oclif + Ink                                                                                                                                                                                                                                                                |
+| Infra    | Turborepo, tooling, env config                                                                                                                                                                                                                                                        |
+| Security | Auth patterns, XSS prevention, secrets management                                                                                                                                                                                                                                     |
+| Meta     | Code reviewing, research methodology, investigation requirements, anti-over-engineering, context management                                                                                                                                                                           |
+
+Each skill covers patterns, conventions, anti-patterns, edge cases, and real code examples for a single technology. Not surface-level docs, but the kind of knowledge you'd normally have to explain to Claude repeatedly.
+
+## Stacks
+
+Stacks bundle related skills with pre-configured agents. Instead of picking skills individually, grab a stack that matches your setup:
+
+- **nextjs-fullstack**: Next.js App Router + Hono + Drizzle + PostHog + Zustand + React Query
+- **angular-stack**: Angular 19 + Signals + NgRx SignalStore + Hono + Drizzle
+- **vue-stack**: Vue 3 Composition API + Pinia + Hono + Drizzle
+- **nuxt-stack**: Nuxt 3 + Vue 3 full-stack + Pinia + Hono + Drizzle
+- **remix-stack**: Remix + React + Hono + Drizzle
+- **solidjs-stack**: SolidJS + Hono + Drizzle
+- **react-native-stack**: React Native + Expo + Zustand + React Query
+- **meta-stack**: Agents for creating agents, skills, docs, and extracting patterns
+
+Each stack includes agents like `web-developer`, `api-developer`, `web-reviewer`, `web-tester`, `web-researcher`, `pattern-scout`, and `documentor`.
+
+## Repository structure
+
+```
 src/
-  skills/       # source skills organized by category
-  stacks/       # stack configurations (skill bundles)
+  skills/       # Source skills organized by category
+  stacks/       # Stack configurations (skill bundles)
+  agents/       # Agent definitions
   schemas/      # JSON schemas for validation
-  docs/         # documentation
+  docs/         # Documentation
 ```
 
-**counts:** 84 skills, 16 agents, 7 stacks
+## Contributing
 
-## skill categories
+### Adding a skill
 
-| category | examples                                                                         |
-| -------- | -------------------------------------------------------------------------------- |
-| web      | react, next.js, remix, vue, angular, solidjs, scss-modules, zustand, react-query |
-| api      | hono, drizzle, better-auth, posthog, resend, axiom+pino+sentry                   |
-| mobile   | react-native, expo                                                               |
-| cli      | commander.js, clack prompts                                                      |
-| infra    | turborepo, github-actions, env config                                            |
-| security | auth patterns, xss prevention, secrets management                                |
-| meta     | reviewing, research-methodology                                                  |
+1. Create a directory under `src/skills/<category>/<name>/`
+2. Add `SKILL.md` with the skill content
+3. Add `reference.md` for API reference
+4. Add an `examples/` directory with real code examples
+5. Run the CLI to compile and verify
 
-## stacks
+Each skill is a structured package. The naming convention is `<domain>/<subcategory>/<technology>` (e.g., `web/framework/react`). All YAML files are validated against public JSON schemas (in `src/schemas/`) generated from Zod types in the CLI, so malformed metadata or invalid references are caught immediately.
 
-stacks bundle related skills with pre-configured agents. available stacks:
+### Skill structure
 
-- **nextjs-fullstack** - Next.js App Router + Hono + Drizzle + PostHog
-- **react-native-stack** - React Native with Expo
-- **vue-stack** - Vue 3 + Nuxt
-- **angular-stack** - Angular 17+ standalone components
-- **remix-stack** - Remix with loaders/actions
-- **solidjs-stack** - SolidJS fine-grained reactivity
-- **nuxt-stack** - Nuxt 3 with Nitro
-
-## CLI
-
-the CLI lives in a separate repo. use it to install skills and compile stacks:
-
-```bash
-# initialize a plugin with selected skills
-cc init
-
-# edit your skill selection
-cc edit
-
-# recompile after changes
-cc compile
+```
+src/skills/<category>/<name>/
+├── SKILL.md           # Main skill content
+├── metadata.yaml      # Version, compatibility, tags
+├── reference.md       # API reference
+└── examples/
+    ├── core.md        # Core usage examples
+    └── {topic}.md     # Topic-specific examples
 ```
 
-see the [CLI repo](https://github.com/claude-collective/cli) for installation.
+### Stack config format
 
-## development
+Stacks are defined in `src/stacks/<name>/config.yaml`:
+
+```yaml
+name: 'Stack Name'
+description: 'What this stack covers'
+author: '@handle'
+version: '1.0.0'
+
+skills:
+  - id: web/framework/react
+  - id: api/framework/hono
+```
+
+## Development
 
 ```bash
-# install deps (for prettier hooks)
+# Install dependencies (for prettier hooks)
 bun install
 
-# format files
+# Format files
 bun run format
 ```
 
-### adding a skill
+## Links
 
-1. create `src/skills/<category>/<name> (@author)/SKILL.md`
-2. add examples in `examples/` subdirectory
-3. add `reference.md` for API docs
-4. run the CLI to compile
+- [Agents Inc CLI](https://github.com/agents-inc/cli): the framework that compiles skills into subagents
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code): the tool this extends
+<!-- TODO: Add community links (Discord, Twitter/X) when they exist -->
 
-### stack config format
-
-stacks are defined in `src/stacks/<name>/config.yaml`:
-
-```yaml
-name: "Stack Name"
-description: "what this stack does"
-author: "@handle"
-version: "1.0.0"
-
-skills:
-  - id: web/framework/react (@vince)
-  - id: api/framework/hono (@vince)
-```
-
-## license
+## License
 
 MIT
