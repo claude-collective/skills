@@ -24,17 +24,17 @@ npx @agents-inc/cli init
 
 The wizard walks you through selecting a stack or individual skills, then compiles subagents and generates a config file. See the [CLI repo](https://github.com/agents-inc/cli) for the full setup guide.
 
-## How skills become subagents
+## How skills work
 
-Skills on their own are structured content, not code. The CLI compiles them into specialized subagents by combining skills with agent definitions and Liquid templates:
+Skills are structured content, not code. The CLI compiles subagents by referencing skills from agent definitions using Liquid templates. Some skills are preloaded (embedded directly in the compiled agent), others are loaded dynamically at runtime:
 
 ```
-marketplace skills + agent definitions + Liquid templates
+agent definitions + skill references + Liquid templates
   → CLI compile
     → compiled subagents (.claude/agents/)
 ```
 
-A `web-developer` subagent might get React, Tailwind, and Vitest skills. A `web-tester` gets Vitest, Playwright, and React Testing Library. Each subagent knows its domain deeply instead of knowing everything shallowly.
+A `web-developer` subagent might reference React, Tailwind, and Vitest skills. A `web-tester` references Vitest, Playwright, and React Testing Library. Each subagent knows its domain deeply instead of knowing everything shallowly.
 
 ## Skill categories
 
@@ -85,26 +85,25 @@ src/
   skills/       # Source skills organized by category
   stacks/       # Stack configurations (skill bundles)
   agents/       # Agent definitions
-  schemas/      # JSON schemas for validation
-  docs/         # Documentation
+docs/           # Documentation
 ```
 
 ## Contributing
 
 ### Adding a skill
 
-1. Create a directory under `src/skills/<category>/<name>/`
+1. Create a directory under `src/skills/<domain>-<subcategory>-<name>/`
 2. Add `SKILL.md` with the skill content
 3. Add `reference.md` for API reference
 4. Add an `examples/` directory with real code examples
 5. Run the CLI to compile and verify
 
-Each skill is a structured package. The naming convention is `<domain>/<subcategory>/<technology>` (e.g., `web/framework/react`). All YAML files are validated against public JSON schemas (in `src/schemas/`) generated from Zod types in the CLI, so malformed metadata or invalid references are caught immediately.
+Each skill is a structured package. The naming convention is `<domain>-<subcategory>-<name>` (e.g., `web-framework-react`). All YAML files are validated against JSON schemas in the [CLI repository](https://github.com/agents-inc/cli), so malformed metadata or invalid references are caught immediately.
 
 ### Skill structure
 
 ```
-src/skills/<category>/<name>/
+src/skills/<domain>-<subcategory>-<name>/
 ├── SKILL.md           # Main skill content
 ├── metadata.yaml      # Version, compatibility, tags
 ├── reference.md       # API reference
@@ -124,8 +123,8 @@ author: '@handle'
 version: '1.0.0'
 
 skills:
-  - id: web/framework/react
-  - id: api/framework/hono
+  - id: web-framework-react
+  - id: api-framework-hono
 ```
 
 ## Development
@@ -140,9 +139,7 @@ bun run format
 
 ## Links
 
-- [Agents Inc CLI](https://github.com/agents-inc/cli): the framework that compiles skills into subagents
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code): the tool this extends
-<!-- TODO: Add community links (Discord, Twitter/X) when they exist -->
+- [Agents Inc CLI](https://github.com/agents-inc/cli): an agent composition framework that builds stacks and compiles specialized subagents for Claude Code
 
 ## License
 
