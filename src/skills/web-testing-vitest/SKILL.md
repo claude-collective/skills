@@ -29,6 +29,8 @@ description: Playwright E2E, Vitest, React Testing Library - E2E for user flows,
 
 ---
 
+this is a new change
+
 **Auto-detection:** E2E testing, Playwright, test-driven development (Tester), Vitest, React Testing Library, test organization
 
 **When to use:**
