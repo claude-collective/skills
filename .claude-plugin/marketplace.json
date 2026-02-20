@@ -218,13 +218,7 @@
       "author": {
         "name": "@vince"
       },
-      "keywords": [
-        "hono",
-        "openapi",
-        "zod",
-        "rest-api",
-        "validation"
-      ],
+      "keywords": ["hono", "openapi", "zod", "rest-api", "validation"],
       "category": "api"
     },
     {
@@ -310,14 +304,7 @@
       "author": {
         "name": "@vince"
       },
-      "keywords": [
-        "cli",
-        "oclif",
-        "ink",
-        "react",
-        "terminal",
-        "framework"
-      ],
+      "keywords": ["cli", "oclif", "ink", "react", "terminal", "framework"],
       "category": "cli"
     },
     {
@@ -423,12 +410,7 @@
       "author": {
         "name": "@vince"
       },
-      "keywords": [
-        "methodology",
-        "implementation",
-        "self-improvement",
-        "meta"
-      ],
+      "keywords": ["methodology", "implementation", "self-improvement", "meta"],
       "category": "methodology"
     },
     {
@@ -1413,12 +1395,7 @@
       "author": {
         "name": "@vince"
       },
-      "keywords": [
-        "zustand",
-        "state-management",
-        "stores",
-        "client-state"
-      ],
+      "keywords": ["zustand", "state-management", "stores", "client-state"],
       "category": "web"
     },
     {
@@ -1449,13 +1426,7 @@
       "author": {
         "name": "@vince"
       },
-      "keywords": [
-        "scss",
-        "css-modules",
-        "cva",
-        "design-tokens",
-        "styling"
-      ],
+      "keywords": ["scss", "css-modules", "cva", "design-tokens", "styling"],
       "category": "web"
     },
     {
