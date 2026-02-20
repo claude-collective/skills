@@ -1,3 +1,6 @@
 node_modules
 dist
 .claude_backup*
+.DS_Store
+.claude/
+CLAUDE.md
