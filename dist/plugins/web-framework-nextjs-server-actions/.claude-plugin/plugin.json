@@ -1,6 +1,6 @@
 {
   "name": "web-framework-nextjs-server-actions",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "skills": "./skills/",
   "description": "Server Actions patterns for mutations, revalidation, and form handling in Next.js App Router",
   "author": {

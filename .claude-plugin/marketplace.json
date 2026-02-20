@@ -484,7 +484,7 @@
       "name": "meta-reviewing-cli-reviewing",
       "source": "./dist/plugins/meta-reviewing-cli-reviewing",
       "description": "CLI code review patterns. Use when reviewing CLI applications built with Commander.js, @clack/prompts, picocolors. Covers exit codes, signal handling, error messages, user experience, testing adequacy.",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "author": {
         "name": "@vince"
       },
@@ -950,7 +950,7 @@
       "name": "web-framework-nextjs-server-actions",
       "source": "./dist/plugins/web-framework-nextjs-server-actions",
       "description": "Server Actions patterns for mutations, revalidation, and form handling in Next.js App Router",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "author": {
         "name": "@vince"
       },
@@ -1317,7 +1317,7 @@
       "name": "web-state-mobx",
       "source": "./dist/plugins/web-state-mobx",
       "description": "MobX observable state management patterns with mobx-react-lite. Use when implementing reactive client state with observables, computed values, actions, and the observer HOC.",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "author": {
         "name": "@vince"
       },
@@ -1433,7 +1433,7 @@
       "name": "web-styling-tailwind",
       "source": "./dist/plugins/web-styling-tailwind",
       "description": "Tailwind CSS v4 - utility-first CSS framework with CSS-first configuration",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "author": {
         "name": "@vince"
       },
@@ -1510,7 +1510,7 @@
       "name": "web-testing-vitest",
       "source": "./dist/plugins/web-testing-vitest",
       "description": "Playwright E2E, Vitest, React Testing Library - E2E for user flows, unit tests for pure functions only, network-level API mocking - inverted testing pyramid prioritizing E2E tests",
-      "version": "1.0.0",
+      "version": "4.0.0",
       "author": {
         "name": "@vince"
       },
