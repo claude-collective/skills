@@ -10,7 +10,6 @@ compatibleWith:
   - api-framework-express
   - api-framework-fastify
   - api-auth-better-auth-drizzle-hono
-  - api-testing-api-testing
 tags:
   - prisma
   - orm
